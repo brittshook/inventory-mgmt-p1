@@ -1,10 +1,15 @@
 package com.cragsupplyco.backend.models;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -16,6 +21,10 @@ public class Category {
     @Column(length = 50)
     @NotBlank
     private String name;
+
+    @OneToMany(mappedBy = "category")
+    @JsonManagedReference
+    List<Product> products;
 
     public int getId() {
         return id;
@@ -33,9 +42,18 @@ public class Category {
         this.name = name;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
     @Override
     public String toString() {
-        return "Category [id=" + id + ", name=" + name + "]";
+        return "Category [id=" + id + ", name=" + name + ", products=" + products + "]";
     }
+
 
 }
