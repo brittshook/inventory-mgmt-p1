@@ -32,6 +32,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @NotNull
     @JsonBackReference
     private Category category;
 
