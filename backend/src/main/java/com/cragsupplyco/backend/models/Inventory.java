@@ -2,6 +2,7 @@ package com.cragsupplyco.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +28,9 @@ public class Inventory {
     @NotNull
     @JsonIdentityReference(alwaysAsId = true)
     private Warehouse warehouse;
+
+    @Column(length = 20)
+    private String size;
 
     @NotNull
     private int quantity;
