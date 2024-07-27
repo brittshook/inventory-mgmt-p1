@@ -33,16 +33,16 @@ public class InventoryService {
         Optional<Inventory> optionalInventory = repo.findById(id);
 
         if (optionalInventory.isPresent()) {
-            Inventory Inventory = optionalInventory.get();
+            Inventory inventory = optionalInventory.get();
             if (operation.equals("increment")) {
-                Inventory.setQuantity(Inventory.getQuantity() + value);
+                inventory.setQuantity(inventory.getQuantity() + value);
             } else if (operation.equals("decrement")) {
-                Inventory.setQuantity(Inventory.getQuantity() - value);
+                inventory.setQuantity(inventory.getQuantity() - value);
             } else {
                 throw new IllegalArgumentException("Invalid operation: " + operation);
             }
 
-            return repo.save(Inventory);
+            return repo.save(inventory);
         } else {
             throw new RuntimeException("Inventory not found with id " + id);
         }
