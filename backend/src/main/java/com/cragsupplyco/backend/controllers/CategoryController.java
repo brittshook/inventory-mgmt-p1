@@ -20,7 +20,7 @@ import com.cragsupplyco.backend.services.CategoryService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping
+@RequestMapping("/category")
 public class CategoryController {
     private CategoryService service;
 
