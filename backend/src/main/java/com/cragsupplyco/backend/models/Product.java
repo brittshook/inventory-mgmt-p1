@@ -26,6 +26,10 @@ public class Product {
 
     @Column(length = 255)
     @NotBlank
+    private String brand;
+
+    @Column(length = 255)
+    @NotBlank
     private String name;
 
     @Column(length = 1000)
