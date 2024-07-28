@@ -10,6 +10,9 @@ public class UpdateQuantityRequestDto {
     @Min(value = 1)
     private int value = 1;
 
+    public UpdateQuantityRequestDto() {
+    }
+
     public UpdateQuantityRequestDto(String operation, int value) {
         this.operation = operation;
         this.value = value;
