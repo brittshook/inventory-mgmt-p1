@@ -2,6 +2,9 @@ package com.cragsupplyco.backend.models;
 
 import java.util.List;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -25,6 +28,7 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category")
+    @Cascade(CascadeType.ALL)
     List<Product> products;
 
     public int getId() {
