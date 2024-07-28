@@ -50,8 +50,8 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void updateProductById(@PathVariable int id, @Valid @RequestBody Product Product) {
-        service.updateProductById(id, Product);
+    public void updateProductById(@PathVariable int id, @Valid @RequestBody Product product) {
+        service.updateProductById(id, product);
     }
 
     @DeleteMapping("/{id}")
