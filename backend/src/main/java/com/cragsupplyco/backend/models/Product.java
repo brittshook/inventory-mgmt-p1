@@ -21,7 +21,7 @@ import jakarta.validation.constraints.NotNull;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // strategies: IDENTITY or AUTO
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(length = 255)
@@ -97,10 +97,18 @@ public class Product {
         this.inventory = inventory;
     }
 
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
     @Override
     public String toString() {
-        return "Product [id=" + id + ", name=" + name + ", description=" + description + ", price=" + price
-                + ", category=" + category + ", inventory=" + inventory + "]";
+        return "Product [id=" + id + ", brand=" + brand + ", name=" + name + ", description=" + description + ", price="
+                + price + ", category=" + category + ", inventory=" + inventory + "]";
     }
 
 }
