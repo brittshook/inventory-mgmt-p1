@@ -67,10 +67,18 @@ public class Inventory {
         this.quantity = quantity;
     }
 
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
     @Override
     public String toString() {
-        return "Inventory [id=" + id + ", product=" + product + ", warehouse=" + warehouse + ", quantity=" + quantity
-                + "]";
+        return "Inventory [id=" + id + ", product=" + product + ", warehouse=" + warehouse + ", size=" + size
+                + ", quantity=" + quantity + "]";
     }
 
 }
