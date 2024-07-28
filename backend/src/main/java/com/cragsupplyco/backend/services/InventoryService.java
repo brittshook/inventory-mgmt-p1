@@ -2,9 +2,12 @@ package com.cragsupplyco.backend.services;
 
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.cragsupplyco.backend.models.Inventory;
 import com.cragsupplyco.backend.repositories.InventoryRepository;
 
+@Service
 public class InventoryService {
     private InventoryRepository repo;
 
