@@ -2,6 +2,9 @@ package com.cragsupplyco.backend.models;
 
 import java.util.List;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -50,6 +53,7 @@ public class Warehouse {
     private String zipCode;
 
     @OneToMany(mappedBy = "warehouse")
+    @Cascade(CascadeType.ALL)
     private List<Inventory> inventory;
 
     public int getId() {
