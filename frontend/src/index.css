@@ -14,6 +14,7 @@
   --text-color-secondary-medium: #60646a;
   --text-color-primary-dark: #3c3c3c;
   --border-color-primary: #eff0f3;
+  --accent-color-blue: #08b3c9;
 }
 
 * {
@@ -27,12 +28,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
   text-decoration: inherit;
 }
 
 a:hover {
-  color: #535bf2;
+  color: var(--accent-color-blue, #08b3c9);
 }
 
 body {
@@ -69,7 +69,7 @@ ol {
   list-style: none;
 }
 
-li {
+li > a {
   display: flex;
   align-items: center;
   gap: 8px;
