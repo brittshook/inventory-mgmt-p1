@@ -2,6 +2,10 @@ import { useState } from "react";
 import "./Sidebar.css";
 import dashboardIcon from "../assets/icons/dashboard.svg";
 import warehouseIcon from "../assets/icons/warehouse.svg";
+import logoutIcon from "../assets/icons/logout.svg";
+import sublistItem from "../assets/sublist_li.svg";
+import lastSublistItem from "../assets/sublist_li_last.svg";
+import profileImage from "/sample_user.webp";
 import { Logo } from "./Logo";
 
 type props = {};
@@ -20,15 +24,17 @@ export const Sidebar = ({}: props) => {
             Dashboard
           </li>
           <li>
-            <img src={warehouseIcon} />
-            Warehouses
+            <span>
+              <img src={warehouseIcon} />
+              Warehouses
+            </span>
             <ul className="sublist">
               <li>
-                <img />
+                <img src={sublistItem} />
                 Products
               </li>
               <li>
-                <img />
+                <img src={lastSublistItem} />
                 Inventory
               </li>
             </ul>
@@ -36,10 +42,15 @@ export const Sidebar = ({}: props) => {
         </ul>
       </div>
       <div id="user-account">
-        <img />
-        {/* TODO: grab name &  role from DB */}
-        <h3>Example name</h3>
-        <p>Example role</p>
+        <div id="user-details">
+          <img id="profile" src={profileImage} />
+          {/* TODO: grab name &  role from DB */}
+          <div className="text">
+            <h3>Jo Klein</h3>
+            <p>Administrator</p>
+          </div>
+        </div>
+        <img src={logoutIcon} alt="Logout" />
       </div>
     </aside>
   );
