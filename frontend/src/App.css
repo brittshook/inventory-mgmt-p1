@@ -3,4 +3,5 @@
   padding: 2rem;
   display: flex;
   height: 100vh;
+  gap: 40px;
 }

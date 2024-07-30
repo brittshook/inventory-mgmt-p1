@@ -9,9 +9,11 @@
   -moz-osx-font-smoothing: grayscale;
 
   --main-bg-color: #f8f8f8;
+  --white-bg-color: #fff;
   --text-color-primary-light: #9ea8b6;
   --text-color-secondary-medium: #60646a;
   --text-color-primary-dark: #3c3c3c;
+  --border-color-primary: #eff0f3;
 }
 
 * {
@@ -37,7 +39,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--main-bg-color);
+  background-color: var(--main-bg-color, #f8f8f8);
 }
 
 h1 {
@@ -49,7 +51,17 @@ h2 {
   text-transform: uppercase;
   font-weight: 600;
   font-size: 14px;
-  color: var(--text-color-primary-light);
+  color: var(--text-color-primary-light, #9ea8b6);
+}
+
+h3 {
+  color: var(--text-color-primary-dark, #3c3c3c);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+p {
+  font-size: 14px;
 }
 
 ul,
