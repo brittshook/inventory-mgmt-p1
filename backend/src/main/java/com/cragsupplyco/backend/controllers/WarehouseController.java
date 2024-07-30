@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,8 @@ import com.cragsupplyco.backend.services.WarehouseService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/warehouse")
+@RequestMapping("/api/warehouse")
+@CrossOrigin(origins = "http://localhost:5173")
 public class WarehouseController {
     private WarehouseService service;
 
