@@ -1,0 +1,94 @@
+import { useState } from "react";
+import "./Sidebar.css";
+import dashboardIcon from "../../assets/icons/dashboard.svg";
+import warehouseIcon from "../../assets/icons/warehouse.svg";
+import logoutIcon from "../../assets/icons/logout.svg";
+import profileImage from "/sample_user.webp";
+import { Logo } from "../Logo";
+import { Link } from "react-router-dom";
+
+type props = {};
+export const Sidebar = ({}: props) => {
+  const [current, setCurrent] = useState("dashboard");
+
+  return (
+    <aside>
+      <div id="top">
+        <Link to="/">
+          <Logo />
+        </Link>
+        <hr />
+        <h2>General</h2>
+        <ul>
+          <li>
+            <Link onClick={() => setCurrent("dashboard")} to="/">
+              <img src={dashboardIcon} />
+              Dashboard
+            </Link>
+          </li>
+          <li>
+            <Link onClick={() => setCurrent("warehouses")} to="/warehouses">
+              <img src={warehouseIcon} />
+              Warehouses
+            </Link>
+            <ul className="sublist">
+              <li>
+                <Link onClick={() => setCurrent("products")} to="/products">
+                  <svg
+                    width="20"
+                    height="33"
+                    viewBox="0 0 20 33"
+                    fill={
+                      current == "products"
+                        ? "var(--accent-color-blue)"
+                        : "none"
+                    }
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 0V18M1 18V33M1 18H10.0278M14.5 13C13.3065 13 12.1619 13.4741 11.318 14.318C10.4741 15.1619 10 16.3065 10 17.5C10 18.6935 10.4741 19.8381 11.318 20.682C12.1619 21.5259 13.3065 22 14.5 22C15.6935 22 16.8381 21.5259 17.682 20.682C18.5259 19.8381 19 18.6935 19 17.5C19 16.3065 18.5259 15.1619 17.682 14.318C16.8381 13.4741 15.6935 13 14.5 13Z"
+                      stroke="#60646A"
+                    />
+                  </svg>
+                  Products
+                </Link>
+              </li>
+              <li>
+                <Link onClick={() => setCurrent("inventory")} to="inventory">
+                  <svg
+                    width="20"
+                    height="33"
+                    viewBox="0 0 20 33"
+                    fill={
+                      current == "inventory"
+                        ? "var(--accent-color-blue)"
+                        : "none"
+                    }
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 0V18M1 18H10.0278M14.5 13C13.3065 13 12.1619 13.4741 11.318 14.318C10.4741 15.1619 10 16.3065 10 17.5C10 18.6935 10.4741 19.8381 11.318 20.682C12.1619 21.5259 13.3065 22 14.5 22C15.6935 22 16.8381 21.5259 17.682 20.682C18.5259 19.8381 19 18.6935 19 17.5C19 16.3065 18.5259 15.1619 17.682 14.318C16.8381 13.4741 15.6935 13 14.5 13Z"
+                      stroke="#60646A"
+                    />
+                  </svg>
+                  Inventory
+                </Link>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div id="user-account">
+        <div id="user-details">
+          <img id="profile" src={profileImage} />
+          {/* TODO: grab name &  role from DB */}
+          <div className="text">
+            <h3>Jo Klein</h3>
+            <p>Administrator</p>
+          </div>
+        </div>
+        <img src={logoutIcon} alt="Logout" />
+      </div>
+    </aside>
+  );
+};

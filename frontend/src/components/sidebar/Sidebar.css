@@ -1,8 +1,7 @@
 aside,
 div#top,
 div#user-account,
-div#user-details,
-li > span {
+div#user-details {
   display: flex;
 }
 
@@ -12,8 +11,7 @@ div#user-account {
 }
 
 aside,
-div#top,
-li:has(ul.sublist) {
+div#top {
   flex-direction: column;
 }
 
@@ -42,36 +40,19 @@ div#top > ul > li {
   padding-bottom: 14px;
 }
 
-aside li {
+aside li a {
   font-size: 13px;
   font-weight: 500;
   color: var(--text-color-secondary-medium);
 }
 
-li > span {
-  gap: 8px;
-}
-
-li > span,
-div#user-account {
-  align-items: center;
-}
-
-li:has(ul.sublist) {
-  align-items: start;
-}
-
 .sublist {
   padding-left: 20px;
+  padding-top: 8px;
 }
 
 ul.sublist > li {
   height: 33px;
-  position: relative;
-}
-
-ul.sublist > li:last-child img {
-  transform: translateY(-6px);
 }
 
 div#user-account {
@@ -80,6 +61,7 @@ div#user-account {
   border: 1px solid var(--border-color-primary);
   padding: 12px 15px;
   gap: 14px;
+  align-items: center;
 }
 
 div#user-account img#profile {
@@ -98,4 +80,8 @@ div#user-account h3 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.active {
+  fill: var(--accent-color-blue, #0098ac);
 }
