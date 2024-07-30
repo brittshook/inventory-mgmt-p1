@@ -1,0 +1,33 @@
+aside,
+div#top {
+  display: flex;
+}
+
+aside {
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+div#top {
+  flex-direction: column;
+  gap: 16px;
+}
+
+#logo {
+  height: 60px;
+}
+
+hr {
+  height: 2px;
+  background: #eff0f3;
+}
+
+aside h2 {
+  padding: 10px 0;
+}
+
+aside li {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-color-secondary-medium);
+}
