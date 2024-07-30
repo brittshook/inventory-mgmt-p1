@@ -1,0 +1,9 @@
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.breadcrumb-item img {
+  height: 20px;
+}
