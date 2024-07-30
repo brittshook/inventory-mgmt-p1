@@ -1,15 +1,27 @@
 aside,
-div#top {
+div#top,
+div#user-account,
+div#user-details,
+li > span {
   display: flex;
 }
 
-aside {
-  flex-direction: column;
+aside,
+div#user-account {
   justify-content: space-between;
 }
 
-div#top {
+aside,
+div#top,
+li:has(ul.sublist) {
   flex-direction: column;
+}
+
+aside {
+  max-width: 250px;
+}
+
+div#top {
   gap: 16px;
 }
 
@@ -26,8 +38,64 @@ aside h2 {
   padding: 10px 0;
 }
 
+div#top > ul > li {
+  padding-bottom: 14px;
+}
+
 aside li {
   font-size: 13px;
   font-weight: 500;
   color: var(--text-color-secondary-medium);
+}
+
+li > span {
+  gap: 8px;
+}
+
+li > span,
+div#user-account {
+  align-items: center;
+}
+
+li:has(ul.sublist) {
+  align-items: start;
+}
+
+.sublist {
+  padding-left: 20px;
+}
+
+ul.sublist > li {
+  height: 33px;
+  position: relative;
+}
+
+ul.sublist > li:last-child img {
+  transform: translateY(-6px);
+}
+
+div#user-account {
+  background-color: var(--white-bg-color);
+  border-radius: 6px;
+  border: 1px solid var(--border-color-primary);
+  padding: 12px 15px;
+  gap: 14px;
+}
+
+div#user-account img#profile {
+  width: 48px;
+  height: 48px;
+  border-radius: 100%;
+}
+
+div#user-details {
+  gap: 10px;
+}
+
+div#user-account div,
+div#user-account p,
+div#user-account h3 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
