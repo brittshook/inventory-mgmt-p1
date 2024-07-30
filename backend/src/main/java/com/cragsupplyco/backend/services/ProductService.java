@@ -19,6 +19,10 @@ public class ProductService {
         return repo.findAll();
     }
 
+    public Iterable<Product> findAllByCategoryId(int categoryId) {
+        return repo.findByCategoryId(categoryId);
+    }
+
     public Optional<Product> findById(int id) {
         return repo.findById(id);
     }

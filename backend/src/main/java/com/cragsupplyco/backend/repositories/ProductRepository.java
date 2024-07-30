@@ -7,5 +7,7 @@ import com.cragsupplyco.backend.models.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
+        Iterable<Product> findByCategoryId(Integer categoryId);
+
 
 }

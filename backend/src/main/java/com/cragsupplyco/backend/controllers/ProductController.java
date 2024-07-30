@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +22,8 @@ import com.cragsupplyco.backend.services.ProductService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api/product")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ProductController {
     private ProductService service;
 
@@ -29,7 +32,10 @@ public class ProductController {
     }
 
     @GetMapping
-    public Iterable<Product> findAllCategories() {
+    public Iterable<Product> findAllProducts(@RequestParam(required = false) Integer categoryId) {
+        if (categoryId != null) {
+            return service.findAllByCategoryId(categoryId);
+        }
         return service.findAll();
     }
 
