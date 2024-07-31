@@ -1,11 +1,16 @@
-import logoImage from "/logo.webp";
+import logoFull from "/logo.webp";
+import logoShort from "/logo_short.webp";
 
-export const Logo = () => {
+type props = {
+  type: "full" | "short";
+};
+
+export const Logo = ({ type }: props) => {
   return (
     <header>
       <img
         id="logo"
-        src={logoImage}
+        src={type == "full" ? logoFull : logoShort}
         alt="Crag Supply Co."
         title="Crag Supply Co."
       />
