@@ -6,6 +6,7 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
@@ -54,6 +55,7 @@ public class Warehouse {
 
     @OneToMany(mappedBy = "warehouse")
     @Cascade(CascadeType.ALL)
+    @JsonIgnore
     private List<Inventory> inventory;
 
     public int getId() {

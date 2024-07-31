@@ -48,7 +48,7 @@ public class Product {
     @JsonIdentityReference(alwaysAsId = true)
     private Category category;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product")
     @JsonIgnore
     private List<Inventory> inventory;
 
