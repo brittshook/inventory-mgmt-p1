@@ -1,0 +1,15 @@
+div.ant-card-body {
+  height: 130px;
+  padding: 0 !important;
+}
+
+div.ant-card-meta-title {
+  white-space: normal !important;
+  text-overflow: clip !important;
+}
+
+div.ant-card-body a {
+  display: flex;
+  height: 100%;
+  padding: 24px;
+}
