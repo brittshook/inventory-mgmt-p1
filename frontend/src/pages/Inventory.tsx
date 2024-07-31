@@ -1,3 +1,14 @@
+
+import { useLocation } from "react-router-dom";
+import { InventoryByWarehouse } from "./InventoryByWarehouse";
+import { InventoryByCategory } from "./InventoryByCategory";
+
 export const Inventory = () => {
-  return <h1>Inventory</h1>;
+  const search = useLocation().search;
+
+  if (/warehouse=\d+/.test(search)) {
+    return <InventoryByWarehouse />;
+  } else if (/category=\d+/.test(search)) {
+    return <InventoryByCategory />;
+  } else return <Inventory />;
 };
