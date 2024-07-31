@@ -1,5 +1,5 @@
 aside,
-div#top,
+nav,
 div#user-account,
 div#user-details {
   display: flex;
@@ -11,7 +11,7 @@ div#user-account {
 }
 
 aside,
-div#top {
+nav {
   flex-direction: column;
 }
 
@@ -19,7 +19,7 @@ aside {
   max-width: 250px;
 }
 
-div#top {
+nav {
   gap: 16px;
 }
 
@@ -36,7 +36,7 @@ aside h2 {
   padding: 10px 0;
 }
 
-div#top > ul > li {
+nav > ul > li {
   padding-bottom: 14px;
 }
 
@@ -58,7 +58,7 @@ ul.sublist > li {
 div#user-account {
   background-color: var(--white-bg-color);
   border-radius: 6px;
-  border: 1px solid var(--border-color-primary);
+  border: 1px solid var(--border-color-light);
   padding: 12px 15px;
   gap: 14px;
   align-items: center;
