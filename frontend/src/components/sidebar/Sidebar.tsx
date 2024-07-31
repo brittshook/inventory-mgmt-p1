@@ -13,97 +13,101 @@ export const Sidebar = ({ isCollapsed }: props) => {
   const location = useLocation();
 
   return (
-    <aside>
-      <nav id="top">
+    <aside className={isCollapsed ? "collapsed" : "expanded"}>
+      <nav>
         <Link to="/">
-          <Logo />
+          {isCollapsed ? <Logo type="short" /> : <Logo type="full" />}
         </Link>
         <hr />
-        <h2>General</h2>
+        {!isCollapsed && <h2>General</h2>}
         <ul>
           <li>
             <Link to="/">
-              <img src={dashboardIcon} />
-              Dashboard
+              <img src={dashboardIcon} alt="dashboard" title="dashboard" />
+              {!isCollapsed && "Dashboard"}
             </Link>
           </li>
           <li>
             <Link to="/products">
-              <img src={productIcon} />
-              Products
+              <img src={productIcon} alt="products" title="products" />
+              {!isCollapsed && "Products"}
             </Link>
-            {(location.pathname == "/products" ||
-              (location.pathname == "/inventory" &&
-                location.search.includes("?category="))) && (
-              <ul className="sublist">
-                <li>
-                  <Link to="inventory?category=all">
-                    <svg
-                      width="20"
-                      height="33"
-                      viewBox="0 0 20 33"
-                      fill={
-                        location.search.includes("?category=")
-                          ? "var(--accent-color-blue)"
-                          : "none"
-                      }
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1 0V18M1 18H10.0278M14.5 13C13.3065 13 12.1619 13.4741 11.318 14.318C10.4741 15.1619 10 16.3065 10 17.5C10 18.6935 10.4741 19.8381 11.318 20.682C12.1619 21.5259 13.3065 22 14.5 22C15.6935 22 16.8381 21.5259 17.682 20.682C18.5259 19.8381 19 18.6935 19 17.5C19 16.3065 18.5259 15.1619 17.682 14.318C16.8381 13.4741 15.6935 13 14.5 13Z"
-                        stroke="#60646A"
-                      />
-                    </svg>
-                    Inventory
-                  </Link>
-                </li>
-              </ul>
-            )}
+            {!isCollapsed &&
+              (location.pathname == "/products" ||
+                (location.pathname == "/inventory" &&
+                  location.search.includes("?category="))) && (
+                <ul className="sublist">
+                  <li>
+                    <Link to="inventory?category=all">
+                      <svg
+                        width="20"
+                        height="33"
+                        viewBox="0 0 20 33"
+                        fill={
+                          location.search.includes("?category=")
+                            ? "var(--accent-color-blue)"
+                            : "none"
+                        }
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M1 0V18M1 18H10.0278M14.5 13C13.3065 13 12.1619 13.4741 11.318 14.318C10.4741 15.1619 10 16.3065 10 17.5C10 18.6935 10.4741 19.8381 11.318 20.682C12.1619 21.5259 13.3065 22 14.5 22C15.6935 22 16.8381 21.5259 17.682 20.682C18.5259 19.8381 19 18.6935 19 17.5C19 16.3065 18.5259 15.1619 17.682 14.318C16.8381 13.4741 15.6935 13 14.5 13Z"
+                          stroke="#60646A"
+                        />
+                      </svg>
+                      Inventory
+                    </Link>
+                  </li>
+                </ul>
+              )}
           </li>
           <li>
             <Link to="/warehouses">
               <img src={warehouseIcon} />
-              Warehouses
+              {!isCollapsed && "Warehouses"}
             </Link>
-            {(location.pathname == "/warehouses" ||
-              (location.pathname == "/inventory" &&
-                location.search.includes("?warehouse="))) && (
-              <ul className="sublist">
-                <li>
-                  <Link to="inventory">
-                    <svg
-                      width="20"
-                      height="33"
-                      viewBox="0 0 20 33"
-                      fill={
-                        location.search.includes("?warehouse=")
-                          ? "var(--accent-color-blue)"
-                          : "none"
-                      }
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1 0V18M1 18H10.0278M14.5 13C13.3065 13 12.1619 13.4741 11.318 14.318C10.4741 15.1619 10 16.3065 10 17.5C10 18.6935 10.4741 19.8381 11.318 20.682C12.1619 21.5259 13.3065 22 14.5 22C15.6935 22 16.8381 21.5259 17.682 20.682C18.5259 19.8381 19 18.6935 19 17.5C19 16.3065 18.5259 15.1619 17.682 14.318C16.8381 13.4741 15.6935 13 14.5 13Z"
-                        stroke="#60646A"
-                      />
-                    </svg>
-                    Inventory
-                  </Link>
-                </li>
-              </ul>
-            )}
+            {!isCollapsed &&
+              (location.pathname == "/warehouses" ||
+                (location.pathname == "/inventory" &&
+                  location.search.includes("?warehouse="))) && (
+                <ul className="sublist">
+                  <li>
+                    <Link to="inventory?warehouse=all">
+                      <svg
+                        width="20"
+                        height="33"
+                        viewBox="0 0 20 33"
+                        fill={
+                          location.search.includes("?warehouse=")
+                            ? "var(--accent-color-blue)"
+                            : "none"
+                        }
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M1 0V18M1 18H10.0278M14.5 13C13.3065 13 12.1619 13.4741 11.318 14.318C10.4741 15.1619 10 16.3065 10 17.5C10 18.6935 10.4741 19.8381 11.318 20.682C12.1619 21.5259 13.3065 22 14.5 22C15.6935 22 16.8381 21.5259 17.682 20.682C18.5259 19.8381 19 18.6935 19 17.5C19 16.3065 18.5259 15.1619 17.682 14.318C16.8381 13.4741 15.6935 13 14.5 13Z"
+                          stroke="#60646A"
+                        />
+                      </svg>
+                      Inventory
+                    </Link>
+                  </li>
+                </ul>
+              )}
           </li>
         </ul>
       </nav>
       <div id="user-account">
-        <div id="user-details">
-          <img id="profile" src={profileImage} />
-          {/* TODO: grab name &  role from DB */}
-          <div className="text">
-            <h3>Jo Klein</h3>
-            <p>Administrator</p>
+        {!isCollapsed && (
+          <div id="user-details">
+            <img id="profile" src={profileImage} />
+            {/* TODO: grab name &  role from DB */}
+            <div className="text">
+              <h3>Jo Klein</h3>
+              <p>Administrator</p>
+            </div>
           </div>
-        </div>
+        )}
         <img src={logoutIcon} alt="Logout" />
       </div>
     </aside>

@@ -85,3 +85,18 @@ div#user-account h3 {
 .active {
   fill: var(--accent-color-blue, #0098ac);
 }
+
+aside.collapsed nav {
+  gap: 40px;
+}
+
+aside.collapsed nav ul {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+aside.collapsed div#user-account {
+  justify-content: center;
+}
