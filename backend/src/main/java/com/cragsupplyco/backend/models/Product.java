@@ -51,7 +51,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     @NotNull
-    // @JsonIdentityReference(alwaysAsId = true)
+    @JsonIdentityReference(alwaysAsId = true)
     @JsonView(Views.Public.class)
     private Category category;
 
