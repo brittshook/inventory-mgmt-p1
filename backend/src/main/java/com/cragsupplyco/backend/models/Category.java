@@ -7,6 +7,7 @@ import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
@@ -23,15 +24,17 @@ import jakarta.validation.constraints.NotBlank;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(Views.Public.class)
     private int id;
 
     @Column(length = 50)
     @NotBlank
+    @JsonView(Views.Public.class)
     private String name;
 
     @OneToMany(mappedBy = "category")
     @Cascade(CascadeType.ALL)
-    @JsonIgnore
+    @JsonView(Views.Internal.class)
     List<Product> products;
 
     public int getId() {

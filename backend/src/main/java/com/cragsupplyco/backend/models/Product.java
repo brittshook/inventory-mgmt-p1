@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,32 +25,38 @@ import jakarta.validation.constraints.NotNull;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(Views.Public.class)
     private int id;
 
     @Column(length = 255)
     @NotBlank
+    @JsonView(Views.Public.class)
     private String brand;
 
     @Column(length = 255)
     @NotBlank
+    @JsonView(Views.Public.class)
     private String name;
 
     @Column(length = 1000)
     @NotBlank
+    @JsonView(Views.Public.class)
     private String description;
 
     @Column(scale = 2)
     @NotNull
+    @JsonView(Views.Public.class)
     private double price;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     @NotNull
-    @JsonIdentityReference(alwaysAsId = true)
+    // @JsonIdentityReference(alwaysAsId = true)
+    @JsonView(Views.Public.class)
     private Category category;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnore
+    @JsonView(Views.Internal.class)
     private List<Inventory> inventory;
 
     public int getId() {

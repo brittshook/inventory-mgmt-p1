@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cragsupplyco.backend.models.Category;
+import com.cragsupplyco.backend.models.Views;
 import com.cragsupplyco.backend.services.CategoryService;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.validation.Valid;
 
@@ -31,6 +33,7 @@ public class CategoryController {
     }
 
     @GetMapping
+    @JsonView(Views.Public.class)
     public Iterable<Category> findAllCategories() {
         return service.findAll();
     }

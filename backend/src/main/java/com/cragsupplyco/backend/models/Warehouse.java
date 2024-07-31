@@ -7,6 +7,7 @@ import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
@@ -25,37 +26,44 @@ import jakarta.validation.constraints.Pattern;
 public class Warehouse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(Views.Public.class)
     private int id;
 
     @Column(length = 50)
     @NotBlank
+    @JsonView(Views.Public.class)
     private String name;
 
     @Min(value = 1)
     @NotNull
+    @JsonView(Views.Public.class)
     private int maxCapacity;
 
     @Column(length = 255)
     @NotBlank
+    @JsonView(Views.Public.class)
     private String streetAddress;
 
     @Column(length = 50)
     @NotBlank
+    @JsonView(Views.Public.class)
     private String city;
 
     @Column(length = 2)
     @NotBlank
     @Pattern(regexp = "^[A-Z]{2}$")
+    @JsonView(Views.Public.class)
     private String state;
 
     @Column(length = 10)
     @NotBlank
     @Pattern(regexp = "^\\d{5}(-\\d{4})?$")
+    @JsonView(Views.Public.class)
     private String zipCode;
 
     @OneToMany(mappedBy = "warehouse")
     @Cascade(CascadeType.ALL)
-    @JsonIgnore
+    @JsonView(Views.Internal.class)
     private List<Inventory> inventory;
 
     public int getId() {

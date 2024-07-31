@@ -1,6 +1,7 @@
 package com.cragsupplyco.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,24 +16,29 @@ import jakarta.validation.constraints.NotNull;
 public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(Views.Public.class)
     private int id;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
     @NotNull
     @JsonIdentityReference(alwaysAsId = true)
+    @JsonView(Views.Public.class)
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
     @NotNull
     @JsonIdentityReference(alwaysAsId = true)
+    @JsonView(Views.Public.class)
     private Warehouse warehouse;
 
     @Column(length = 20)
+    @JsonView(Views.Public.class)
     private String size;
 
     @NotNull
+    @JsonView(Views.Public.class)
     private int quantity;
 
     public int getId() {

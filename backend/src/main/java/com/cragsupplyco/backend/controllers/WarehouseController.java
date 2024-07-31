@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cragsupplyco.backend.models.Views;
 import com.cragsupplyco.backend.models.Warehouse;
 import com.cragsupplyco.backend.services.WarehouseService;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.validation.Valid;
 
@@ -31,6 +33,7 @@ public class WarehouseController {
     }
 
     @GetMapping
+    @JsonView(Views.Public.class)
     public Iterable<Warehouse> findAllCategories() {
         return service.findAll();
     }
@@ -42,6 +45,7 @@ public class WarehouseController {
     }
 
     @GetMapping("/{id}")
+    @JsonView(Views.Internal.class)
     public ResponseEntity<Warehouse> findWarehouseById(@PathVariable int id) {
         Optional<Warehouse> warehouse = service.findById(id);
         if (warehouse.isPresent())
