@@ -33,7 +33,7 @@ public class InventoryController {
     }
 
     @GetMapping
-    public Iterable<Inventory> findAllCategories() {
+    public Iterable<Inventory> findAllInventory() {
         return service.findAll();
     }
 
