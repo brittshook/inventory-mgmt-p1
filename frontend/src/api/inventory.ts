@@ -29,3 +29,13 @@ export const postInventory = async (data: InventoryDataType) => {
     throw error;
   }
 };
+
+export const deleteInventoryById = async (id: number) => {
+  try {
+    const response = await axiosInstance.delete(`${API_ENDPOINT}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error posting data", error);
+    throw error;
+  }
+};

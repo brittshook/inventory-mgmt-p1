@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Button, Input, Space, Table, Tooltip } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { Button, Input, Popconfirm, Space, Table, Tooltip } from "antd";
 import type {
   InputRef,
   TableColumnsType,
@@ -9,10 +9,13 @@ import type {
 import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
+import EditableCell from "./EditableCell";
 import "./DataTable.css";
+import { useForm } from "antd/es/form/Form";
+import { deleteInventoryById } from "../api/inventory";
 
 type props = {
-  data?: DataType[];
+  initialData?: DataType[];
   loading: boolean;
   showWarehouses: boolean;
   showCategories: boolean;
@@ -33,14 +36,70 @@ export type DataType = {
 type DataIndex = keyof DataType;
 
 export const DataTable = ({
-  data,
+  initialData,
   loading,
   showCategories,
   showWarehouses,
 }: props) => {
+  const [data, setData] = useState<DataType[]>([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
+  const [editingKey, setEditingKey] = useState("");
+  const [form] = useForm();
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  useEffect(() => {
+    if (initialData) {
+      setData(initialData);
+    }
+  }, [initialData]);
+
+  // const isEditing = (record: DataType) => record.key === Number(editingKey);
+
+  // const edit = (record: Partial<DataType> & { key: React.Key }) => {
+  //   form.setFieldsValue({ ...record });
+  //   setEditingKey(`${record.key}`);
+  // };
+
+  // const cancel = () => {
+  //   setEditingKey("");
+  // };
+
+  // const save = async (key: React.Key) => {
+  //   try {
+  //     const row = (await form.validateFields()) as DataType;
+  //     const newData = [...data];
+  //     const index = newData.findIndex((item) => key === item.key);
+
+  //     if (index > -1) {
+  //       const item = newData[index];
+  //       newData.splice(index, 1, { ...item, ...row });
+  //       await updateData(newData[index]);
+  //       setData(newData);
+  //       setEditingKey("");
+  //     } else {
+  //       newData.push(row);
+  //       await updateData(row);
+  //       setData(newData);
+  //       setEditingKey("");
+  //     }
+  //   } catch (errInfo) {
+  //     console.log("Validate Failed:", errInfo);
+  //   }
+  // };
+
+  const handleDelete = async (key: number) => {
+    setConfirmLoading(true);
+    try {
+      await deleteInventoryById(key);
+      setData(data.filter((item) => item.key !== key));
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    } finally {
+      setConfirmLoading(false);
+    }
+  };
 
   const handleSearch = (
     selectedKeys: string[],
@@ -272,9 +331,22 @@ export const DataTable = ({
       fixed: "right",
       width: 140,
       render: (_, record) => (
-        <Space size="middle">
+        <Space>
           <a>Edit</a>
-          <a>Delete</a>
+          <Popconfirm
+            title="Confirm delete?"
+            onConfirm={() => {
+              handleDelete(record.key);
+            }}
+            okButtonProps={{
+              type: "primary",
+              danger: true,
+              loading: confirmLoading,
+            }}
+            okText="Delete"
+          >
+            <a>Delete</a>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -301,22 +373,6 @@ export const DataTable = ({
     />
   );
 };
-
-// const handleDelete = (key: React.Key) => {
-//   const newData = dataSource.filter((item) => item.key !== key);
-//   setDataSource(newData);
-// };
-
-// {
-//   title: 'operation',
-//   dataIndex: 'operation',
-//   render: (_, record) =>
-//     dataSource.length >= 1 ? (
-//       <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
-//         <a>Delete</a>
-//       </Popconfirm>
-//     ) : null,
-// },
 
 // import type { GetProp } from "antd";
 // import type { SorterResult } from "antd/es/table/interface";
