@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.models.Views;
 import com.cragsupplyco.backend.models.Warehouse;
 import com.cragsupplyco.backend.services.WarehouseService;
@@ -34,7 +36,7 @@ public class WarehouseController {
 
     @GetMapping
     @JsonView(Views.Public.class)
-    public Iterable<Warehouse> findAllCategories() {
+    public Iterable<Warehouse> findAllWarehouses() {
         return service.findAll();
     }
 
