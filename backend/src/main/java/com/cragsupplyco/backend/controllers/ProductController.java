@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cragsupplyco.backend.models.Product;
+import com.cragsupplyco.backend.models.Views;
 import com.cragsupplyco.backend.services.ProductService;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.validation.Valid;
 
@@ -32,6 +34,13 @@ public class ProductController {
     }
 
     @GetMapping
+    @JsonView(Views.Public.class)
+    public Iterable<Product> findAllProducts() {
+        return service.findAll();
+    }
+
+    @GetMapping("/detailed")
+    @JsonView(Views.Internal.class)
     public Iterable<Product> findAllProducts(@RequestParam(required = false) Integer categoryId) {
         if (categoryId != null) {
             return service.findAllByCategoryId(categoryId);
@@ -46,7 +55,18 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @JsonView(Views.Public.class)
     public ResponseEntity<Product> findProductById(@PathVariable int id) {
+        Optional<Product> product = service.findById(id);
+        if (product.isPresent())
+            return ResponseEntity.ok(product.get());
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/{id}/detailed")
+    @JsonView(Views.Internal.class)
+    public ResponseEntity<Product> findProductByIdDetailed(@PathVariable int id) {
         Optional<Product> product = service.findById(id);
         if (product.isPresent())
             return ResponseEntity.ok(product.get());
