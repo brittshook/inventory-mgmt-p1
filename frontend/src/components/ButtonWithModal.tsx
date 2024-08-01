@@ -1,22 +1,22 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { Button, Form, Modal } from "antd";
 
 type props = {
   children: ReactElement;
   title: string;
   modalButtonText: string;
-  onCreate: (values: any) => void;
+  // onCreate: (values: any) => void;
   buttonType?: "primary";
   buttonText: string;
   buttonIcon?: string;
   disabled?: boolean;
-  initialValues?: {};
+  initialValues?: { warehouse?: string | null; categoryName?: string | null };
 };
 
 export const ButtonWithModal = ({
   children,
   title,
-  onCreate,
+  // onCreate,
   modalButtonText,
   buttonType,
   buttonText,
@@ -33,12 +33,15 @@ export const ButtonWithModal = ({
     setOpen(true);
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
     setConfirmLoading(true);
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
-    }, 1000);
+    const values = await form.validateFields();
+    if (initialValues?.warehouse) values.warehouse = initialValues?.warehouse;
+    if (initialValues?.categoryName)
+      values.categoryName = initialValues?.categoryName;
+    console.log(values);
+    setOpen(false);
+    setConfirmLoading(false);
   };
 
   const handleCancel = () => {
@@ -62,14 +65,7 @@ export const ButtonWithModal = ({
         okButtonProps={{ autoFocus: true, htmlType: "submit" }}
         destroyOnClose
       >
-        <Form
-          layout="vertical"
-          form={form}
-          name="form_in_modal"
-          initialValues={initialValues}
-          clearOnDestroy
-          onFinish={(values) => onCreate(values)}
-        >
+        <Form layout="vertical" form={form} name="form_in_modal" clearOnDestroy>
           {children}
         </Form>
       </Modal>

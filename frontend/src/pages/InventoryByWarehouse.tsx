@@ -100,7 +100,7 @@ export const InventoryByWarehouse = () => {
             modalButtonText="Create"
             buttonType="primary"
             title="New Inventory Item"
-            onCreate={(values) => console.log(values)}
+            initialValues={{ warehouse }}
           >
             <>
               <Form.Item
@@ -175,16 +175,15 @@ export const InventoryByWarehouse = () => {
                   name="warehouse"
                   rules={[
                     {
-                      required: true,
-                      message: "Please select the Warehouse!",
+                      required: false,
                     },
                   ]}
                 >
                   <Select
                     style={{ width: 207 }}
-                    placeholder="Warehouse"
                     disabled
                     defaultValue={warehouse}
+                    value={warehouse}
                     options={[{ value: warehouse, label: warehouse }]}
                   />
                 </Form.Item>
