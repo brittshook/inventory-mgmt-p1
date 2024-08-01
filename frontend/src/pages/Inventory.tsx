@@ -2,6 +2,7 @@
 import { useLocation } from "react-router-dom";
 import { InventoryByWarehouse } from "./InventoryByWarehouse";
 import { InventoryByCategory } from "./InventoryByCategory";
+import { AllInventory } from "./AllInventory";
 
 export const Inventory = () => {
   const search = useLocation().search;
@@ -10,5 +11,5 @@ export const Inventory = () => {
     return <InventoryByWarehouse />;
   } else if (/category=\d+/.test(search)) {
     return <InventoryByCategory />;
-  } else return <Inventory />;
+  } else return <AllInventory />;
 };
