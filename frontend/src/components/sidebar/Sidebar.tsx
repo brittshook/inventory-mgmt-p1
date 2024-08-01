@@ -10,7 +10,8 @@ import { Link, useLocation } from "react-router-dom";
 type props = { isCollapsed?: boolean };
 
 export const Sidebar = ({ isCollapsed }: props) => {
-  const location = useLocation();
+  const path = useLocation().pathname;
+  const search = useLocation().search;
 
   return (
     <aside className={isCollapsed ? "collapsed" : "expanded"}>
@@ -33,9 +34,7 @@ export const Sidebar = ({ isCollapsed }: props) => {
               {!isCollapsed && "Products"}
             </Link>
             {!isCollapsed &&
-              (location.pathname == "/products" ||
-                (location.pathname == "/inventory" &&
-                  location.search.includes("?category="))) && (
+              /(products|inventory\?category=)/.test(path + search) && (
                 <ul className="sublist">
                   <li>
                     <Link to="inventory?category=all">
@@ -44,7 +43,7 @@ export const Sidebar = ({ isCollapsed }: props) => {
                         height="33"
                         viewBox="0 0 20 33"
                         fill={
-                          location.search.includes("?category=")
+                          /category=/.test(search)
                             ? "var(--accent-color-blue)"
                             : "none"
                         }
@@ -67,9 +66,7 @@ export const Sidebar = ({ isCollapsed }: props) => {
               {!isCollapsed && "Warehouses"}
             </Link>
             {!isCollapsed &&
-              (location.pathname == "/warehouses" ||
-                (location.pathname == "/inventory" &&
-                  location.search.includes("?warehouse="))) && (
+              /(warehouses|inventory\?warehouse=)/.test(path + search) && (
                 <ul className="sublist">
                   <li>
                     <Link to="inventory?warehouse=all">
@@ -78,7 +75,7 @@ export const Sidebar = ({ isCollapsed }: props) => {
                         height="33"
                         viewBox="0 0 20 33"
                         fill={
-                          location.search.includes("?warehouse=")
+                          /warehouse=/.test(search)
                             ? "var(--accent-color-blue)"
                             : "none"
                         }
