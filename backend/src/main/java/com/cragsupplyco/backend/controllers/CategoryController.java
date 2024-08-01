@@ -45,6 +45,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
+    @JsonView(Views.Internal.class)
     public ResponseEntity<Category> findCategoryById(@PathVariable int id) {
         Optional<Category> category = service.findById(id);
         if (category.isPresent())
