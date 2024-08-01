@@ -19,16 +19,6 @@ export const getCategories = async () => {
   }
 };
 
-export const getCategoryById = async (id: number) => {
-  try {
-    const response = await axiosInstance.get(`${API_ENDPOINT}/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching data", error);
-    throw error;
-  }
-};
-
 export const postCategories = async (data: CategoryDataType) => {
   try {
     const response = await axiosInstance.post(API_ENDPOINT, data);
