@@ -1,27 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { Dashboard } from "./pages/Dashboard";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Warehouses } from "./pages/Warehouses";
 import { Inventory } from "./pages/Inventory";
 import { Products } from "./pages/Products";
 import { Sidebar } from "./components/sidebar/Sidebar";
+import { Breadcrumb } from "./components/breadcrumb/Breadcrumb";
+import warehouseIcon from "./assets/icons/warehouse.svg";
 
 function App() {
   // TODO: set to false once implementing users
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 900);
+
+  const handleResize = () => {
+    setIsCollapsed(window.innerWidth < 900);
+  };
+
+  useEffect(() => {
+    setIsCollapsed(window.innerWidth < 900);
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const testItems = [
+    {
+      href: "/warehouses",
+      title: (
+        <div className="breadcrumb-item">
+          <img src={warehouseIcon} alt="warehouse" />
+          <span>{"Warehouses"}</span>
+        </div>
+      ),
+    },
+    {
+      href: `/products?warehouse=${"all"}`,
+      title: "Products",
+    },
+  ];
 
   return (
     <>
-      {isLoggedIn && <Sidebar />}
-      <Routes>
-        {isLoggedIn && <Route path="/" element={<Dashboard />} />}
-        {!isLoggedIn && <Route path="/" element={<Login />} />}
-        <Route path="/warehouses" element={<Warehouses />} />
-        <Route path="/inventory" element={<Inventory />} />
-        <Route path="/products" element={<Products />} />
-      </Routes>
+      {isLoggedIn && (
+        <>
+          <Sidebar isCollapsed={isCollapsed} />
+          <main>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/warehouses" element={<Warehouses />} />
+              <Route path="/inventory" element={<Inventory />} />
+              <Route path="/products" element={<Products />} />
+            </Routes>
+          </main>
+        </>
+      )}
+      {!isLoggedIn && <Route path="/" element={<Login />} />}
     </>
   );
 }
