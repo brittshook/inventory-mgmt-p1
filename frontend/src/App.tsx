@@ -7,8 +7,6 @@ import { Warehouses } from "./pages/Warehouses";
 import { Inventory } from "./pages/Inventory";
 import { Products } from "./pages/Products";
 import { Sidebar } from "./components/sidebar/Sidebar";
-import { Breadcrumb } from "./components/breadcrumb/Breadcrumb";
-import warehouseIcon from "./assets/icons/warehouse.svg";
 
 function App() {
   // TODO: set to false once implementing users
@@ -28,22 +26,6 @@ function App() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  const testItems = [
-    {
-      href: "/warehouses",
-      title: (
-        <div className="breadcrumb-item">
-          <img src={warehouseIcon} alt="warehouse" />
-          <span>{"Warehouses"}</span>
-        </div>
-      ),
-    },
-    {
-      href: `/products?warehouse=${"all"}`,
-      title: "Products",
-    },
-  ];
 
   return (
     <>
