@@ -38,3 +38,13 @@ export const postCategories = async (data: CategoryDataType) => {
     throw error;
   }
 };
+
+export const deleteCategoryById = async (id: number) => {
+  try {
+    const response = await axiosInstance.delete(`${API_ENDPOINT}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error posting data", error);
+    throw error;
+  }
+};

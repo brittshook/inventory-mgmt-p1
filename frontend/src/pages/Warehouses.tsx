@@ -1,5 +1,9 @@
 import { Form, Input, Select } from "antd";
-import { WarehouseDataType, getWarehouses } from "../api/warehouse";
+import {
+  WarehouseDataType,
+  deleteWarehouseById,
+  getWarehouses,
+} from "../api/warehouse";
 import { ButtonWithModal } from "../components/ButtonWithModal";
 import { Card } from "../components/card/Card";
 import { useEffect, useState } from "react";
@@ -21,20 +25,29 @@ export const Warehouses = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getWarehouses();
-        setWarehouses(result);
-      } catch (e) {
-        e instanceof Error && setError(e);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const result = await getWarehouses();
+      setWarehouses(result);
+    } catch (e) {
+      e instanceof Error && setError(e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteWarehouseById(id);
+      await fetchData();
+    } catch (e) {
+      e instanceof Error && setError(e);
+    }
+  };
   // TODO: make error message an alert
   if (error) return <div>Error: {error.message}</div>;
 
@@ -135,6 +148,8 @@ export const Warehouses = () => {
             loaded={loading}
             path={`/inventory?warehouse=${warehouse.id}`}
             title={warehouse.name}
+            id={warehouse.id}
+            deleteItem={handleDelete}
           ></Card>
         ))}
       </section>

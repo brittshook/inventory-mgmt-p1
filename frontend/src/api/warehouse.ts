@@ -43,3 +43,13 @@ export const postWarehouses = async (data: WarehouseDataType) => {
     throw error;
   }
 };
+
+export const deleteWarehouseById = async (id: number) => {
+  try {
+    const response = await axiosInstance.delete(`${API_ENDPOINT}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error posting data", error);
+    throw error;
+  }
+};
