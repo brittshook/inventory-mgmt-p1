@@ -13,8 +13,9 @@
   --text-color-primary-light: #9ea8b6;
   --text-color-secondary-medium: #60646a;
   --text-color-primary-dark: #3c3c3c;
-  --border-color-primary: #eff0f3;
-  --accent-color-blue: #08b3c9;
+  --border-color-light: #eff0f3;
+  --accent-color-blue: #1677ff;
+  --border-color: #e7e7e7;
 }
 
 * {
@@ -43,7 +44,8 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 30px;
+  font-weight: 600;
   line-height: 1.1;
 }
 
