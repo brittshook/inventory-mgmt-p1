@@ -14,7 +14,7 @@ export type WarehouseDataType = {
 
 const API_ENDPOINT = "/warehouse";
 
-export const getAllWarehouses = async () => {
+export const getWarehouses = async () => {
   try {
     const response = await axiosInstance.get(API_ENDPOINT);
     return response.data;
