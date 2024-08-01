@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/Button";
 import { DataTable, DataType } from "../components/DataTable";
 import { useLocation } from "react-router-dom";
-import { ProductDataType, getProductsWithInventoryByCategoryId } from "../api/product";
+import { getWarehouseById } from "../api/warehouse";
+import { getProductById, ProductDataType } from "../api/product";
+import { InventoryDataType } from "../api/inventory";
 
-export const InventoryByCategory = () => {
+export const InventoryByWarehouse = () => {
   const search = useLocation().search;
   const id = search.match(/\d+/)![0];
 
@@ -16,21 +18,27 @@ export const InventoryByCategory = () => {
     const fetchData = async () => {
       if (id) {
         try {
-          const result = await getProductsWithInventoryByCategoryId(Number(id));
+          const result = await getWarehouseById(Number(id));
 
-          if (result) {
-            const inventory = result.flatMap((product: ProductDataType) => {
-              return product.inventory.map((item) => ({
-                key: product.id,
-                brand: product.brand,
-                name: product.name,
-                description: product.description,
-                price: product.price,
-                warehouseName: item.warehouse,
-                size: item.size ?? "N/A",
-                quantity: item.quantity,
-              }));
-            });
+          if (result && result.inventory) {
+            const inventory = await Promise.all(
+              result.inventory.map(async (item: InventoryDataType) => {
+                const productId = item.product;
+                const product: ProductDataType = await getProductById(
+                  productId
+                );
+                return {
+                  key: item.id,
+                  size: item.size ?? "N/A",
+                  quantity: item.quantity,
+                  brand: product.brand,
+                  name: product.name,
+                  description: product.description,
+                  price: product.price,
+                  categoryName: product.category,
+                };
+              })
+            );
 
             setInventory(inventory);
           }
@@ -58,8 +66,8 @@ export const InventoryByCategory = () => {
       </div>
       <DataTable
         loading={loading}
-        showWarehouses
-        showCategories={false}
+        showCategories
+        showWarehouses={false}
         data={inventory}
       />
     </section>
