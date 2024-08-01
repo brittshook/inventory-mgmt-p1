@@ -2,6 +2,9 @@ package com.cragsupplyco.backend.models;
 
 import java.util.List;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -56,6 +59,7 @@ public class Product {
     private Category category;
 
     @OneToMany(mappedBy = "product")
+    @Cascade(CascadeType.ALL)
     @JsonView(Views.Internal.class)
     private List<Inventory> inventory;
 
