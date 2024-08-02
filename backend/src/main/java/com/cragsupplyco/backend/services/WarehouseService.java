@@ -23,6 +23,10 @@ public class WarehouseService {
         return repo.findById(id);
     }
 
+    public Optional<Warehouse> findByName(String name) {
+        return repo.findByName(name);
+    }
+
     public Warehouse save(Warehouse warehouse) {
         return repo.save(warehouse);
     }

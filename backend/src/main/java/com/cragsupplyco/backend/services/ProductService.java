@@ -27,6 +27,10 @@ public class ProductService {
         return repo.findById(id);
     }
 
+    public Optional<Product> findByBrandAndName(String brand, String name) {
+        return repo.findByBrandAndName(brand, name);
+    }
+
     public Product save(Product product) {
         return repo.save(product);
     }
