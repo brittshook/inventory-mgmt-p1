@@ -225,8 +225,7 @@ export const InventoryByCategory = () => {
     </>
   );
 
-  // TODO: make error message an alert
-  if (error) return <>{console.log(error.message)}</>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <>

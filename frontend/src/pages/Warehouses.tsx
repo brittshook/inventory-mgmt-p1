@@ -52,7 +52,7 @@ export const Warehouses = () => {
       e instanceof Error && setError(e);
     }
   };
-  // TODO: make error message an alert
+
   if (error) return <div>Error: {error.message}</div>;
 
   return (

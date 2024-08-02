@@ -16,7 +16,6 @@ main {
   overflow: scroll;
 }
 
-/* TODO: MAYBE ADJUST*/
 main > section {
   padding: 24px 14px;
   display: flex;

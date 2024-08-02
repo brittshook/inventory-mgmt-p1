@@ -13,7 +13,7 @@ import { Form, Input } from "antd";
 
 export const Products = () => {
   const [form] = Form.useForm();
-  
+
   const [categories, setCategories] = useState<CategoryDataType[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
@@ -51,17 +51,7 @@ export const Products = () => {
     }
   };
 
-  // TODO: make error message an alert
-  if (error)
-    return (
-      <>
-        {console.log(error.message)}
-        <img
-          src={gif404}
-          alt="Animated image captioned 'file that under oops'"
-        />
-      </>
-    );
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <section id="products">

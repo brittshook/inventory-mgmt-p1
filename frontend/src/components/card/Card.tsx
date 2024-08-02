@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import { Card as CardElement, Dropdown } from "antd";
 import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
 import "./Card.css";
