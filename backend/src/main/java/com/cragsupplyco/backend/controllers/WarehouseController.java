@@ -46,6 +46,16 @@ public class WarehouseController {
         return service.save(warehouse);
     }
 
+    @GetMapping("/byProps")
+    @JsonView(Views.Public.class)
+    public ResponseEntity<Warehouse> findWarehouseByName(@RequestParam String name) {
+        Optional<Warehouse> warehouse = service.findByName(name);
+        if (warehouse.isPresent())
+            return ResponseEntity.ok(warehouse.get());
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @GetMapping("/{id}")
     @JsonView(Views.Internal.class)
     public ResponseEntity<Warehouse> findWarehouseById(@PathVariable int id) {
