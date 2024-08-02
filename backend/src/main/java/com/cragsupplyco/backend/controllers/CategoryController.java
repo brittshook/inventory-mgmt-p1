@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +43,16 @@ public class CategoryController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public Category createCategory(@Valid @RequestBody Category category) {
         return service.save(category);
+    }
+
+    @GetMapping("/byProps")
+    @JsonView(Views.Public.class)
+    public ResponseEntity<Category> findCategoryByName(@RequestParam String name) {
+        Optional<Category> category = service.findByName(name);
+        if (category.isPresent())
+            return ResponseEntity.ok(category.get());
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/{id}")
