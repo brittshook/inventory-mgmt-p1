@@ -1,4 +1,5 @@
 import axiosInstance from "./api";
+import { CategoryDataType } from "./category";
 import { InventoryDataType } from "./inventory";
 
 export type ProductDataType = {
@@ -79,6 +80,25 @@ export const postProduct = async (data: {
 }) => {
   try {
     const response = await axiosInstance.post(API_ENDPOINT, data);
+    return response.data;
+  } catch (e) {
+    console.error("Error posting data", e);
+    throw e;
+  }
+};
+
+export const putProduct = async (
+  id: number,
+  data: {
+    brand: string;
+    name: string;
+    description: string;
+    price: number;
+    category: { id: number; name: string };
+  }
+) => {
+  try {
+    const response = await axiosInstance.put(`${API_ENDPOINT}/${id}`, data);
     return response.data;
   } catch (e) {
     console.error("Error posting data", e);

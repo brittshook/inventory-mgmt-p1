@@ -86,6 +86,15 @@ export const InventoryByCategory = () => {
     }
   };
 
+  const handlePut = async (data: InventoryFormValues) => {
+    try {
+      await putInventory(data);
+      await fetchData();
+    } catch (e) {
+      e instanceof Error && setError(e);
+    }
+  };
+
   const formItems = (
     <>
       <Form.Item
@@ -139,6 +148,7 @@ export const InventoryByCategory = () => {
             style={{ width: 250 }}
             placeholder="Product Type"
             disabled
+            defaultValue={category}
             options={[{ value: category, label: category }]}
           />
         </Form.Item>
@@ -263,7 +273,7 @@ export const InventoryByCategory = () => {
           showWarehouses
           showCategories={false}
           initialData={inventory}
-          updateHandler={(data) => putInventory(data.key, data)}
+          updateHandler={handlePut}
           editModalFormItems={formItems}
         />
       </section>

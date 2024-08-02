@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Button, Input, Popconfirm, Space, Table, Tooltip } from "antd";
+import { ReactElement, useEffect, useRef, useState } from "react";
+import { Button, Form, Input, Popconfirm, Space, Table, Tooltip } from "antd";
 import type {
   InputRef,
   TableColumnsType,
@@ -9,16 +9,17 @@ import type {
 import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
-import EditableCell from "./EditableCell";
 import "./DataTable.css";
-import { useForm } from "antd/es/form/Form";
-import { deleteInventoryById } from "../api/inventory";
+import { deleteInventoryById, InventoryFormValues } from "../api/inventory";
+import { ButtonWithModal } from "./ButtonWithModal";
 
 type props = {
   initialData?: DataType[];
   loading: boolean;
   showWarehouses: boolean;
   showCategories: boolean;
+  updateHandler: (data: any) => Promise<void>;
+  editModalFormItems: ReactElement;
 };
 
 export type DataType = {
@@ -40,54 +41,22 @@ export const DataTable = ({
   loading,
   showCategories,
   showWarehouses,
+  updateHandler,
+  editModalFormItems,
 }: props) => {
   const [data, setData] = useState<DataType[]>([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
-  const [editingKey, setEditingKey] = useState("");
-  const [form] = useForm();
   const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const [form] = Form.useForm();
 
   useEffect(() => {
     if (initialData) {
       setData(initialData);
     }
   }, [initialData]);
-
-  // const isEditing = (record: DataType) => record.key === Number(editingKey);
-
-  // const edit = (record: Partial<DataType> & { key: React.Key }) => {
-  //   form.setFieldsValue({ ...record });
-  //   setEditingKey(`${record.key}`);
-  // };
-
-  // const cancel = () => {
-  //   setEditingKey("");
-  // };
-
-  // const save = async (key: React.Key) => {
-  //   try {
-  //     const row = (await form.validateFields()) as DataType;
-  //     const newData = [...data];
-  //     const index = newData.findIndex((item) => key === item.key);
-
-  //     if (index > -1) {
-  //       const item = newData[index];
-  //       newData.splice(index, 1, { ...item, ...row });
-  //       await updateData(newData[index]);
-  //       setData(newData);
-  //       setEditingKey("");
-  //     } else {
-  //       newData.push(row);
-  //       await updateData(row);
-  //       setData(newData);
-  //       setEditingKey("");
-  //     }
-  //   } catch (errInfo) {
-  //     console.log("Validate Failed:", errInfo);
-  //   }
-  // };
 
   const handleDelete = async (key: number) => {
     setConfirmLoading(true);
@@ -332,10 +301,29 @@ export const DataTable = ({
       width: 140,
       render: (_, record) => (
         <Space>
-          <a>Edit</a>
+          <ButtonWithModal
+            title="Update Inventory Item"
+            buttonType="link"
+            buttonSize="small"
+            buttonText="Edit"
+            modalButtonText="Save"
+            confirmHandler={updateHandler}
+            form={form}
+            recordId={record.key}
+          >
+            <Form
+              layout="vertical"
+              form={form}
+              name="form_in_modal"
+              initialValues={record}
+            >
+              {editModalFormItems}
+            </Form>
+          </ButtonWithModal>
           <Popconfirm
             title="Confirm delete?"
             onConfirm={() => {
+              console.log(record);
               handleDelete(record.key);
             }}
             okButtonProps={{
@@ -345,7 +333,9 @@ export const DataTable = ({
             }}
             okText="Delete"
           >
-            <a>Delete</a>
+            <Button type="link" size="small">
+              Delete
+            </Button>
           </Popconfirm>
         </Space>
       ),
@@ -373,68 +363,3 @@ export const DataTable = ({
     />
   );
 };
-
-// import type { GetProp } from "antd";
-// import type { SorterResult } from "antd/es/table/interface";
-
-// type ColumnsType<T> = TableProps<T>["columns"];
-// type TablePaginationConfig = Exclude<
-//   GetProp<TableProps, "pagination">,
-//   boolean
-// >;
-
-// interface TableParams {
-//   pagination?: TablePaginationConfig;
-//   sortField?: SorterResult<any>["field"];
-//   sortOrder?: SorterResult<any>["order"];
-//   filters?: Parameters<GetProp<TableProps, "onChange">>[1];
-// }
-
-// const getInventoryParams = (params: TableParams) => ({
-//   results: params.pagination?.pageSize,
-//   page: params.pagination?.current,
-//   ...params,
-// });
-
-// export const DataTable = ({ dataSource }: props) => {
-//   const [data, setData] = useState<DataType[]>();
-//   const [loading, setLoading] = useState(false);
-//   const [tableParams, setTableParams] = useState<TableParams>({
-//     pagination: {
-//       current: 1,
-//       pageSize: 20,
-//     },
-//   });
-//   const [searchText, setSearchText] = useState("");
-//   const [searchedColumn, setSearchedColumn] = useState("");
-//   const searchInput = useRef<InputRef>(null);
-
-//   const handleTableChange: TableProps["onChange"] = (
-//     pagination,
-//     filters,
-//     sorter
-//   ) => {
-//     setTableParams({
-//       pagination,
-//       filters,
-//       sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
-//       sortField: Array.isArray(sorter) ? undefined : sorter.field,
-//     });
-
-//     // `dataSource` is useless since `pageSize` changed
-//     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-//       setData([]);
-//     }
-//   };
-
-//   return (
-//     <Table
-//       columns={columns}
-//       rowKey={(record: DataType) => `${record.id}`}
-//       dataSource={data}
-//       pagination={tableParams.pagination}
-//       loading={loading}
-//       onChange={handleTableChange}
-//     />
-//   );
-// };

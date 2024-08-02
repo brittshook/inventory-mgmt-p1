@@ -78,6 +78,15 @@ export const AllInventory = () => {
     }
   };
 
+  const handlePut = async (data: InventoryFormValues) => {
+    try {
+      await putInventory(data);
+      await fetchData();
+    } catch (e) {
+      e instanceof Error && setError(e);
+    }
+  };
+
   const formItems = (
     <>
       <Form.Item
@@ -267,7 +276,7 @@ export const AllInventory = () => {
           showWarehouses
           showCategories
           initialData={inventory}
-          updateHandler={(data) => putInventory(data.key, data)}
+          updateHandler={handlePut}
           editModalFormItems={formItems}
         />
       </section>

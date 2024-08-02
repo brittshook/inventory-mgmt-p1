@@ -84,9 +84,9 @@ export const InventoryByWarehouse = () => {
     }
   };
 
-  const handlePut = async (id: number, data: InventoryFormValues) => {
+  const handlePut = async (data: InventoryFormValues) => {
     try {
-      await putInventory(id, data);
+      await putInventory(data);
       await fetchData();
     } catch (e) {
       e instanceof Error && setError(e);
@@ -270,7 +270,7 @@ export const InventoryByWarehouse = () => {
           showCategories
           showWarehouses={false}
           initialData={inventory}
-          updateHandler={(data) => putInventory(data.key, data)}
+          updateHandler={handlePut}
           editModalFormItems={formItems}
         />
       </section>

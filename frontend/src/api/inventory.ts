@@ -1,6 +1,11 @@
 import axiosInstance from "./api";
 import { getCategoryByName } from "./category";
-import { getProductByBrandAndName, postProduct } from "./product";
+import {
+  getProductByBrandAndName,
+  getProductById,
+  postProduct,
+  putProduct,
+} from "./product";
 import { getWarehouseByName } from "./warehouse";
 
 export type InventoryDataType = {
@@ -12,6 +17,7 @@ export type InventoryDataType = {
 };
 
 export type InventoryFormValues = {
+  id?: number;
   brand: string;
   name: string;
   description: string;
@@ -19,7 +25,7 @@ export type InventoryFormValues = {
   size: string | "N/A";
   quantity: number;
   categoryName: string;
-  warehouse: string;
+  warehouseName: string;
 };
 
 const API_ENDPOINT = "/inventory";
@@ -34,13 +40,31 @@ export const getInventory = async () => {
   }
 };
 
-export const postInventory = async (data: InventoryFormValues) => {
+export const putInventory = async (data: InventoryFormValues) => {
   try {
     let product;
+    console.log(data.warehouseName);
 
     try {
       product = await getProductByBrandAndName(data.brand, data.name);
-      console.log(product)
+
+      const isProductUpdated =
+        product.description !== data.description ||
+        product.price !== data.price ||
+        product.category.name !== data.categoryName;
+
+      if (isProductUpdated) {
+        console.log(product.id);
+        const category = await getCategoryByName(data.categoryName);
+        await putProduct(product.id, {
+          brand: data.brand,
+          name: data.name,
+          description: data.description,
+          price: data.price,
+          category: category,
+        });
+        product = await getProductById(product.id);
+      }
     } catch (e) {
       const category = await getCategoryByName(data.categoryName);
       product = await postProduct({
@@ -52,7 +76,41 @@ export const postInventory = async (data: InventoryFormValues) => {
       });
     }
 
-    const warehouse = await getWarehouseByName(data.warehouse);
+    const warehouse = await getWarehouseByName(data.warehouseName);
+
+    console.log("Is this running");
+    const response = await axiosInstance.put(`${API_ENDPOINT}/${data.id}`, {
+      product: product,
+      warehouse: warehouse,
+      size: data.size,
+      quantity: data.quantity,
+    });
+    return response.data;
+  } catch (e) {
+    console.error("Error posting data", e);
+    throw e;
+  }
+};
+
+export const postInventory = async (data: InventoryFormValues) => {
+  try {
+    let product;
+
+    try {
+      product = await getProductByBrandAndName(data.brand, data.name);
+      console.log(product);
+    } catch (e) {
+      const category = await getCategoryByName(data.categoryName);
+      product = await postProduct({
+        brand: data.brand,
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        category: category,
+      });
+    }
+
+    const warehouse = await getWarehouseByName(data.warehouseName);
 
     const response = await axiosInstance.post(API_ENDPOINT, {
       product: product,

@@ -12,6 +12,9 @@ type props = {
   disabled?: boolean;
   confirmHandler: (data: any) => Promise<void>;
   form: FormInstance<any>;
+  recordId?: number;
+  setWarehouse?: string | null;
+  setCategory?: string | null;
 };
 
 export const ButtonWithModal = ({
@@ -25,6 +28,9 @@ export const ButtonWithModal = ({
   disabled,
   confirmHandler,
   form,
+  recordId,
+  setCategory,
+  setWarehouse,
 }: props) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -37,6 +43,9 @@ export const ButtonWithModal = ({
     try {
       setConfirmLoading(true);
       const values = await form.validateFields();
+      if (setCategory) values.categoryName = setCategory;
+      if (setWarehouse) values.warehouseName = setWarehouse;
+      if (recordId) values.id = recordId;
       console.log(values);
       await confirmHandler(values);
       setOpen(false);
