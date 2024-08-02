@@ -237,6 +237,8 @@ export const InventoryByWarehouse = () => {
     </>
   );
 
+  if (error) return <div>Error: {error.message}</div>;
+
   return (
     <>
       <Breadcrumb
