@@ -27,9 +27,9 @@ export const getWarehouses = async () => {
   try {
     const response = await axiosInstance.get(API_ENDPOINT);
     return response.data;
-  } catch (error) {
-    console.error("Error fetching data", error);
-    throw error;
+  } catch (e) {
+    console.error("Error fetching data", e);
+    throw e;
   }
 };
 
@@ -37,9 +37,23 @@ export const getWarehouseById = async (id: number) => {
   try {
     const response = await axiosInstance.get(`${API_ENDPOINT}/${id}`);
     return response.data;
-  } catch (error) {
-    console.error("Error fetching data", error);
-    throw error;
+  } catch (e) {
+    console.error("Error fetching data", e);
+    throw e;
+  }
+};
+
+export const getWarehouseByName = async (name: string) => {
+  try {
+    const response = await axiosInstance.get(`${API_ENDPOINT}/byProps`, {
+      params: {
+        name: name,
+      },
+    });
+    return response.data;
+  } catch (e) {
+    console.error("Error posting data", e);
+    throw e;
   }
 };
 
@@ -47,9 +61,9 @@ export const postWarehouse = async (data: WarehouseFormValues) => {
   try {
     const response = await axiosInstance.post(API_ENDPOINT, data);
     return response.data;
-  } catch (error) {
-    console.error("Error posting data", error);
-    throw error;
+  } catch (e) {
+    console.error("Error posting data", e);
+    throw e;
   }
 };
 
@@ -57,8 +71,8 @@ export const deleteWarehouseById = async (id: number) => {
   try {
     const response = await axiosInstance.delete(`${API_ENDPOINT}/${id}`);
     return response.data;
-  } catch (error) {
-    console.error("Error posting data", error);
-    throw error;
+  } catch (e) {
+    console.error("Error posting data", e);
+    throw e;
   }
 };

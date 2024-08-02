@@ -5,12 +5,12 @@ type props = {
   children: ReactElement;
   title: string;
   modalButtonText: string;
-  // onCreate: (values: any) => void;
   buttonType?: "primary";
   buttonText: string;
   buttonIcon?: string;
   disabled?: boolean;
   initialValues?: { warehouse?: string | null; categoryName?: string | null };
+  addItem: (data: any) => Promise<void>;
 };
 
 export const ButtonWithModal = ({
@@ -23,6 +23,7 @@ export const ButtonWithModal = ({
   buttonIcon,
   disabled,
   initialValues,
+  addItem,
 }: props) => {
   const [form] = Form.useForm();
 
@@ -34,14 +35,19 @@ export const ButtonWithModal = ({
   };
 
   const handleOk = async () => {
-    setConfirmLoading(true);
-    const values = await form.validateFields();
-    if (initialValues?.warehouse) values.warehouse = initialValues?.warehouse;
-    if (initialValues?.categoryName)
-      values.categoryName = initialValues?.categoryName;
-    console.log(values);
-    setOpen(false);
-    setConfirmLoading(false);
+    try {
+      setConfirmLoading(true);
+      const values = await form.validateFields();
+      if (initialValues?.warehouse) values.warehouse = initialValues?.warehouse;
+      if (initialValues?.categoryName)
+        values.categoryName = initialValues?.categoryName;
+      await addItem(values);
+      console.log(values);
+      setOpen(false);
+      setConfirmLoading(false);
+    } catch (e) {
+      setConfirmLoading(false);
+    }
   };
 
   const handleCancel = () => {

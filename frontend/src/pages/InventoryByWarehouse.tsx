@@ -3,7 +3,11 @@ import { DataTable, DataType } from "../components/DataTable";
 import { useLocation } from "react-router-dom";
 import { getWarehouseById } from "../api/warehouse";
 import { getProductById, ProductDataType } from "../api/product";
-import { InventoryDataType } from "../api/inventory";
+import {
+  InventoryDataType,
+  InventoryFormValues,
+  postInventory,
+} from "../api/inventory";
 import { Breadcrumb } from "../components/breadcrumb/Breadcrumb";
 import warehouseIcon from "../assets/icons/warehouse.svg";
 import { ButtonWithModal } from "../components/ButtonWithModal";
@@ -23,52 +27,59 @@ export const InventoryByWarehouse = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (id) {
-        try {
-          const result = await getWarehouseById(Number(id));
+  const fetchData = async () => {
+    if (id) {
+      try {
+        const result = await getWarehouseById(Number(id));
 
-          if (result) {
-            setWarehouse(result.name);
+        if (result) {
+          setWarehouse(result.name);
 
-            if (result.inventory) {
-              const inventory = await Promise.all(
-                result.inventory.map(async (item: InventoryDataType) => {
-                  const productId = item.product;
-                  const product: ProductDataType = await getProductById(
-                    productId
-                  );
-                  return {
-                    key: item.id,
-                    size: item.size ?? "N/A",
-                    quantity: item.quantity,
-                    brand: product.brand,
-                    name: product.name,
-                    description: product.description,
-                    price: product.price,
-                    categoryName: product.category,
-                  };
-                })
-              );
-              setInventory(inventory);
-            }
+          if (result.inventory) {
+            const inventory = await Promise.all(
+              result.inventory.map(async (item: InventoryDataType) => {
+                const productId = item.product;
+                const product: ProductDataType = await getProductById(
+                  productId
+                );
+                return {
+                  key: item.id,
+                  size: item.size ?? "N/A",
+                  quantity: item.quantity,
+                  brand: product.brand,
+                  name: product.name,
+                  description: product.description,
+                  price: product.price,
+                  categoryName: product.category,
+                };
+              })
+            );
+            setInventory(inventory);
           }
-
-          const categoriesResult = await getCategories();
-          if (categoriesResult) setCategories(categoriesResult);
-        } catch (e) {
-          e instanceof Error && setError(e);
-        } finally {
-          setLoading(false);
         }
+
+        const categoriesResult = await getCategories();
+        if (categoriesResult) setCategories(categoriesResult);
+      } catch (e) {
+        e instanceof Error && setError(e);
+      } finally {
+        setLoading(false);
       }
-    };
+    }
+  };
 
+  useEffect(() => {
     fetchData();
-  }, [id]);
+  }, []);
 
-  console.log(inventory);
+  const handlePost = async (data: InventoryFormValues) => {
+    try {
+      await postInventory(data);
+      await fetchData();
+    } catch (e) {
+      e instanceof Error && setError(e);
+    }
+  };
 
   // TODO: make error message an alert
   if (error) return <>{console.log(error.message)}</>;
@@ -101,6 +112,7 @@ export const InventoryByWarehouse = () => {
             buttonType="primary"
             title="New Inventory Item"
             initialValues={{ warehouse }}
+            addItem={handlePost}
           >
             <>
               <Form.Item

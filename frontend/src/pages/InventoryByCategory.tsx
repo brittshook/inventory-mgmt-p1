@@ -11,6 +11,7 @@ import { getCategoryById } from "../api/category";
 import { ButtonWithModal } from "../components/ButtonWithModal";
 import { Form, Input, Select, Space } from "antd";
 import { getWarehouses, WarehouseDataType } from "../api/warehouse";
+import { InventoryFormValues, postInventory } from "../api/inventory";
 
 export const InventoryByCategory = () => {
   const path = useLocation().pathname;
@@ -27,48 +28,57 @@ export const InventoryByCategory = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (id) {
-        try {
-          const categoryResult = await getCategoryById(Number(id));
-          if (categoryResult) setCategory(categoryResult.name);
+  const fetchData = async () => {
+    if (id) {
+      try {
+        const categoryResult = await getCategoryById(Number(id));
+        if (categoryResult) setCategory(categoryResult.name);
 
-          const productResult = await getProductsWithInventoryByCategoryId(
-            Number(id)
+        const productResult = await getProductsWithInventoryByCategoryId(
+          Number(id)
+        );
+
+        if (productResult) {
+          const inventory = productResult.flatMap(
+            (product: ProductDataType) => {
+              return product.inventory.map((item) => ({
+                key: item.id,
+                brand: product.brand,
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                warehouseName: item.warehouse,
+                size: item.size ?? "N/A",
+                quantity: item.quantity,
+              }));
+            }
           );
 
-          if (productResult) {
-            const inventory = productResult.flatMap(
-              (product: ProductDataType) => {
-                return product.inventory.map((item) => ({
-                  key: item.id,
-                  brand: product.brand,
-                  name: product.name,
-                  description: product.description,
-                  price: product.price,
-                  warehouseName: item.warehouse,
-                  size: item.size ?? "N/A",
-                  quantity: item.quantity,
-                }));
-              }
-            );
-
-            setInventory(inventory);
-          }
-
-          const warehousesResult = await getWarehouses();
-          if (warehousesResult) setWarehouses(warehousesResult);
-        } catch (e) {
-          e instanceof Error && setError(e);
-        } finally {
-          setLoading(false);
+          setInventory(inventory);
         }
-      }
-    };
 
+        const warehousesResult = await getWarehouses();
+        if (warehousesResult) setWarehouses(warehousesResult);
+      } catch (e) {
+        e instanceof Error && setError(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
     fetchData();
-  }, [id]);
+  }, []);
+
+  const handlePost = async (data: InventoryFormValues) => {
+    try {
+      await postInventory(data);
+      await fetchData();
+    } catch (e) {
+      e instanceof Error && setError(e);
+    }
+  };
 
   // TODO: make error message an alert
   if (error) return <>{console.log(error.message)}</>;
@@ -101,6 +111,7 @@ export const InventoryByCategory = () => {
             buttonType="primary"
             title="New Inventory Item"
             initialValues={{ categoryName: category }}
+            addItem={handlePost}
           >
             <>
               <Form.Item
