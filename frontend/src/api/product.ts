@@ -1,5 +1,4 @@
 import axiosInstance from "./api";
-import { CategoryDataType } from "./category";
 import { InventoryDataType } from "./inventory";
 
 export type ProductDataType = {

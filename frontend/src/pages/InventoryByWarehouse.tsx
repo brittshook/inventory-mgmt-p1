@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTable, DataType } from "../components/DataTable";
 import { useLocation } from "react-router-dom";
 import { getWarehouseById } from "../api/warehouse";

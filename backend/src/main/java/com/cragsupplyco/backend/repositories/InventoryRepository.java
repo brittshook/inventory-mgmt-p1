@@ -7,5 +7,4 @@ import com.cragsupplyco.backend.models.Inventory;
 
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
-
 }

@@ -14,6 +14,8 @@ type props = {
   id: number;
 };
 
+// TODO: use modal to confirm before delete
+
 export const Card = ({
   title,
   subtitle,

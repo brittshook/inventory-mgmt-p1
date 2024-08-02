@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import { Dashboard } from "./pages/Dashboard";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { Warehouses } from "./pages/Warehouses";
 import { Inventory } from "./pages/Inventory";
 import { Products } from "./pages/Products";

@@ -10,7 +10,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
 import "./DataTable.css";
-import { deleteInventoryById, InventoryFormValues } from "../api/inventory";
+import { deleteInventoryById } from "../api/inventory";
 import { ButtonWithModal } from "./ButtonWithModal";
 
 type props = {
