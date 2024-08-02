@@ -12,6 +12,15 @@ export type WarehouseDataType = {
   inventory: InventoryDataType[];
 };
 
+export type WarehouseFormValues = {
+  name: string;
+  maxCapacity: number;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zipCode: string;
+};
+
 const API_ENDPOINT = "/warehouse";
 
 export const getWarehouses = async () => {
@@ -34,7 +43,7 @@ export const getWarehouseById = async (id: number) => {
   }
 };
 
-export const postWarehouses = async (data: WarehouseDataType) => {
+export const postWarehouse = async (data: WarehouseFormValues) => {
   try {
     const response = await axiosInstance.post(API_ENDPOINT, data);
     return response.data;

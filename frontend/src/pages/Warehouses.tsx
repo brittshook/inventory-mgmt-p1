@@ -1,22 +1,15 @@
 import { Form, Input, Select } from "antd";
 import {
   WarehouseDataType,
+  WarehouseFormValues,
   deleteWarehouseById,
   getWarehouses,
+  postWarehouse,
 } from "../api/warehouse";
 import { ButtonWithModal } from "../components/ButtonWithModal";
 import { Card } from "../components/card/Card";
 import { useEffect, useState } from "react";
 import { US_STATES_AND_DC } from "../utils/states";
-
-type WarehouseFormValues = {
-  name: string;
-  maxCapacity: number;
-  streetAddress: string;
-  city: string;
-  state: string;
-  zipCode: string;
-};
 
 export const Warehouses = () => {
   const [warehouses, setWarehouses] = useState<WarehouseDataType[] | null>(
@@ -48,6 +41,15 @@ export const Warehouses = () => {
       e instanceof Error && setError(e);
     }
   };
+
+  const handlePost = async (data: WarehouseFormValues) => {
+    try {
+      await postWarehouse(data);
+      await fetchData();
+    } catch (e) {
+      e instanceof Error && setError(e);
+    }
+  };
   // TODO: make error message an alert
   if (error) return <div>Error: {error.message}</div>;
 
@@ -59,10 +61,8 @@ export const Warehouses = () => {
           buttonText="Add Warehouse"
           buttonType="primary"
           title="New Warehouse"
-          onCreate={() => {
-            console.log("submit");
-          }}
           modalButtonText="Create"
+          addItem={handlePost}
         >
           <>
             <Form.Item
@@ -72,7 +72,7 @@ export const Warehouses = () => {
                 { required: true, message: "Please input the warehouse name!" },
               ]}
             >
-              <Input />
+              <Input addonBefore="Warehouse" />
             </Form.Item>
             <Form.Item
               label="Max Capacity"
@@ -139,7 +139,7 @@ export const Warehouses = () => {
               </Form.Item>
             </Input.Group>
           </>
-        </ButtonWithModal>{" "}
+        </ButtonWithModal>
       </div>
       <section className="cards">
         {warehouses?.map((warehouse) => (
@@ -147,7 +147,7 @@ export const Warehouses = () => {
             key={warehouse.id}
             loaded={loading}
             path={`/inventory?warehouse=${warehouse.id}`}
-            title={warehouse.name}
+            title={`Warehouse ${warehouse.name}`}
             id={warehouse.id}
             deleteItem={handleDelete}
           ></Card>
