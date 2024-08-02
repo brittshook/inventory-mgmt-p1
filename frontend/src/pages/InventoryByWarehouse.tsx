@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DataTable, DataType } from "../components/DataTable";
 import { useLocation } from "react-router-dom";
 import { getWarehouseById } from "../api/warehouse";
@@ -24,6 +24,8 @@ export const InventoryByWarehouse = () => {
   const { TextArea } = Input;
 
   const [warehouse, setWarehouse] = useState<string | null>(null);
+  const [totalCapacity, setTotalCapacity] = useState(0);
+  const [maxCapacity, setMaxCapacity] = useState(0);
   const [inventory, setInventory] = useState<DataType[]>();
   const [categories, setCategories] = useState<CategoryDataType[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -36,6 +38,7 @@ export const InventoryByWarehouse = () => {
 
         if (result) {
           setWarehouse(result.name);
+          setMaxCapacity(result.maxCapacity);
 
           if (result.inventory) {
             const inventory = await Promise.all(
@@ -74,6 +77,18 @@ export const InventoryByWarehouse = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const calculateTotalCapacity = (data: DataType[]) => {
+    const total = data.reduce((sum, item) => sum + item.quantity, 0);
+    setTotalCapacity(total);
+    console.log(totalCapacity);
+  };
+
+  useEffect(() => {
+    if (inventory && inventory.length > 0) {
+      calculateTotalCapacity(inventory);
+    }
+  }, [inventory]);
 
   const handlePost = async (data: InventoryFormValues) => {
     try {
@@ -246,7 +261,10 @@ export const InventoryByWarehouse = () => {
       />
       <section id="inventory">
         <div className="section-heading">
-          <h1>Inventory</h1>
+          <h1>
+            Inventory ({totalCapacity}/{maxCapacity})
+          </h1>
+
           <ButtonWithModal
             buttonText="Add Inventory"
             modalButtonText="Create"
@@ -254,6 +272,7 @@ export const InventoryByWarehouse = () => {
             title="New Inventory Item"
             confirmHandler={handlePost}
             form={form}
+            disabled={totalCapacity >= maxCapacity}
           >
             <Form
               layout="vertical"
