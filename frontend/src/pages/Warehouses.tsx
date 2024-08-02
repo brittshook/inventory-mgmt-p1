@@ -153,6 +153,7 @@ export const Warehouses = () => {
             title={`Warehouse ${warehouse.name}`}
             id={warehouse.id}
             deleteItem={handleDelete}
+            subtitle={`${warehouse.city}, ${warehouse.state}`}
           ></Card>
         ))}
       </section>

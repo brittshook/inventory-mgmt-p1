@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { Card as CardElement, Dropdown } from "antd";
 import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
 import "./Card.css";
@@ -13,8 +13,6 @@ type props = {
   deleteItem: (id: number) => Promise<void>;
   id: number;
 };
-
-// TODO: use modal to confirm before delete
 
 export const Card = ({
   title,
@@ -55,12 +53,11 @@ export const Card = ({
     </Dropdown>,
   ];
 
-  
   return (
     <>
       <CardElement loading={loaded} actions={actions}>
         <Link to={path}>
-          <CardElement.Meta title={title} description={subtitle} />
+          <CardElement.Meta title={title} description={<p>{subtitle}</p>} />
         </Link>
       </CardElement>
     </>
