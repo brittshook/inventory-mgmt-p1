@@ -12,6 +12,8 @@ import gif404 from "/oops.gif";
 import { Form, Input } from "antd";
 
 export const Products = () => {
+  const [form] = Form.useForm();
+  
   const [categories, setCategories] = useState<CategoryDataType[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
@@ -70,17 +72,20 @@ export const Products = () => {
           buttonType="primary"
           title="New Product Category"
           modalButtonText="Create"
-          addItem={handlePost}
+          confirmHandler={handlePost}
+          form={form}
         >
-          <Form.Item
-            label="Category Name"
-            name="name"
-            rules={[
-              { required: true, message: "Please input the category name" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
+          <Form layout="vertical" form={form} name="form_in_modal">
+            <Form.Item
+              label="Category Name"
+              name="name"
+              rules={[
+                { required: true, message: "Please input the category name" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          </Form>
         </ButtonWithModal>
       </div>
       <section className="cards">

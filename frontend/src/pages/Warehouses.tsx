@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import { US_STATES_AND_DC } from "../utils/states";
 
 export const Warehouses = () => {
+  const [form] = Form.useForm();
+
   const [warehouses, setWarehouses] = useState<WarehouseDataType[] | null>(
     null
   );
@@ -62,9 +64,10 @@ export const Warehouses = () => {
           buttonType="primary"
           title="New Warehouse"
           modalButtonText="Create"
-          addItem={handlePost}
+          confirmHandler={handlePost}
+          form={form}
         >
-          <>
+          <Form layout="vertical" form={form} name="form_in_modal">
             <Form.Item
               label="Warehouse Name"
               name="name"
@@ -138,7 +141,7 @@ export const Warehouses = () => {
                 <Input style={{ width: 120 }} />
               </Form.Item>
             </Input.Group>
-          </>
+          </Form>
         </ButtonWithModal>
       </div>
       <section className="cards">

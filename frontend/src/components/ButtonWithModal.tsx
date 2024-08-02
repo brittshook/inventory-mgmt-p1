@@ -1,32 +1,31 @@
-import { ReactElement, useEffect, useState } from "react";
-import { Button, Form, Modal } from "antd";
+import { ReactElement, useState } from "react";
+import { Button, Form, FormInstance, Modal } from "antd";
 
 type props = {
   children: ReactElement;
   title: string;
   modalButtonText: string;
-  buttonType?: "primary";
+  buttonType?: "primary" | "link";
+  buttonSize?: "small" | "large";
   buttonText: string;
   buttonIcon?: string;
   disabled?: boolean;
-  initialValues?: { warehouse?: string | null; categoryName?: string | null };
-  addItem: (data: any) => Promise<void>;
+  confirmHandler: (data: any) => Promise<void>;
+  form: FormInstance<any>;
 };
 
 export const ButtonWithModal = ({
   children,
   title,
-  // onCreate,
   modalButtonText,
   buttonType,
+  buttonSize,
   buttonText,
   buttonIcon,
   disabled,
-  initialValues,
-  addItem,
+  confirmHandler,
+  form,
 }: props) => {
-  const [form] = Form.useForm();
-
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
@@ -38,11 +37,8 @@ export const ButtonWithModal = ({
     try {
       setConfirmLoading(true);
       const values = await form.validateFields();
-      if (initialValues?.warehouse) values.warehouse = initialValues?.warehouse;
-      if (initialValues?.categoryName)
-        values.categoryName = initialValues?.categoryName;
-      await addItem(values);
       console.log(values);
+      await confirmHandler(values);
       setOpen(false);
       setConfirmLoading(false);
     } catch (e) {
@@ -57,7 +53,12 @@ export const ButtonWithModal = ({
 
   return (
     <>
-      <Button type={buttonType} onClick={showModal} disabled={disabled}>
+      <Button
+        type={buttonType}
+        onClick={showModal}
+        disabled={disabled}
+        size={buttonSize}
+      >
         {buttonIcon}
         {buttonText}
       </Button>
@@ -71,9 +72,7 @@ export const ButtonWithModal = ({
         okButtonProps={{ autoFocus: true, htmlType: "submit" }}
         destroyOnClose
       >
-        <Form layout="vertical" form={form} name="form_in_modal" clearOnDestroy>
-          {children}
-        </Form>
+        {children}
       </Modal>
     </>
   );
