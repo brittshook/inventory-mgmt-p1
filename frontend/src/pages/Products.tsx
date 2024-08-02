@@ -8,7 +8,6 @@ import {
 } from "../api/category";
 import { Card } from "../components/card/Card";
 import { useEffect, useState } from "react";
-import gif404 from "/oops.gif";
 import { Form, Input } from "antd";
 
 export const Products = () => {
