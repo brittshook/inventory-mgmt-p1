@@ -1,8 +1,10 @@
 import { ButtonWithModal } from "../components/ButtonWithModal";
 import {
   CategoryDataType,
+  CategoryFormValues,
   deleteCategoryById,
   getCategories,
+  postCategory,
 } from "../api/category";
 import { Card } from "../components/card/Card";
 import { useEffect, useState } from "react";
@@ -38,6 +40,15 @@ export const Products = () => {
     }
   };
 
+  const handlePost = async (data: CategoryFormValues) => {
+    try {
+      await postCategory(data);
+      await fetchData();
+    } catch (e) {
+      e instanceof Error && setError(e);
+    }
+  };
+
   // TODO: make error message an alert
   if (error)
     return (
@@ -58,10 +69,8 @@ export const Products = () => {
           buttonText="Add Category"
           buttonType="primary"
           title="New Product Category"
-          onCreate={() => {
-            console.log("submit");
-          }}
           modalButtonText="Create"
+          addItem={handlePost}
         >
           <Form.Item
             label="Category Name"

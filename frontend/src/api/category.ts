@@ -7,6 +7,10 @@ export type CategoryDataType = {
   products: ProductDataType[];
 };
 
+export type CategoryFormValues = {
+  name: string;
+};
+
 const API_ENDPOINT = "/category";
 
 export const getCategories = async () => {
@@ -29,7 +33,7 @@ export const getCategoryById = async (id: number) => {
   }
 };
 
-export const postCategories = async (data: CategoryDataType) => {
+export const postCategory = async (data: CategoryFormValues) => {
   try {
     const response = await axiosInstance.post(API_ENDPOINT, data);
     return response.data;
