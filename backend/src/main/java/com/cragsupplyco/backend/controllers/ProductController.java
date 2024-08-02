@@ -54,6 +54,16 @@ public class ProductController {
         return service.save(product);
     }
 
+    @GetMapping("/byProps")
+    @JsonView(Views.Public.class)
+    public ResponseEntity<Product> findProductByBrandAndName(@RequestParam String brand, @RequestParam String name) {
+        Optional<Product> product = service.findByBrandAndName(brand, name);
+        if (product.isPresent())
+            return ResponseEntity.ok(product.get());
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @GetMapping("/{id}")
     @JsonView(Views.Public.class)
     public ResponseEntity<Product> findProductById(@PathVariable int id) {
