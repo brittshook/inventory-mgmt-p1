@@ -9,6 +9,7 @@ import {
 import { Card } from "../components/card/Card";
 import { useEffect, useState } from "react";
 import { Form, Input } from "antd";
+import { ErrorPage } from "./ErrorPage";
 
 export const Products = () => {
   const [form] = Form.useForm();
@@ -50,7 +51,7 @@ export const Products = () => {
     }
   };
 
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return <ErrorPage messageText={error.message} />;
 
   return (
     <section id="products">

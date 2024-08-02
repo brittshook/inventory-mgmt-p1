@@ -10,6 +10,7 @@ import { ButtonWithModal } from "../components/ButtonWithModal";
 import { Card } from "../components/card/Card";
 import { useEffect, useState } from "react";
 import { US_STATES_AND_DC } from "../utils/states";
+import { ErrorPage } from "./ErrorPage";
 
 export const Warehouses = () => {
   const [form] = Form.useForm();
@@ -53,7 +54,7 @@ export const Warehouses = () => {
     }
   };
 
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return <ErrorPage messageText={error.message} />;
 
   return (
     <section id="warehouses">

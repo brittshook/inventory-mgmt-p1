@@ -3,6 +3,7 @@ import { getInventory } from "../api/inventory";
 import { Card } from "antd";
 import { DataType } from "../components/DataTable";
 import { getWarehouses, WarehouseDataType } from "../api/warehouse";
+import { ErrorPage } from "./ErrorPage";
 
 export const Dashboard = () => {
   const [totalInventory, setTotalInventory] = useState<number>(0);
@@ -37,7 +38,7 @@ export const Dashboard = () => {
   }, []);
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return <ErrorPage messageText={error.message} />;
 
   return (
     <section id="dashboard">

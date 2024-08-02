@@ -14,6 +14,7 @@ import warehouseIcon from "../assets/icons/warehouse.svg";
 import { ButtonWithModal } from "../components/ButtonWithModal";
 import { Form, Input, Select, Space } from "antd";
 import { CategoryDataType, getCategories } from "../api/category";
+import { ErrorPage } from "./ErrorPage";
 
 export const InventoryByWarehouse = () => {
   const path = useLocation().pathname;
@@ -237,7 +238,7 @@ export const InventoryByWarehouse = () => {
     </>
   );
 
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return <ErrorPage messageText={error.message} />;
 
   return (
     <>

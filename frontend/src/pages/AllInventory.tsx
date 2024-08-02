@@ -14,6 +14,7 @@ import {
   postInventory,
   putInventory,
 } from "../api/inventory";
+import { ErrorPage } from "./ErrorPage";
 
 export const AllInventory = () => {
   const path = useLocation().pathname;
@@ -228,7 +229,7 @@ export const AllInventory = () => {
     </>
   );
 
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return <ErrorPage messageText={error.message} />;
 
   return (
     <>
