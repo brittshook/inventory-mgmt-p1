@@ -23,13 +23,13 @@ export const Sidebar = ({ isCollapsed }: props) => {
         {!isCollapsed && <h2>General</h2>}
         <ul>
           <li>
-            <Link to="/">
+            <Link id="dashboard" to="/">
               <img src={dashboardIcon} alt="dashboard" title="dashboard" />
               {!isCollapsed && "Dashboard"}
             </Link>
           </li>
           <li>
-            <Link to="/products">
+            <Link id="products" to="/products">
               <img src={productIcon} alt="products" title="products" />
               {!isCollapsed && "Products"}
             </Link>
@@ -37,7 +37,7 @@ export const Sidebar = ({ isCollapsed }: props) => {
               /(products|inventory\?category=)/.test(path + search) && (
                 <ul className="sublist">
                   <li>
-                    <Link to="inventory?category=all">
+                    <Link id="inventory-products" to="inventory?category=all">
                       <svg
                         width="20"
                         height="33"
@@ -61,7 +61,7 @@ export const Sidebar = ({ isCollapsed }: props) => {
               )}
           </li>
           <li>
-            <Link to="/warehouses">
+            <Link id="warehouses" to="/warehouses">
               <img src={warehouseIcon} />
               {!isCollapsed && "Warehouses"}
             </Link>
@@ -69,7 +69,10 @@ export const Sidebar = ({ isCollapsed }: props) => {
               /(warehouses|inventory\?warehouse=)/.test(path + search) && (
                 <ul className="sublist">
                   <li>
-                    <Link to="inventory?warehouse=all">
+                    <Link
+                      id="inventory-warehouses"
+                      to="inventory?warehouse=all"
+                    >
                       <svg
                         width="20"
                         height="33"
