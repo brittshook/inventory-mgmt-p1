@@ -235,7 +235,7 @@ export const InventoryByCategory = () => {
           {
             href: "/products",
             title: (
-              <div className="breadcrumb-item">
+              <div id="breadcrumb-products" className="breadcrumb-item">
                 <img src={productIcon} alt="product" />
                 <span>{"Products"}</span>
               </div>
@@ -243,7 +243,16 @@ export const InventoryByCategory = () => {
           },
           {
             href: `${path + search}`,
-            title: category ?? "",
+            title: (
+              <div
+                id={`breadcrumb-${category
+                  ?.toLocaleLowerCase()
+                  .replace(" ", "-")}`}
+                className="breadcrumb-item"
+              >
+                {category}
+              </div>
+            ),
           },
         ]}
       />
