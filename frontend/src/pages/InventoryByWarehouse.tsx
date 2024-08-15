@@ -247,7 +247,7 @@ export const InventoryByWarehouse = () => {
           {
             href: "/warehouses",
             title: (
-              <div className="breadcrumb-item">
+              <div id="breadcrumb-warehouses" className="breadcrumb-item">
                 <img src={warehouseIcon} alt="warehouse" />
                 <span>{"Warehouses"}</span>
               </div>
@@ -255,7 +255,16 @@ export const InventoryByWarehouse = () => {
           },
           {
             href: `${path + search}`,
-            title: warehouse ?? "",
+            title: (
+              <div
+                id={`breadcrumb-${warehouse
+                  ?.toLocaleLowerCase()
+                  .replace(" ", "-")}`}
+                className="breadcrumb-item"
+              >
+                {warehouse}
+              </div>
+            ),
           },
         ]}
       />
