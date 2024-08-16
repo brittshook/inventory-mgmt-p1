@@ -2,8 +2,8 @@ spring:
   application:
     name: backend
   datasource:
-    url: jdbc:postgresql://localhost:5432/cragsupplyco
-    username: postgres
+    url: ${DB_URL}
+    username: ${DB_USER}
     password: ${DB_PWD}
   jpa:
     hibernate:
