@@ -40,7 +40,6 @@ export const Warehouses = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      console.log(id);
       await deleteWarehouseById(id);
       await fetchData();
     } catch (e) {
@@ -59,7 +58,6 @@ export const Warehouses = () => {
 
   const handlePut = async (id: number) => {
     try {
-      console.log(id);
       const data = updateForm.getFieldsValue();
       await putWarehouse(id, data);
       await fetchData();

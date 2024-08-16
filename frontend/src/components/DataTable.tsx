@@ -323,7 +323,6 @@ export const DataTable = ({
           <Popconfirm
             title="Confirm delete?"
             onConfirm={() => {
-              console.log(record);
               handleDelete(record.key);
             }}
             okButtonProps={{

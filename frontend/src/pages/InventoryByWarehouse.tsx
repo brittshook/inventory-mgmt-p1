@@ -82,7 +82,6 @@ export const InventoryByWarehouse = () => {
   const calculateTotalCapacity = (data: DataType[]) => {
     const total = data.reduce((sum, item) => sum + item.quantity, 0);
     setTotalCapacity(total);
-    console.log(totalCapacity);
   };
 
   useEffect(() => {

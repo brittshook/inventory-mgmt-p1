@@ -73,8 +73,6 @@ export const Card = ({
   const handleOk = async () => {
     try {
       setConfirmLoading(true);
-      const values = await form!.validateFields();
-      console.log(values);
       await updateItem(id);
       setOpen(false);
       setConfirmLoading(false);

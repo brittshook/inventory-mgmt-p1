@@ -46,7 +46,6 @@ export const ButtonWithModal = ({
       if (setCategory) values.categoryName = setCategory;
       if (setWarehouse) values.warehouseName = setWarehouse;
       if (recordId) values.id = recordId;
-      console.log(values);
       await confirmHandler(values);
       setOpen(false);
       setConfirmLoading(false);

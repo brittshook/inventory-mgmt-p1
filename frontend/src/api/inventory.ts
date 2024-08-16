@@ -53,7 +53,6 @@ export const putInventory = async (data: InventoryFormValues) => {
         product.category.name !== data.categoryName;
 
       if (isProductUpdated) {
-        console.log(product.id);
         const category = await getCategoryByName(data.categoryName);
         await putProduct(product.id, {
           brand: data.brand,
@@ -96,7 +95,6 @@ export const postInventory = async (data: InventoryFormValues) => {
 
     try {
       product = await getProductByBrandAndName(data.brand, data.name);
-      console.log(product);
     } catch (e) {
       const category = await getCategoryByName(data.categoryName);
       product = await postProduct({

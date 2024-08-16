@@ -55,9 +55,7 @@ export const Products = () => {
 
   const handlePut = async (id: number) => {
     try {
-      console.log(id);
       const data = updateForm.getFieldsValue();
-      console.log(data);
       await putCategory(id, data);
       await fetchData();
     } catch (e) {
