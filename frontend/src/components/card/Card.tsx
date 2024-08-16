@@ -15,6 +15,7 @@ type props = {
   id: number;
   editForm?: ReactElement;
   form?: FormInstance<any>;
+  initialValues?: {};
 };
 
 export const Card = ({
@@ -26,11 +27,14 @@ export const Card = ({
   deleteItem,
   id,
   editForm,
+  form,
+  initialValues
 }: props) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const handleEditClick = () => {
+    form?.setFieldsValue(initialValues);
     setOpen(true);
   };
 
@@ -64,11 +68,6 @@ export const Card = ({
     </Dropdown>,
   ];
 
-  const handleCancel = () => {
-    console.log("Clicked cancel button");
-    setOpen(false);
-  };
-
   const handleOk = async () => {
     try {
       setConfirmLoading(true);
@@ -79,6 +78,14 @@ export const Card = ({
       setConfirmLoading(false);
     }
   };
+
+  const handleCancel = () => {
+    console.log("Clicked cancel button");
+    form?.resetFields();
+    setOpen(false);
+  };
+
+
   return (
     <>
       <CardElement loading={loaded} actions={actions}>

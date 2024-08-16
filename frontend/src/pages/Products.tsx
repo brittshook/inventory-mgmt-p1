@@ -100,13 +100,10 @@ export const Products = () => {
             title={category.name}
             deleteItem={handleDelete}
             updateItem={handlePut}
+            form={updateForm}
+            initialValues={{ name: category.name }}
             editForm={
-              <Form
-                layout="vertical"
-                form={updateForm}
-                name="form_in_modal"
-                initialValues={{ name: category.name }}
-              >
+              <Form layout="vertical" form={updateForm} name="form_in_modal">
                 <Form.Item
                   label="Category Name"
                   name="name"

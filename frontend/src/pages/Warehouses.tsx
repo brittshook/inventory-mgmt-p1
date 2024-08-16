@@ -167,13 +167,10 @@ export const Warehouses = () => {
             id={warehouse.id}
             updateItem={handlePut}
             deleteItem={handleDelete}
+            form={updateForm}
+            initialValues={warehouse}
             editForm={
-              <Form
-                layout="vertical"
-                form={updateForm}
-                name="form_in_modal"
-                initialValues={warehouse}
-              >
+              <Form layout="vertical" form={updateForm} name="form_in_modal">
                 <Form.Item
                   label="Warehouse Name"
                   name="name"
