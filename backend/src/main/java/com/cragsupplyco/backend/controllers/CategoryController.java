@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/category")
-@CrossOrigin(origins = "http://crag-supply-co-frontend.s3-website.us-east-2.amazonaws.com")
+@CrossOrigin(origins = "http://crag-supply-co-client.s3-website-us-east-1.amazonaws.com")
 public class CategoryController {
     private CategoryService service;
 
