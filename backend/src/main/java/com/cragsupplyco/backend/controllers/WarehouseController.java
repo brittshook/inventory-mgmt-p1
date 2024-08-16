@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/warehouse")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://crag-supply-co-frontend.s3-website.us-east-2.amazonaws.com")
 public class WarehouseController {
     private WarehouseService service;
 
