@@ -26,7 +26,6 @@ export const Card = ({
   deleteItem,
   id,
   editForm,
-  form,
 }: props) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);

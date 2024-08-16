@@ -167,7 +167,6 @@ export const Warehouses = () => {
             id={warehouse.id}
             updateItem={handlePut}
             deleteItem={handleDelete}
-            form={updateForm}
             editForm={
               <Form
                 layout="vertical"

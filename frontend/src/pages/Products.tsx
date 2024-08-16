@@ -100,7 +100,6 @@ export const Products = () => {
             title={category.name}
             deleteItem={handleDelete}
             updateItem={handlePut}
-            form={updateForm}
             editForm={
               <Form
                 layout="vertical"
