@@ -40,6 +40,7 @@ export const Warehouses = () => {
 
   const handleDelete = async (id: number) => {
     try {
+      console.log(id);
       await deleteWarehouseById(id);
       await fetchData();
     } catch (e) {
@@ -56,8 +57,10 @@ export const Warehouses = () => {
     }
   };
 
-  const handlePut = async (id: number, data: WarehouseFormValues) => {
+  const handlePut = async (id: number) => {
     try {
+      console.log(id);
+      const data = updateForm.getFieldsValue();
       await putWarehouse(id, data);
       await fetchData();
     } catch (e) {
@@ -168,7 +171,12 @@ export const Warehouses = () => {
             deleteItem={handleDelete}
             form={updateForm}
             editForm={
-              <Form layout="vertical" form={form} name="form_in_modal">
+              <Form
+                layout="vertical"
+                form={updateForm}
+                name="form_in_modal"
+                initialValues={warehouse}
+              >
                 <Form.Item
                   label="Warehouse Name"
                   name="name"

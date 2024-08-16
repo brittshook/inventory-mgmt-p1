@@ -57,6 +57,16 @@ export const postCategory = async (data: CategoryFormValues) => {
   }
 };
 
+export const putCategory = async (id: number, data: CategoryFormValues) => {
+  try {
+    const response = await axiosInstance.put(`${API_ENDPOINT}/${id}`, data);
+    return response.data;
+  } catch (e) {
+    console.error("Error posting data", e);
+    throw e;
+  }
+};
+
 export const deleteCategoryById = async (id: number) => {
   try {
     const response = await axiosInstance.delete(`${API_ENDPOINT}/${id}`);

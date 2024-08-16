@@ -5,6 +5,7 @@ import {
   deleteCategoryById,
   getCategories,
   postCategory,
+  putCategory,
 } from "../api/category";
 import { Card } from "../components/card/Card";
 import { useEffect, useState } from "react";
@@ -13,6 +14,7 @@ import { ErrorPage } from "./ErrorPage";
 
 export const Products = () => {
   const [form] = Form.useForm();
+  const [updateForm] = Form.useForm();
 
   const [categories, setCategories] = useState<CategoryDataType[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -45,6 +47,18 @@ export const Products = () => {
   const handlePost = async (data: CategoryFormValues) => {
     try {
       await postCategory(data);
+      await fetchData();
+    } catch (e) {
+      e instanceof Error && setError(e);
+    }
+  };
+
+  const handlePut = async (id: number) => {
+    try {
+      console.log(id);
+      const data = updateForm.getFieldsValue();
+      console.log(data);
+      await putCategory(id, data);
       await fetchData();
     } catch (e) {
       e instanceof Error && setError(e);
@@ -87,6 +101,29 @@ export const Products = () => {
             path={`/inventory?category=${category.id}`}
             title={category.name}
             deleteItem={handleDelete}
+            updateItem={handlePut}
+            form={updateForm}
+            editForm={
+              <Form
+                layout="vertical"
+                form={updateForm}
+                name="form_in_modal"
+                initialValues={{ name: category.name }}
+              >
+                <Form.Item
+                  label="Category Name"
+                  name="name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input the category name!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              </Form>
+            }
           ></Card>
         ))}
       </section>

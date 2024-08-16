@@ -43,7 +43,6 @@ export const getInventory = async () => {
 export const putInventory = async (data: InventoryFormValues) => {
   try {
     let product;
-    console.log(data.warehouseName);
 
     try {
       product = await getProductByBrandAndName(data.brand, data.name);
@@ -78,7 +77,6 @@ export const putInventory = async (data: InventoryFormValues) => {
 
     const warehouse = await getWarehouseByName(data.warehouseName);
 
-    console.log("Is this running");
     const response = await axiosInstance.put(`${API_ENDPOINT}/${data.id}`, {
       product: product,
       warehouse: warehouse,

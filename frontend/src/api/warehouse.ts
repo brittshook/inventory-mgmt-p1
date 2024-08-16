@@ -67,6 +67,16 @@ export const postWarehouse = async (data: WarehouseFormValues) => {
   }
 };
 
+export const putWarehouse = async (id: number, data: WarehouseFormValues) => {
+  try {
+    const response = await axiosInstance.put(`${API_ENDPOINT}/${id}`, data);
+    return response.data;
+  } catch (e) {
+    console.error("Error posting data", e);
+    throw e;
+  }
+};
+
 export const deleteWarehouseById = async (id: number) => {
   try {
     const response = await axiosInstance.delete(`${API_ENDPOINT}/${id}`);
