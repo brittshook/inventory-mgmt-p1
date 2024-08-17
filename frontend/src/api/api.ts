@@ -2,7 +2,7 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL:
-    "http://crag-supply-co-env.eba-es8xkrpa.us-east-1.elasticbeanstalk.com/api",
+    "http://crag-supply-co-env-4.eba-ndsnmqsj.us-east-1.elasticbeanstalk.com/api",
   timeout: 10000,
 });
 
