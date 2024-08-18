@@ -36,8 +36,8 @@ public class TestDataUtil {
         inventoryRepository.deleteAll();
         // reset id auto generation sequences, otherwise the id's will increment where they left off 
         // on each reset/reseed, making them unreliable for testing
-        categoryRepository.resetIdSequence();
         warehouseRepository.resetIdSequence();
+        categoryRepository.resetIdSequence();
     }
 
     public void generateTestData() {
@@ -78,7 +78,23 @@ public class TestDataUtil {
             ca1.setState("CA");
             ca1.setZipCode("92121");
 
-            warehouseRepository.saveAll(Arrays.asList(ca1));
+            Warehouse ny1 = new Warehouse();
+            ny1.setName("NY1");
+            ny1.setMaxCapacity(1200);
+            ny1.setStreetAddress("150 5th Ave");
+            ny1.setCity("New York");
+            ny1.setState("NY");
+            ny1.setZipCode("10011");
+
+            Warehouse tx1 = new Warehouse();
+            tx1.setName("TX1");
+            tx1.setMaxCapacity(1500);
+            tx1.setStreetAddress("2100 Kramer Ln");
+            tx1.setCity("Austin");
+            tx1.setState("TX");
+            tx1.setZipCode("78758");
+
+            warehouseRepository.saveAll(Arrays.asList(ca1, ny1, tx1));
 
             // Seeding Products
             Product productBackpack = new Product();
@@ -132,14 +148,45 @@ public class TestDataUtil {
             inv1.setWarehouse(ca1);
             inv1.setSize(null);
 
-            Inventory inv8 = new Inventory();
-            inv8.setQuantity(200);
-            inv8.setProduct(productBelayDevice);
-            inv8.setWarehouse(ca1);
-            inv8.setSize("L");
+            Inventory inv2 = new Inventory();
+            inv2.setQuantity(150);
+            inv2.setProduct(productClimbingShoes);
+            inv2.setWarehouse(ny1);
+            inv2.setSize("M");
 
-            inventoryRepository.saveAll(Arrays.asList(inv1, inv8));
+            Inventory inv3 = new Inventory();
+            inv3.setQuantity(200);
+            inv3.setProduct(productBackpack);
+            inv3.setWarehouse(ny1);
+            inv3.setSize("L");
+
+            Inventory inv4 = new Inventory();
+            inv4.setQuantity(300);
+            inv4.setProduct(productCarabinerSet);
+            inv4.setWarehouse(ny1);
+            inv4.setSize("S");
+
+            Inventory inv5 = new Inventory();
+            inv5.setQuantity(150);
+            inv5.setProduct(productHelmet);
+            inv5.setWarehouse(ca1);
+            inv5.setSize("S");
+
+            Inventory inv6 = new Inventory();
+            inv6.setQuantity(75);
+            inv6.setProduct(productBelayDevice);
+            inv6.setWarehouse(ca1);
+            inv6.setSize("L");
+
+            Inventory inv7 = new Inventory();
+            inv7.setQuantity(170);
+            inv7.setProduct(productHelmet);
+            inv7.setWarehouse(tx1);
+            inv7.setSize("S");
+
+            inventoryRepository.saveAll(Arrays.asList(inv1, inv2, inv3, inv4, inv5, inv6, inv7));
         }
+
     }
 
 }
