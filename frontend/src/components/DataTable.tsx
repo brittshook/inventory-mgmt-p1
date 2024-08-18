@@ -299,7 +299,7 @@ export const DataTable = ({
       key: "action",
       fixed: "right",
       width: 140,
-      render: (_, record) => (
+      render: (_, record, index) => (
         <Space>
           <ButtonWithModal
             title="Update Inventory Item"
@@ -329,10 +329,11 @@ export const DataTable = ({
               type: "primary",
               danger: true,
               loading: confirmLoading,
+              id: `confirm-delete-inventory-${index}`,
             }}
             okText="Delete"
           >
-            <Button type="link" size="small">
+            <Button type="link" size="small" id={`delete-inventory-${index}`}>
               Delete
             </Button>
           </Popconfirm>
