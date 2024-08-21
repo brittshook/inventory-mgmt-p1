@@ -26,10 +26,8 @@ public class ProductServiceTests {
     private ProductRepository productRepository;
 
     private Product product1;
-
     private Product product2;
 
-    private Product savedProduct;
 
     @BeforeMethod
     public void setUp() {
