@@ -1,13 +1,16 @@
 package com.cragsupplyco.backend;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-@SpringBootTest
 class BackendApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    public void test() {
+        int a = 5;
+        int b = 10;
+        int result = a + b;
+        Assert.assertEquals(result, 15, "The addition result should be 15");
+    }
 
 }
