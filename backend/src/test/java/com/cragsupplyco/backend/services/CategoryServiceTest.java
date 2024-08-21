@@ -2,7 +2,6 @@ package com.cragsupplyco.backend.services;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
@@ -26,13 +25,8 @@ public class CategoryServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
 
-    @Mock
     private Category category1;
-
-    @Mock
     private Category category2;
-
-    @Mock
     private Category category3;
 
     @BeforeMethod
@@ -84,7 +78,6 @@ public class CategoryServiceTest {
     public void testFindCategoryByExistingId() {
         when(categoryRepository.findById(category1.getId())).thenReturn(Optional.of(category1));
         Optional<Category> result = categoryService.findById(category1.getId());
-        System.out.println(category1.getId());
         assertTrue(result.isPresent());
     }
 
