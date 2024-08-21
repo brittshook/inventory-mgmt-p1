@@ -2,6 +2,8 @@ package com.cragsupplyco.backend.services;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +17,6 @@ import org.testng.annotations.Test;
 
 import com.cragsupplyco.backend.models.Category;
 import com.cragsupplyco.backend.repositories.CategoryRepository;
-
 
 public class CategoryServiceTest {
 
@@ -67,10 +68,16 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void testFindByName() {
+    public void testFindByExistingName() {
         when(categoryRepository.findByName(category1.getName())).thenReturn(Optional.of(category1));
         Optional<Category> result = categoryService.findByName(category1.getName());
         assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void testFindByNonExistentName() {
+        Optional<Category> result = categoryService.findByName("Name");
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -85,6 +92,30 @@ public class CategoryServiceTest {
     public void testFindCategoryByNonExistentId() {
         Optional<Category> result = categoryService.findById(1);
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testSaveCategory() {
+        Category newCategory = new Category();
+        newCategory.setId(4);
+        newCategory.setName("New Category");
+        when(categoryRepository.save(newCategory)).thenReturn(newCategory);
+        Category result = categoryService.save(newCategory);
+        assertTrue(result.equals(newCategory));
+    }
+
+    @Test
+    public void testUpdateCategoryById() {
+        category3.setName("Updated Category");
+        when(categoryRepository.save(category3)).thenReturn(category3);
+        Category result = categoryService.updateCategoryById(category3.getId(), category3);
+        assertTrue(result.equals(category3));
+    }
+
+    @Test
+    public void testDeleteCategoryById() {
+        categoryService.deleteById(category3.getId());
+        verify(categoryRepository).deleteById(category3.getId());
     }
 
 }
