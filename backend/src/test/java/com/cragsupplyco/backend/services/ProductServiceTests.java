@@ -24,19 +24,42 @@ public class ProductServiceTests {
     @Mock
     private ProductRepository productRepository;
 
+    Product product;
+
+    Product emptyProduct;
+
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        this.product = new Product();
+        this.product.setName("Climbing shoes");
+        this.product.setBrand("PenguinPro");
+        this.product.setId(1);
     }
 
     @Test
-    public void testFindProductById() {
-        Product product = new Product();
-        when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
-
+    public void testFindProductByExistingId() {
+        when(productRepository.findById(1)).thenReturn(Optional.of(product));
         Optional<Product> result = productService.findById(product.getId());
+        assertTrue(result.isPresent());
+    }
 
-        // assertEquals(result.getName(), "Sample Product");
-        // verify(productRepository, times(1)).findById(1L);
+    @Test
+    public void testFindProductByNonExistantId() {
+        Optional<Product> result = productService.findById(2);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testFindByBrandAndName() {
+        when(productRepository.findByBrandAndName(product.getBrand(), product.getName())).thenReturn(Optional.of(product));
+        Optional<Product> result = productService.findByBrandAndName(product.getBrand(), product.getName());
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void testFindByBrandAndNonExistantName() {
+        Optional<Product> result = productService.findByBrandAndName(product.getBrand(), "");
+        assertFalse(result.isPresent());
     }
 }
