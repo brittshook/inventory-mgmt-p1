@@ -10,7 +10,7 @@ export const Dashboard = () => {
   const [totalCapacity, setTotalCapacity] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-
+  console.log("pipeline");
   const fetchData = async () => {
     try {
       const inventoryResult = await getInventory();
