@@ -1,5 +1,6 @@
 package com.cragsupplyco.backend.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -101,7 +102,7 @@ public class CategoryServiceTest {
 
         when(categoryRepository.save(expectedCategory)).thenReturn(expectedCategory);
         Category result = categoryService.save(expectedCategory);
-        assertTrue(result.equals(expectedCategory));
+        assertEquals(expectedCategory, result);
     }
 
     @Test
@@ -112,7 +113,7 @@ public class CategoryServiceTest {
 
         when(categoryRepository.save(expectedCategory)).thenReturn(expectedCategory);
         Category result = categoryService.updateCategoryById(categoryId, expectedCategory);
-        assertTrue(result.equals(expectedCategory));
+        assertEquals(expectedCategory, result);
     }
 
     @Test
