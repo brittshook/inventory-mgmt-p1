@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        VERSION = "0.0.33"
+        VERSION = "0.0.36"
     }
 
     stages {
@@ -29,7 +29,7 @@ pipeline {
 
         stage('test backend') {
             steps {
-                sh "echo unit tests happened here"
+                sh "cd backend && mvn test -Dspring.profiles.active=test"
             }
         }
 

@@ -49,10 +49,10 @@ public class InventoryControllerTests {
 
     @BeforeMethod
     public void setUp() {
+        closeable = MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(inventoryController)
                 .setValidator(new LocalValidatorFactoryBean())
                 .build();
-        closeable = MockitoAnnotations.openMocks(this);
 
         product1 = new Product();
         product1.setId(1);
@@ -92,7 +92,9 @@ public class InventoryControllerTests {
 
     @AfterTest
     public void teardown() throws Exception {
-        closeable.close();
+        if (closeable != null) {
+            closeable.close();
+        }
     }
 
     @Test

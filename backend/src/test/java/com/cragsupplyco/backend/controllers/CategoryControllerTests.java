@@ -54,13 +54,16 @@ public class CategoryControllerTests {
         validCategory.setName("Climbing Accessories");
 
         invalidCategory = new Category();
-        invalidCategory.setName("");  // Invalid because name is blank
+        invalidCategory.setName("");
     }
 
     @AfterTest
     public void teardown() throws Exception {
-        closeable.close();
+        if (closeable != null) {
+            closeable.close();
+        }
     }
+    
 
     @Test
     public void testFindAllCategories() {

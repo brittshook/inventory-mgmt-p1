@@ -41,7 +41,6 @@ public class WarehouseControllerTests {
     public void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
 
-        // Creating mock warehouse data
         warehouse1 = new Warehouse();
         warehouse1.setId(1);
         warehouse1.setName("Central Warehouse");
@@ -80,9 +79,11 @@ public class WarehouseControllerTests {
 
     @AfterTest
     public void teardown() throws Exception {
-        closeable.close();
+        if (closeable != null) {
+            closeable.close();
+        }
     }
-
+    
     @Test
     public void testFindAllWarehouses() {
         List<Warehouse> expectedWarehouses = Arrays.asList(warehouse1, warehouse2);

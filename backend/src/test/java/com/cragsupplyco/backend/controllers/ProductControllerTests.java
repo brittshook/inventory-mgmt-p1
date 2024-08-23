@@ -92,8 +92,10 @@ public class ProductControllerTests {
     }
 
     @AfterTest
-    public void teardown() throws Exception{
-        closeable.close();
+    public void teardown() throws Exception {
+        if (closeable != null) {
+            closeable.close();
+        }
     }
 
     @Test
