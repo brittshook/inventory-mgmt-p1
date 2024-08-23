@@ -14,7 +14,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -24,6 +30,9 @@ import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.services.ProductService;
 
 public class ProductControllerTests {
+
+
+    private MockMvc mockMvc;
 
     @Mock
     private ProductService productService;
@@ -37,12 +46,16 @@ public class ProductControllerTests {
 
     private Product validProduct;
     private Product invalidProduct;
+    private String invalidProductJson;
 
     @BeforeMethod
     public void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
         MockitoAnnotations.openMocks(this);
 
+        mockMvc = MockMvcBuilders.standaloneSetup(productController)
+                        .setValidator(new LocalValidatorFactoryBean())
+                        .build();
         Category category1 = new Category();
         category1.setId(1);
         category1.setName("Climbing Gear");
@@ -75,6 +88,7 @@ public class ProductControllerTests {
         invalidProduct = new Product();
         invalidProduct.setPrice(0.0);
         invalidProduct.setCategory(category1);
+        invalidProductJson = "{\"id\":4,\"brand\":\"\",\"name\":\"\",\"description\":\"\",\"price\":0.0,\"category\":{\"id\":1,\"name\":\"Climbing Gear\"},\"inventory\":null}";
     }
 
     @AfterTest
@@ -145,6 +159,18 @@ public class ProductControllerTests {
         assertEquals(response.getBody(), product1);
 
         verify(productService, times(1)).findByBrandAndName(brand, name);
+    }
+
+    @Test
+    public void testFindProductByBrandAndName404() throws Exception {
+        String brand = "invalidBrand";
+        String name = "invalidName";
+        when(productService.findByBrandAndName(brand, name)).thenReturn(Optional.empty());
+        mockMvc.perform(get("/api/product/byProps")
+                .param("name", name)
+                .param("brand", brand)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test
