@@ -42,7 +42,7 @@ export const Dashboard = () => {
 
   return (
     <section id="dashboard">
-      <h1>Dashboard</h1>
+      <h1>Dashboard test</h1>
       <Card
         style={{ marginTop: 16 }}
         type="inner"
