@@ -15,6 +15,9 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -26,6 +29,8 @@ import com.cragsupplyco.backend.models.Warehouse;
 import com.cragsupplyco.backend.services.InventoryService;
 
 public class InventoryControllerTests {
+
+    private MockMvc mockMvc;
 
     @Mock
     private InventoryService inventoryService;
@@ -44,6 +49,9 @@ public class InventoryControllerTests {
 
     @BeforeMethod
     public void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(inventoryController)
+                .setValidator(new LocalValidatorFactoryBean())
+                .build();
         closeable = MockitoAnnotations.openMocks(this);
 
         product1 = new Product();
