@@ -10,7 +10,6 @@ export const Dashboard = () => {
   const [totalCapacity, setTotalCapacity] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-  console.log("pipeline");
   const fetchData = async () => {
     try {
       const inventoryResult = await getInventory();
@@ -42,7 +41,7 @@ export const Dashboard = () => {
 
   return (
     <section id="dashboard">
-      <h1>Dashboard test</h1>
+      <h1>Dashboard</h1>
       <Card
         style={{ marginTop: 16 }}
         type="inner"
