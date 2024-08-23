@@ -29,7 +29,7 @@ pipeline {
 
         stage('test backend') {
             steps {
-                sh "echo unit tests happened here"
+                sh "mvn test -Dspring.profiles.active=test"
             }
         }
 
