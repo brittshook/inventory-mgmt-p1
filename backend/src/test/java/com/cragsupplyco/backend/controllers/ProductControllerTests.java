@@ -1,19 +1,21 @@
 package com.cragsupplyco.backend.controllers;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -23,96 +25,159 @@ import com.cragsupplyco.backend.services.ProductService;
 
 public class ProductControllerTests {
 
-    private MockMvc mockMvc;
-
     @Mock
     private ProductService productService;
 
     @InjectMocks
     private ProductController productController;
+    private AutoCloseable closeable;
 
     private Product product1;
     private Product product2;
 
-    private String validProductJson;
     private Product validProduct;
     private Product invalidProduct;
 
     @BeforeMethod
-public void setUp() {
-    MockitoAnnotations.openMocks(this);
+    public void setUp() {
+        closeable = MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.openMocks(this);
 
-    mockMvc = MockMvcBuilders.standaloneSetup(productController)
-            .setValidator(new LocalValidatorFactoryBean())
-            .build();
+        Category category1 = new Category();
+        category1.setId(1);
+        category1.setName("Climbing Gear");
 
-    Category mockCategory = new Category();
-    mockCategory.setId(1);
-    mockCategory.setName("Climbing Gear");
-    mockCategory.setProducts(Arrays.asList(product1, product2, validProduct, invalidProduct));
+        product1 = new Product();
+        product1.setId(1);
+        product1.setName("Climbing Shoes");
+        product1.setBrand("PenguinPro");
+        product1.setDescription("Durable climbing shoes");
+        product1.setPrice(150.0);
+        product1.setCategory(category1);
 
-    product1 = new Product();
-    product1.setId(1);
-    product1.setName("Climbing Shoes");
-    product1.setBrand("PenguinPro");
-    product1.setDescription("Durable climbing shoes");
-    product1.setPrice(150.0);
-    product1.setCategory(mockCategory);
+        product2 = new Product();
+        product2.setId(2);
+        product2.setName("Rope");
+        product2.setBrand("EverStrong");
+        product2.setDescription("Tough climbing rope");
+        product2.setPrice(80.0);
+        product2.setCategory(category1);
 
-    product2 = new Product();
-    product2.setId(2);
-    product2.setName("Rope");
-    product2.setBrand("EverStrong");
-    product2.setDescription("Tough climbing rope");
-    product2.setPrice(80.0);
-    product2.setCategory(mockCategory);
 
-    validProduct = new Product();
-    validProduct.setId(3);
-    validProduct.setName("Hiking Boots");
-    validProduct.setBrand("HikersInc");
-    validProduct.setDescription("Durable climbing boots");
-    validProduct.setPrice(150.0);
-    validProduct.setCategory(mockCategory);
-    // model annotation @JsonIdentityInfo will cause nested object "category" not to serialize properly in a call like ObjectMapper.writeValueAsString
-    // so the JSON for the post methods must be manually defined
-    validProductJson = "{\"id\":3,\"brand\":\"HikersInc\",\"name\":\"Hiking Boots\",\"description\":\"Durable climbing boots\",\"price\":150.0,\"category\":{\"id\":1,\"name\":\"Climbing Gear\"},\"inventory\":null}";
+        validProduct = new Product();
+        validProduct.setId(4);
+        validProduct.setName("Hiking Boots");
+        validProduct.setBrand("HikersInc");
+        validProduct.setDescription("Durable hiking boots");
+        validProduct.setPrice(150.0);
+        validProduct.setCategory(category1);
 
-    invalidProduct = new Product();
-    invalidProduct.setPrice(0.0);
-    invalidProduct.setCategory(mockCategory);
+        invalidProduct = new Product();
+        invalidProduct.setPrice(0.0);
+        invalidProduct.setCategory(category1);
+    }
 
-}
-
-    @Test
-    public void testFindAllProducts() throws Exception {
-        given(productService.findAll()).willReturn(Arrays.asList(product1, product2));
-        mockMvc.perform(get("/api/product")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Climbing Shoes"))
-                .andExpect(jsonPath("$[1].name").value("Rope"));
+    @AfterTest
+    public void teardown() throws Exception{
+        closeable.close();
     }
 
     @Test
-    public void testFindAllProductsWithCategoryId() throws Exception {
+    public void testFindAllProducts() {
+        List<Product> expectedProducts = Arrays.asList(product1, product2);
+
+        when(productService.findAll()).thenReturn(expectedProducts);
+
+        Iterable<Product> result = productController.findAllProducts();
+
+        assertEquals(result, expectedProducts);
+        verify(productService, times(1)).findAll();
+    }
+
+    @Test
+    public void testFindAllProductsWithCategoryId() {
         int categoryId = 1;
-        given(productService.findAllByCategoryId(categoryId)).willReturn(Arrays.asList(product1));
-        mockMvc.perform(get("/api/product/detailed")
-                .param("categoryId", String.valueOf(categoryId))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Climbing Shoes"));
+        List<Product> expectedProducts = Arrays.asList(product1, product2, validProduct);
+        when(productService.findAllByCategoryId(categoryId)).thenReturn(expectedProducts);
+
+        Iterable<Product> result = productController.findAllProducts(categoryId);
+
+        assertEquals(result, expectedProducts);
+
+        verify(productService, times(1)).findAllByCategoryId(categoryId);
     }
 
     @Test
-    public void testCreateValidProduct() throws Exception {
-        given(productService.save(any(Product.class))).willReturn(validProduct);
-        mockMvc.perform(post("/api/product")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(validProductJson))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Hiking Boots"))
-                .andExpect(jsonPath("$.brand").value("HikersInc"));
+    public void testFindById() {
+        int id = product1.getId();
+        when(productService.findById(id)).thenReturn(Optional.of(product1));
+
+        ResponseEntity<Product> response = productController.findProductById(id);
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(response.getBody(), product1);
+
+        verify(productService, times(1)).findById(id);
+    }
+
+    @Test
+    public void testFindByIdDetailed() {
+        int id = product1.getId();
+        when(productService.findById(id)).thenReturn(Optional.of(product1));
+        
+        ResponseEntity<Product> response = productController.findProductByIdDetailed(id);
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(response.getBody(), product1);
+
+        verify(productService, times(1)).findById(id);
+    }
+
+    @Test
+    public void testFindProductByBrandAndName() {
+        String brand = product1.getBrand();
+        String name = product1.getName();
+        when(productService.findByBrandAndName(brand, name)).thenReturn(Optional.of(product1));
+
+        ResponseEntity<Product> response = productController.findProductByBrandAndName(brand, name);
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(response.getBody(), product1);
+
+        verify(productService, times(1)).findByBrandAndName(brand, name);
+    }
+
+    @Test
+    public void testCreateValidProduct() {
+        when(productService.save(any(Product.class))).thenReturn(validProduct);
+
+        Product result = productController.createProduct(validProduct);
+
+        assertEquals(result, validProduct);
+
+        verify(productService, times(1)).save(any(Product.class));
+    }
+
+    @Test
+    public void testCreateInvalidProduct() {
+        Product result = productController.createProduct(invalidProduct);
+
+        assertEquals(result, null);
+    }
+
+    @Test
+    public void testUpdateProductById() {
+        productController.updateProductById(4, validProduct);
+
+        verify(productService, times(1))
+        .updateProductById(eq(4), any(Product.class));
+    }
+
+    @Test
+    public void testDeleteProductById() {
+        productController.deleteProductById(4);
+
+        verify(productService, times(1))
+        .deleteById(4);
     }
 }
