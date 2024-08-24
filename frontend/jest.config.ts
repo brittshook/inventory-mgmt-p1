@@ -1,12 +1,14 @@
-export default {
+import type { Config } from "@jest/types";
+
+const config: Config.InitialOptions = {
   preset: "ts-jest/presets/default-esm",
   testEnvironment: "jest-environment-jsdom",
-  setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
+  setupFilesAfterEnv: ["<rootDir>/setupTests.js"],
   transform: {
     "^.+\\.tsx?$": [
       "ts-jest",
       {
-        tsconfig: 'tsconfig.app.json',
+        tsconfig: "tsconfig.app.json",
         diagnostics: false,
         astTransformers: {
           before: [
@@ -20,8 +22,8 @@ export default {
                     VITE_AUTH0_CLIENT_ID: "placeholder",
                     VITE_AUTH0_REDIRECT_URI: "placeholder",
                     VITE_AUTH0_AUDIENCE: "placeholder",
-                  }
-                }
+                  },
+                },
               },
             },
           ],
@@ -30,7 +32,13 @@ export default {
     ],
   },
   moduleNameMapper: {
-    "\\.(jpg|jpeg|png|gif|webp|svg|css)$": "<rootDir>/src/test/__mocks__/fileMock.js",
-    '^@/(.*)': '<rootDir>/src/$1'
+    "\\.(jpg|jpeg|png|gif|webp|svg|css)$":
+      "<rootDir>/src/test/__mocks__/fileMock.js",
+    "^@/(.*)": "<rootDir>/src/$1",
   },
+  collectCoverage: true,
+  coverageDirectory: "coverage",
+  coverageReporters: ["lcov", "json", "text"],
 };
+
+export default config;

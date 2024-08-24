@@ -114,6 +114,7 @@
 					<execution>
 						<goals>
 							<goal>prepare-agent</goal>
+							<goal>report</goal>
 						</goals>
 					</execution>
 					<!-- attached to Maven test phase -->
