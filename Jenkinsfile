@@ -1,35 +1,43 @@
 pipeline {
     agent any
-    
+
     environment {
-        VERSION = "0.0.37"
+        MAJOR_VERSION = '0'
+        MINOR_VERSION = '1'
+        PATCH_VERSION = "${env.BUILD_NUMBER}"
     }
 
     stages {
+        stage('prepare version') {
+            def newPatchVersion = PATCH_VERSION.toInteger() + 1
+            env.VERSION = "${MAJOR_VERSION}.${MINOR_VERSION}.${newPatchVersion}"
+            echo "Updated version to: ${env.VERSION}"
+        }
+
         stage('build frontend') {
             steps {
-                sh "echo Building Stage 1"
-                sh "cd frontend && npm install && npm run build"
+                sh 'echo Building Stage 1'
+                sh 'cd frontend && npm install && npm run build'
             }
         }
 
         stage('deploy frontend') {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'AWS_CREDENTIALS') {
-                    sh "aws s3 sync frontend/dist s3://crag-supply-co-client"
+                    sh 'aws s3 sync frontend/dist s3://crag-supply-co-client'
                 }
             }
         }
 
         stage('build backend') {
             steps {
-                sh "cd backend && mvn clean install -DskipTests=true -Dspring.profiles.active=build"
+                sh 'cd backend && mvn clean install -DskipTests=true -Dspring.profiles.active=build'
             }
         }
 
         stage('test backend') {
             steps {
-                sh "cd backend && mvn test -Dspring.profiles.active=test"
+                sh 'cd backend && mvn test -Dspring.profiles.active=test'
             }
         }
 
