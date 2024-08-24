@@ -256,9 +256,7 @@ export const InventoryByWarehouse = () => {
             href: `${path + search}`,
             title: (
               <div
-                id={`breadcrumb-${warehouse
-                  ?.toLocaleLowerCase()
-                  .replace(" ", "-")}`}
+                id={`breadcrumb-warehouse-name`}
                 className="breadcrumb-item"
               >
                 {warehouse}
@@ -299,6 +297,7 @@ export const InventoryByWarehouse = () => {
           initialData={inventory}
           updateHandler={handlePut}
           editModalFormItems={formItems}
+          warehouseName={warehouse}
         />
       </section>
     </>

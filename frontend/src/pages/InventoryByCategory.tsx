@@ -245,9 +245,7 @@ export const InventoryByCategory = () => {
             href: `${path + search}`,
             title: (
               <div
-                id={`breadcrumb-${category
-                  ?.toLocaleLowerCase()
-                  .replace(" ", "-")}`}
+                id={`breadcrumb-product-type`}
                 className="breadcrumb-item"
               >
                 {category}
@@ -284,6 +282,7 @@ export const InventoryByCategory = () => {
           initialData={inventory}
           updateHandler={handlePut}
           editModalFormItems={formItems}
+          categoryName={category}
         />
       </section>
     </>

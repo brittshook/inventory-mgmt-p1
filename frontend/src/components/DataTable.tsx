@@ -20,6 +20,8 @@ type props = {
   showCategories: boolean;
   updateHandler: (data: any) => Promise<void>;
   editModalFormItems: ReactElement;
+  categoryName?: string | null;
+  warehouseName?: string | null;
 };
 
 export type DataType = {
@@ -43,6 +45,8 @@ export const DataTable = ({
   showWarehouses,
   updateHandler,
   editModalFormItems,
+  categoryName,
+  warehouseName,
 }: props) => {
   const [data, setData] = useState<DataType[]>([]);
   const [searchText, setSearchText] = useState("");
@@ -315,7 +319,11 @@ export const DataTable = ({
               layout="vertical"
               form={form}
               name="form_in_modal"
-              initialValues={record}
+              initialValues={{
+                ...record,
+                ...(categoryName && { categoryName }),
+                ...(warehouseName && { warehouseName }),
+              }}
             >
               {editModalFormItems}
             </Form>
