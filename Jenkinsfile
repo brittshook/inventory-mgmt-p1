@@ -22,15 +22,18 @@ pipeline {
             steps {
                 sh 'echo Building Stage 1'
                 script {
-                    dir('frontend') {
-                        sh '''
-                        npm install
-                        npm run build
-                        npx sonar-scanner \
-                            -Dsonar.projectKey=${brittshook_inventory-mgmt-p1} \
-                            -Dsonar.sources=src \
-                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-                        '''
+                    withSonarQubeEnv('SonarCloud') {
+                        dir('frontend') {
+                            sh '''
+                            npm install
+                            npm run build
+                            npx sonar-scanner \
+                                -Dsonar.projectKey=${brittshook_inventory-mgmt-p1} \
+                                -Dsonar.projectName=inventory-mgmt-p1 \
+                                -Dsonar.sources=src \
+                                -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+                            '''
+                        }
                     }
                 }
             }
