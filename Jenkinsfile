@@ -18,10 +18,21 @@ pipeline {
             }
         }
 
-        stage('Build Frontend') {
+        stage('Build and Analyze Frontend') {
             steps {
                 sh 'echo Building Stage 1'
-                sh 'cd frontend && npm install && npm run build'
+                script {
+                    dir('frontend') {
+                        sh '''
+                        npm install
+                        npm run build
+                        npx sonar-scanner \
+                            -Dsonar.projectKey=${brittshook_inventory-mgmt-p1} \
+                            -Dsonar.sources=src \
+                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+                        '''
+                    }
+                }
             }
         }
 
@@ -33,20 +44,21 @@ pipeline {
             }
         }
 
-        stage('Build Backend') {
+        stage('Build and Analyze Backend') {
             steps {
-                sh 'cd backend && mvn clean install -DskipTests=true -Dspring.profiles.active=build'
-            }
-        }
-
-        stage('SonarCloud Analysis') {
-            steps {
-                script {
-                    def scannerHome = tool 'SonarQube Scanner'
-                    withSonarQubeEnv('SonarCloud') {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=brittshook_inventory-mgmt-p1 -Dsonar.projectName=inventory-mgmt-p1 -Dsonar.java.binaries=backend/target/classes"
+                withSonarQubeEnv('SonarCloud') {
+                    dir('backend') {
+                        sh '''
+                        mvn clean install -DskipTests=true -Dspring.profiles.active=build
+                        mvn sonar:sonar \
+                            -Dsonar.projectKey=brittshook_inventory-mgmt-p1 \
+                            -Dsonar.projectName=inventory-mgmt-p1 \
+                            -Dsonar.java.binaries=target/classes" \
+                            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                        '''
                     }
                 }
+                sh 'cd backend && mvn clean install -DskipTests=true -Dspring.profiles.active=build'
             }
         }
 
