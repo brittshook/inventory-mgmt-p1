@@ -56,7 +56,7 @@ pipeline {
                         mvn sonar:sonar \
                             -Dsonar.projectKey=brittshook_inventory-mgmt-p1 \
                             -Dsonar.projectName=inventory-mgmt-p1 \
-                            -Dsonar.java.binaries=target/classes" \
+                            -Dsonar.java.binaries=target/classes \
                             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                         '''
                     }
