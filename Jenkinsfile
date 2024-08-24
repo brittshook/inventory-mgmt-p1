@@ -10,9 +10,11 @@ pipeline {
     stages {
         stage('prepare version') {
             steps {
-                def newPatchVersion = PATCH_VERSION.toInteger() + 1
-                env.VERSION = "${MAJOR_VERSION}.${MINOR_VERSION}.${newPatchVersion}"
-                echo "Updated version to: ${env.VERSION}"
+                script {
+                    def newPatchVersion = PATCH_VERSION.toInteger() + 1
+                    env.VERSION = "${MAJOR_VERSION}.${MINOR_VERSION}.${newPatchVersion}"
+                    echo "Updated version to: ${env.VERSION}"
+                }
             }
         }
 
