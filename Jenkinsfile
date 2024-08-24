@@ -28,8 +28,8 @@ pipeline {
                             npm install
                             npm run build
                             npx sonar-scanner \
-                                -Dsonar.projectKey=${brittshook_inventory-mgmt-p1} \
-                                -Dsonar.projectName=inventory-mgmt-p1 \
+                                -Dsonar.projectKey=mgmt-p1 \
+                                -Dsonar.projectName=inventory-mgmt-p1-frontend \
                                 -Dsonar.sources=src \
                                 -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
                             '''
@@ -55,9 +55,8 @@ pipeline {
                         mvn clean install -DskipTests=true -Dspring.profiles.active=build
                         mvn sonar:sonar \
                             -Dsonar.projectKey=brittshook_inventory-mgmt-p1 \
-                            -Dsonar.projectName=inventory-mgmt-p1 \
+                            -Dsonar.projectName=inventory-mgmt-p1-backend \
                             -Dsonar.java.binaries=target/classes \
-                            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                         '''
                     }
                 }
