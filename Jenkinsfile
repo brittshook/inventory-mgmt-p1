@@ -44,7 +44,7 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarQube Scanner'
                     withSonarQubeEnv('SonarCloud') {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=brittshook_inventory-mgmt-p1 -Dsonar.projectName=backend -Dsonar.java.binaries=backend/target/classes"
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=brittshook_inventory-mgmt-p1 -Dsonar.projectName=inventory-mgmt-p1 -Dsonar.java.binaries=backend/target/classes"
                     }
                 }
             }
