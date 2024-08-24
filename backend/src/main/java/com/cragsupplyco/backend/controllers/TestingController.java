@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cragsupplyco.backend.utils.TestDataUtil;
 
-@CrossOrigin
+@CrossOrigin(origins = {"http://crag-supply-co-client.s3-website-us-east-1.amazonaws.com", "http://localhost:5173"})
 @RestController
 @RequestMapping("/api/testing")
 public class TestingController {
