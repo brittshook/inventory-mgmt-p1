@@ -26,6 +26,7 @@ pipeline {
                             sh '''
                             npm install
                             npm run build
+                            npm run test -- --coverage
                             npx sonar-scanner \
                                 -Dsonar.projectKey=mgmt-p1 \
                                 -Dsonar.projectName=inventory-mgmt-p1-frontend \
