@@ -25,7 +25,7 @@ public class Category {
     @JsonView(Views.Public.class)
     private int id;
 
-    @Column(length = 50)
+    @Column(length = 50, unique = true)
     @NotBlank
     @JsonView(Views.Public.class)
     private String name;
