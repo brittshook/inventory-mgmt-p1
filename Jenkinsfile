@@ -116,8 +116,13 @@ pipeline {
                     sh '''
                         git clone https://github.com/daniel413x/project-two-functional-tests.git
                         cd project-two-functional-tests
-                        mvn test -Dcucumber.publish.token=${CUCUMBER_PUBLISH_TOKEN} -Dheadless=true
                     '''
+                    withCredentials(string(credentialsId: 'CUCUMBER_PUBLISH_TOKEN', variable: 'CUCUMBER_TOKEN')) {
+                        sh '''
+                        echo 'cucumber.publish.token=${CUCUMBER_TOKEN}' >> src/test/resources/junit-platform.properties
+                        mvn test -Dheadless=true
+                        '''
+                    }
 
                     sh "kill ${backendPid} || true"
                     sh "kill ${frontendPid} || true"
