@@ -74,8 +74,6 @@ pipeline {
 
         stage('Perform Functional Tests') {
             steps {
-                cleanWs()
-                
                 script {
                     // capture id's to later terminate pipeline project test servers
                     def backendPid
@@ -123,6 +121,8 @@ pipeline {
                     sh "kill ${backendPid} || true"
                     sh "kill ${frontendPid} || true"
                 }
+
+                cleanWs()
             }
         }
 
