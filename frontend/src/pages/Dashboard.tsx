@@ -6,6 +6,8 @@ import { getWarehouses, WarehouseDataType } from "../api/warehouse";
 import { ErrorPage } from "./ErrorPage";
 
 export const Dashboard = () => {
+  const env = import.meta.env.MODE;
+  console.log(env);
   const [totalInventory, setTotalInventory] = useState<number>(0);
   const [totalCapacity, setTotalCapacity] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
@@ -38,7 +40,6 @@ export const Dashboard = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <ErrorPage messageText={error.message} />;
-
   return (
     <section id="dashboard">
       <h1>Dashboard</h1>
