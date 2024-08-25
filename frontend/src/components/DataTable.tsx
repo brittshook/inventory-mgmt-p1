@@ -268,6 +268,7 @@ export const DataTable = ({
       sorter: (a, b) => a.price - b.price,
       sortDirections: ["ascend", "descend", "ascend"],
       width: 100,
+      render: (price: number) => price.toFixed(2),
     },
     {
       title: "Size",
