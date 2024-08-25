@@ -8,6 +8,12 @@ pipeline {
     }
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
         stage('Prepare Version') {
             steps {
                 script {
@@ -104,6 +110,7 @@ pipeline {
                         done
                         echo "***backend is ready***"
                     '''
+                    
                     sh '''
                         until curl --output /dev/null --silent http://localhost:5173; do
                             echo 'waiting for frontend...'
@@ -120,9 +127,8 @@ pipeline {
 
                     sh "kill ${backendPid} || true"
                     sh "kill ${frontendPid} || true"
+                    sh 'rm -rf project-two-functional-tests'
                 }
-
-                cleanWs()
             }
         }
 
