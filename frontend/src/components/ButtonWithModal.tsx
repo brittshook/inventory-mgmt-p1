@@ -49,14 +49,15 @@ export const ButtonWithModal = ({
       await confirmHandler(values);
       setOpen(false);
       setConfirmLoading(false);
+      form.resetFields();
     } catch (e) {
       setConfirmLoading(false);
     }
   };
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
+    form.resetFields();
   };
 
   return (
