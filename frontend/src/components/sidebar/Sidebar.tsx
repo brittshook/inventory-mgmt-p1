@@ -3,37 +3,39 @@ import dashboardIcon from "../../assets/icons/dashboard.svg";
 import warehouseIcon from "../../assets/icons/warehouse.svg";
 import productIcon from "../../assets/icons/items.svg";
 import logoutIcon from "../../assets/icons/logout.svg";
+import inventoryIcon from "../../assets/icons/inventory.svg";
 import profileImage from "/sample_user.webp";
 import { Logo } from "../Logo";
 import { Link, useLocation } from "react-router-dom";
+import { useScreenSize } from "../../context/ScreenSizeContext";
 
-type props = { isCollapsed?: boolean };
+export const Sidebar = () => {
+  const { isSmallerThan900 } = useScreenSize();
 
-export const Sidebar = ({ isCollapsed }: props) => {
   const path = useLocation().pathname;
   const search = useLocation().search;
 
   return (
-    <aside className={isCollapsed ? "collapsed" : "expanded"}>
+    <aside className={isSmallerThan900 ? "collapsed" : "expanded"}>
       <nav>
         <Link to="/">
-          {isCollapsed ? <Logo type="short" /> : <Logo type="full" />}
+          {isSmallerThan900 ? <Logo type="short" /> : <Logo type="full" />}
         </Link>
         <hr />
-        {!isCollapsed && <h2>General</h2>}
+        {!isSmallerThan900 && <h2>General</h2>}
         <ul>
           <li>
             <Link id={"dashboard"} to="/">
               <img src={dashboardIcon} alt="dashboard" title="dashboard" />
-              {!isCollapsed && "Dashboard"}
+              {!isSmallerThan900 && "Dashboard"}
             </Link>
           </li>
           <li>
             <Link id={"products"} to="/products">
               <img src={productIcon} alt="products" title="products" />
-              {!isCollapsed && "Products"}
+              {!isSmallerThan900 && "Products"}
             </Link>
-            {!isCollapsed &&
+            {!isSmallerThan900 &&
               /(products|inventory\?category=)/.test(path + search) && (
                 <ul className="sublist">
                   <li>
@@ -63,9 +65,9 @@ export const Sidebar = ({ isCollapsed }: props) => {
           <li>
             <Link id={"warehouses"} to="/warehouses">
               <img src={warehouseIcon} />
-              {!isCollapsed && "Warehouses"}
+              {!isSmallerThan900 && "Warehouses"}
             </Link>
-            {!isCollapsed &&
+            {!isSmallerThan900 &&
               /(warehouses|inventory\?warehouse=)/.test(path + search) && (
                 <ul className="sublist">
                   <li>
@@ -95,10 +97,17 @@ export const Sidebar = ({ isCollapsed }: props) => {
                 </ul>
               )}
           </li>
+          {isSmallerThan900 && (
+            <li>
+              <Link id="all-inventory" to="inventory?category=all">
+                <img src={inventoryIcon} alt="inventory" title="inventory" />
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
       <div id="user-account">
-        {!isCollapsed && (
+        {!isSmallerThan900 && (
           <div id="user-details">
             <img id="profile" src={profileImage} />
             {/* TODO: grab name &  role from DB */}
