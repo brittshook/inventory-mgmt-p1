@@ -1,6 +1,8 @@
 package com.cragsupplyco.backend.models;
 
 import java.util.List;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -18,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -46,6 +49,7 @@ public class Product {
 
     @Column(scale = 2)
     @NotNull
+    @Min(value = 0)
     @JsonView(Views.Public.class)
     private double price;
 
@@ -90,7 +94,8 @@ public class Product {
     }
 
     public void setPrice(double price) {
-        this.price = price;
+        BigDecimal bdValue = BigDecimal.valueOf(price);
+        this.price = bdValue.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     public Category getCategory() {
