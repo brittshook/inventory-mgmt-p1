@@ -72,6 +72,59 @@ pipeline {
             }
         }
 
+        stage('Perform Functional Tests') {
+            steps {
+                script {
+                    // capture id's to later terminate pipeline project test servers
+                    def backendPid
+                    def frontendPid
+                    withCredentials([
+                        string(credentialsId: 'TEST_DB_USER', variable: 'DB_USER'),
+                        string(credentialsId: 'TEST_DB_PWD', variable: 'DB_PWD'),
+                        string(credentialsId: 'TEST_DB_URL', variable: 'DB_URL')]) {
+                        dir('backend') {
+                            backendPid = sh(script: '''
+                                mvn spring-boot:run -Dspring-boot.run.arguments="--DB_URL=${DB_URL} --DB_USER=${DB_USER} --DB_PWD=${DB_PWD}" &
+                                echo \$!
+                            ''', returnStdout: true).trim()
+                        }
+                    }
+
+                    dir('frontend') {
+                        frontendPid = sh(script: '''
+                            npm install && npx vite --mode test &
+                            echo $!
+                        ''', returnStdout: true).trim()
+                    }
+
+                    sh '''
+                        until curl --output /dev/null --silent http://localhost:5000; do
+                            echo 'waiting for backend...'
+                            sleep 5
+                        done
+                        echo "***backend is ready***"
+                    '''
+                    sh '''
+                        until curl --output /dev/null --silent http://localhost:5173; do
+                            echo 'waiting for frontend...'
+                            sleep 5
+                        done
+                        echo "***frontend is ready***"
+                    '''
+
+                    sh '''
+                        git clone https://github.com/brittshook/inventory-mgmt-p1.git
+                        cd inventory-mgmt-p1
+                        cd project-two-functional-tests
+                        mvn test -Dheadless=true
+                    '''
+
+                    sh "kill ${backendPid} || true"
+                    sh "kill ${frontendPid} || true"
+                }
+            }
+        }
+
         stage('Deploy Backend') {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'AWS_CREDENTIALS') {
