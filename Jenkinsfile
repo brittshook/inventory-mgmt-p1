@@ -113,8 +113,7 @@ pipeline {
                     '''
 
                     sh '''
-                        git clone https://github.com/brittshook/inventory-mgmt-p1.git
-                        cd inventory-mgmt-p1
+                        git clone https://github.com/daniel413x/project-two-functional-tests.git
                         cd project-two-functional-tests
                         mvn test -Dheadless=true
                     '''
