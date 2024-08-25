@@ -216,7 +216,7 @@ export const InventoryByCategory = () => {
           rules={[
             {
               required: true,
-              message: "Please input the product price!",
+              message: "Please input the quantity!",
             },
           ]}
         >
