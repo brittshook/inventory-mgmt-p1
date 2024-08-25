@@ -120,10 +120,7 @@ pipeline {
                         cd project-two-functional-tests
                     '''
                     withCredentials([string(credentialsId: 'CUCUMBER_PUBLISH_TOKEN', variable: 'CUCUMBER_TOKEN')]) {
-                        sh '''
-                        echo 'cucumber.publish.token=${CUCUMBER_TOKEN}' >> src/test/resources/junit-platform.properties
-                        mvn test -Dheadless=true
-                        '''
+                        sh 'mvn test -Dheadless=true -Dcucumber.publish.token=${CUCUMBER_TOKEN}'
                     }
 
                     sh "kill ${backendPid} || true"
