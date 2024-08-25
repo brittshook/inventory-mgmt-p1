@@ -116,7 +116,7 @@ pipeline {
                     sh '''
                         git clone https://github.com/daniel413x/project-two-functional-tests.git
                         cd project-two-functional-tests
-                        mvn test -Dheadless=true
+                        mvn test -Dcucumber.publish.token=${CUCUMBER_PUBLISH_TOKEN} -Dheadless=true
                     '''
 
                     sh "kill ${backendPid} || true"
