@@ -80,7 +80,6 @@ export const Card = ({
   };
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     form?.resetFields();
     setOpen(false);
   };
