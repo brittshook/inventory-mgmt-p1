@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { ReactElement, useContext, useEffect, useRef, useState } from "react";
 import { Button, Form, Input, Popconfirm, Space, Table, Tooltip } from "antd";
 import type {
   InputRef,
@@ -12,6 +12,7 @@ import Highlighter from "react-highlight-words";
 import "./DataTable.css";
 import { deleteInventoryById } from "../api/inventory";
 import { ButtonWithModal } from "./ButtonWithModal";
+import { useScreenSize } from "../context/ScreenSizeContext";
 
 type props = {
   initialData?: DataType[];
@@ -48,6 +49,8 @@ export const DataTable = ({
   categoryName,
   warehouseName,
 }: props) => {
+  const { isLargerThan1250 } = useScreenSize();
+
   const [data, setData] = useState<DataType[]>([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -198,7 +201,7 @@ export const DataTable = ({
         a.brand.toLowerCase().localeCompare(b.brand.toLowerCase()),
       defaultSortOrder: "ascend",
       width: 160,
-      fixed: "left",
+      fixed: isLargerThan1250 ? "left" : undefined,
       ...getColumnSearchProps("brand"),
       ellipsis: {
         showTitle: false,
@@ -217,8 +220,8 @@ export const DataTable = ({
       sorter: (a, b) =>
         a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
       sortDirections: ["ascend", "descend", "ascend"],
-      fixed: "left",
-      width: 240,
+      fixed: isLargerThan1250 ? "left" : undefined,
+      width: 220,
       ellipsis: {
         showTitle: false,
       },
