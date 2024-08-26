@@ -128,11 +128,13 @@ pipeline {
                         echo '***frontend is ready***'
                     '''
 
-                    sh '''
-                        git clone https://github.com/daniel413x/project-two-functional-tests.git
-                        cd project-two-functional-tests
-                        mvn test -Dheadless=true
-                    '''
+                    withCredentials([string(credentialsId: 'CUCUMBER_PUBLISH_TOKEN', variable: 'CUCUMBER_TOKEN')]) {
+                        sh '''
+                            git clone https://github.com/daniel413x/project-two-functional-tests.git
+                            cd project-two-functional-tests
+                            mvn test -Dheadless=true -Dcucumber.publish.token=${CUCUMBER_TOKEN}
+                        '''
+                    }
 
                     // Clean up project-two-functional-tests repo
                     sh 'rm -rf project-two-functional-tests'
