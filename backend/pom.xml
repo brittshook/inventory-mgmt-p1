@@ -13,7 +13,7 @@
 	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>backend</name>
-	<description>Demo project for Spring Boot</description>
+	<description>API for inventory management system for climbing gear supply store, built with Java/SpringBoot</description>
 	<url/>
 	<licenses>
 		<license/>
