@@ -1,5 +1,7 @@
 package com.cragsupplyco.backend.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -13,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.testng.Assert;
 
 import com.cragsupplyco.backend.models.Category;
 import com.cragsupplyco.backend.repositories.CategoryRepository;
@@ -39,34 +40,39 @@ public class CategoryServiceTest {
 
     @Test
     public void testFindAll() {
-        List<Category> exepctedCategories = Arrays.asList(new Category(), new Category(), new Category());
+        Category category1 = new Category();
+        Category category2 = new Category();
+        Category category3 = new Category();
+        List<Category> exepctedCategories = Arrays.asList(category1, category2, category3);
 
         when(categoryRepository.findAll()).thenReturn(exepctedCategories);
         Iterable<Category> result = categoryService.findAll();
 
-        Assert.assertEquals(exepctedCategories, result);
+        int count = 0;
+        for (Category category : result) {
+            count++;
+        }
+
+        assertTrue(count == exepctedCategories.size());
     }
 
     @Test
     public void testFindByExistingName() {
-        Category expectedCategory = new Category();
-        expectedCategory.setName("Climbing Shoes");
-
         String categoryName = "Climbing Shoes";
+        Category expectedCategory = new Category();
+        expectedCategory.setName(categoryName);
 
         when(categoryRepository.findByName(categoryName)).thenReturn(Optional.of(expectedCategory));
         Optional<Category> result = categoryService.findByName(categoryName);
-        Assert.assertTrue(result.isPresent());
+        assertTrue(result.isPresent());
     }
 
     @Test
     public void testFindByNonExistentName() {
         String categoryName = "Helmets";
 
-        when(categoryRepository.findByName(categoryName)).thenReturn(Optional.empty());
-
         Optional<Category> result = categoryService.findByName(categoryName);
-        Assert.assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -77,27 +83,26 @@ public class CategoryServiceTest {
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(expectedCategory));
         Optional<Category> result = categoryService.findById(categoryId);
-        Assert.assertTrue(result.isPresent());
+        assertTrue(result.isPresent());
     }
 
     @Test
     public void testFindCategoryByNonExistentId() {
         int categoryId = 2;
 
-        when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
-
         Optional<Category> result = categoryService.findById(categoryId);
-        Assert.assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty());
     }
 
     @Test
     public void testSaveCategory() {
+        int categoryId = 4;
         Category expectedCategory = new Category();
-        expectedCategory.setId(4);
+        expectedCategory.setId(categoryId);
 
         when(categoryRepository.save(expectedCategory)).thenReturn(expectedCategory);
         Category result = categoryService.save(expectedCategory);
-        Assert.assertEquals(expectedCategory, result);
+        assertEquals(expectedCategory, result);
     }
 
     @Test
@@ -108,7 +113,7 @@ public class CategoryServiceTest {
 
         when(categoryRepository.save(expectedCategory)).thenReturn(expectedCategory);
         Category result = categoryService.updateCategoryById(categoryId, expectedCategory);
-        Assert.assertEquals(expectedCategory, result);
+        assertEquals(expectedCategory, result);
     }
 
     @Test

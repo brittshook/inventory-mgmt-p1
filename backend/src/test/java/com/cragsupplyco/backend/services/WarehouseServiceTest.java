@@ -12,7 +12,6 @@ import java.util.Optional;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -41,7 +40,10 @@ public class WarehouseServiceTest {
 
     @Test
     public void testFindAll() {
-        List<Warehouse> exepctedCategories = Arrays.asList(new Warehouse(), new Warehouse());
+        Warehouse warehouse1 = new Warehouse();
+        Warehouse warehouse2 = new Warehouse();
+        Warehouse warehouse3 = new Warehouse();
+        List<Warehouse> exepctedCategories = Arrays.asList(warehouse1, warehouse2, warehouse3);
 
         when(warehouseRepository.findAll()).thenReturn(exepctedCategories);
         Iterable<Warehouse> result = warehouseService.findAll();
@@ -51,7 +53,7 @@ public class WarehouseServiceTest {
             count++;
         }
 
-        Assert.assertTrue(count == exepctedCategories.size());
+        assertTrue(count == exepctedCategories.size());
     }
 
     @Test
@@ -62,7 +64,7 @@ public class WarehouseServiceTest {
 
         when(warehouseRepository.findByName(warehouseName)).thenReturn(Optional.of(expectedWarehouse));
         Optional<Warehouse> result = warehouseService.findByName(warehouseName);
-        Assert.assertTrue(result.isPresent());
+        assertTrue(result.isPresent());
     }
 
     @Test
@@ -70,7 +72,7 @@ public class WarehouseServiceTest {
         String warehouseName = "ST1";
 
         Optional<Warehouse> result = warehouseService.findByName(warehouseName);
-        Assert.assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -81,7 +83,7 @@ public class WarehouseServiceTest {
 
         when(warehouseRepository.findById(warehouseId)).thenReturn(Optional.of(expectedWarehouse));
         Optional<Warehouse> result = warehouseService.findById(warehouseId);
-        Assert.assertTrue(result.isPresent());
+        assertTrue(result.isPresent());
     }
 
     @Test
