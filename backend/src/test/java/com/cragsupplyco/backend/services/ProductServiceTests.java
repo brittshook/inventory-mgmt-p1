@@ -5,46 +5,40 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeMethod;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.repositories.ProductRepository;
-import com.cragsupplyco.backend.services.ProductService;
 
 public class ProductServiceTests {
 
     @InjectMocks
     private ProductService productService;
+    private AutoCloseable closeable;
 
     @Mock
     private ProductRepository productRepository;
 
-    private Product product1;
-    private Product product2;
-
-
-    @BeforeMethod
+    @BeforeTest
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        this.product1 = new Product();
-        this.product1.setName("Climbing shoes");
-        this.product1.setBrand("PenguinPro");
-        this.product1.setId(1);
-        this.product2 = new Product();
-        this.product2.setName("Climbing shoesz");
-        this.product2.setBrand("PenguinProz");
-        this.product2.setId(2);
+        closeable = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterTest
+    public void teardown() throws Exception {
+        closeable.close();
     }
 
     @Test
     public void testFindAll() {
-        List<Product> products = Arrays.asList(product1, product2);
+        List<Product> products = Arrays.asList(new Product(), new Product());
         when(productRepository.findAll()).thenReturn(products);
 
         Iterable<Product> result = productService.findAll();
@@ -54,33 +48,51 @@ public class ProductServiceTests {
             count++;
         }
 
-        assertTrue(count == products.size());
+        Assert.assertTrue(count == products.size());
     }
 
     @Test
     public void testFindProductByExistingId() {
+        Product product1 = new Product();
+        product1.setId(1);
+
         when(productRepository.findById(product1.getId())).thenReturn(Optional.of(product1));
         Optional<Product> result = productService.findById(product1.getId());
-        assertTrue(result.isPresent());
+        Assert.assertTrue(result.isPresent());
     }
 
     @Test
     public void testFindProductByNonExistentId() {
+        when(productRepository.findById(1)).thenReturn(Optional.empty());
+
         Optional<Product> result = productService.findById(1);
-        assertTrue(result.isEmpty());
+        Assert.assertTrue(result.isEmpty());
     }
 
     @Test
     public void testFindByBrandAndName() {
-        when(productRepository.findByBrandAndName(product1.getBrand(), product1.getName())).thenReturn(Optional.of(product1));
-        Optional<Product> result = productService.findByBrandAndName(product1.getBrand(), product1.getName());
-        assertTrue(result.isPresent());
+        Product product1 = new Product();
+        product1.setName("Climbing Shoes");
+        product1.setBrand("PenguinPro");
+        product1.setId(1);
+
+        String brand = "PenguinPro";
+        String name = "Climbing Shoes";
+
+        when(productRepository.findByBrandAndName(brand, name)).thenReturn(Optional.of(product1));
+        Optional<Product> result = productService.findByBrandAndName(brand, name);
+        Assert.assertTrue(result.isPresent());
     }
 
     @Test
     public void testFindByBrandAndNonExistentName() {
-        Optional<Product> result = productService.findByBrandAndName(product1.getBrand(), "");
-        assertFalse(result.isPresent());
+        String brand = "Unknown Brand";
+        String name = "Unknown Name";
+
+        when(productRepository.findByBrandAndName(brand, name)).thenReturn(Optional.empty());
+
+        Optional<Product> result = productService.findByBrandAndName(brand, name);
+        Assert.assertFalse(result.isPresent());
     }
 
     @Test
@@ -88,21 +100,25 @@ public class ProductServiceTests {
         Product savedProduct = new Product();
         savedProduct.setId(3);
         savedProduct.setName("newProduct");
+
         when(productRepository.save(savedProduct)).thenReturn(savedProduct);
+
         Product result = productService.save(savedProduct);
-        assertTrue(result.equals(savedProduct));
+        Assert.assertTrue(result.equals(savedProduct));
     }
 
     @Test
     public void testUpdateProductById() {
-        int productId = 1; 
         Product updatedProduct = new Product();
-        updatedProduct.setId(productId);  // Ensure the id is correctly set
+        updatedProduct.setId(1); 
         updatedProduct.setName("updatedProduct");
+
+        int productId = 1;
+
         when(productRepository.save(updatedProduct)).thenReturn(updatedProduct);
         Product result = productService.updateProductById(productId, updatedProduct);
-        assertNotNull(result);
-        assertEquals(result, updatedProduct);
+        Assert.assertNotNull(result);
+        Assert.assertEquals(result, updatedProduct);
         verify(productRepository, times(1)).save(updatedProduct);
     }
 

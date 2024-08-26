@@ -1,7 +1,5 @@
 package com.cragsupplyco.backend.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -13,6 +11,7 @@ import java.util.Optional;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -54,7 +53,7 @@ public class InventoryServiceTest {
             count++;
         }
 
-        assertTrue(count == exepctedCategories.size());
+        Assert.assertTrue(count == exepctedCategories.size());
     }
 
     @Test
@@ -65,7 +64,7 @@ public class InventoryServiceTest {
 
         when(inventoryRepository.findById(inventoryId)).thenReturn(Optional.of(expectedInventory));
         Optional<Inventory> result = inventoryService.findById(inventoryId);
-        assertTrue(result.isPresent());
+        Assert.assertTrue(result.isPresent());
     }
 
     @Test
@@ -73,7 +72,7 @@ public class InventoryServiceTest {
         int inventoryId = 2;
 
         Optional<Inventory> result = inventoryService.findById(inventoryId);
-        assertTrue(result.isEmpty());
+        Assert.assertTrue(result.isEmpty());
     }
 
     @Test
@@ -84,7 +83,7 @@ public class InventoryServiceTest {
 
         when(inventoryRepository.save(expectedInventory)).thenReturn(expectedInventory);
         Inventory result = inventoryService.save(expectedInventory);
-        assertEquals(expectedInventory, result);
+        Assert.assertEquals(expectedInventory, result);
     }
 
     @Test
@@ -95,7 +94,7 @@ public class InventoryServiceTest {
 
         when(inventoryRepository.save(expectedInventory)).thenReturn(expectedInventory);
         Inventory result = inventoryService.updateInventoryById(inventoryId, expectedInventory);
-        assertEquals(expectedInventory, result);
+        Assert.assertEquals(expectedInventory, result);
     }
 
     @Test
@@ -119,7 +118,7 @@ public class InventoryServiceTest {
 
         Inventory result = inventoryService.updateQuantityById(inventoryId, inventoryOperation, inventoryAddQuantity);
 
-        assertEquals(updatedInventory, result);
+        Assert.assertEquals(updatedInventory, result);
     }
 
     @Test
