@@ -75,7 +75,6 @@ pipeline {
         stage('Perform Functional Tests') {
             steps {
                 script {
-                    sh 'rm -rf project-two-functional-tests'
                     // capture id's to later terminate pipeline project test servers
                     def backendPid
                     def frontendPid
