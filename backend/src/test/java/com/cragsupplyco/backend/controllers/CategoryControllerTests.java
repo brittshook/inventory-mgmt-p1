@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
@@ -15,6 +14,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -51,7 +51,7 @@ public class CategoryControllerTests {
 
         Iterable<Category> result = categoryController.findAllCategories();
 
-        assertEquals(result, expectedCategories);
+        Assert.assertEquals(result, expectedCategories);
         verify(categoryService, times(1)).findAll();
     }
 
@@ -65,8 +65,8 @@ public class CategoryControllerTests {
 
         ResponseEntity<Category> response = categoryController.findCategoryById(id);
 
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
-        assertEquals(response.getBody(), category1);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(response.getBody(), category1);
         verify(categoryService, times(1)).findById(id);
     }
 
@@ -77,7 +77,7 @@ public class CategoryControllerTests {
 
         ResponseEntity<Category> response = categoryController.findCategoryById(id);
 
-        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
         verify(categoryService, times(1)).findById(id);
     }
 
@@ -92,8 +92,8 @@ public class CategoryControllerTests {
 
         ResponseEntity<Category> response = categoryController.findCategoryByName(name);
 
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
-        assertEquals(response.getBody(), category1);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(response.getBody(), category1);
         verify(categoryService, times(1)).findByName(name);
     }
 
@@ -104,7 +104,7 @@ public class CategoryControllerTests {
 
         ResponseEntity<Category> response = categoryController.findCategoryByName(name);
 
-        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
         verify(categoryService, times(1)).findByName(name);
     }
 
@@ -118,7 +118,7 @@ public class CategoryControllerTests {
 
         Category result = categoryController.createCategory(validCategory);
 
-        assertEquals(result, validCategory);
+        Assert.assertEquals(result, validCategory);
         verify(categoryService, times(1)).save(validCategory);
     }
 
@@ -129,7 +129,7 @@ public class CategoryControllerTests {
 
         Category category = categoryController.createCategory(invalidCategory);
 
-        assertEquals(category, null);
+        Assert.assertEquals(category, null);
     }
 
     @Test
