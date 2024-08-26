@@ -74,6 +74,16 @@ pipeline {
 
         stage('Perform Functional Tests') {
             steps {
+                // Clean up project-two-functional-tests repo if leftover from previous build/failure
+                sh '''
+                    if [ -d "project-two-functional-tests" ]; then
+                        echo "Directory exists, deleting..."
+                        rm -rf project-two-functional-tests
+                    else
+                        echo "Directory does not exist, skipping deletion."
+                    fi
+                '''
+
                 script {
                     // capture IDs to later terminate pipeline project test servers
                     def backendPid
@@ -88,7 +98,7 @@ pipeline {
                                 echo \$!
                             ''', returnStdout: true).trim()
                         }
-                    }
+                        }
 
                     dir('frontend') {
                         frontendPid = sh(script: '''
@@ -145,7 +155,6 @@ pipeline {
                 }
             }
         }
-
 
         stage('Deploy Backend') {
             steps {
