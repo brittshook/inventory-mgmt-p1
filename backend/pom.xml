@@ -31,7 +31,7 @@
 		<java.version>17</java.version>
 		<sonar.organization>brittshook</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<!-- <sonar.exclusions>/src/main/java/com/cragsupplyco/backend/controllers/TestingController.java, /src/main/java/com/cragsupplyco/backend/utils/TestDataUtil.java</sonar.exclusions> -->
+		<sonar.exclusions>/src/main/java/com/cragsupplyco/backend/controllers/TestingController.java, /src/main/java/com/cragsupplyco/backend/utils/TestDataUtil.java</sonar.exclusions>
 	</properties>
 	<dependencies>
 		<dependency>
