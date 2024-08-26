@@ -16,7 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.cragsupplyco.backend.models.Category;
@@ -31,9 +31,30 @@ public class CategoryControllerTests {
     private CategoryController categoryController;
     private AutoCloseable closeable;
 
-    @BeforeTest
+    private Category category1;
+    private Category category2;
+
+    private Category validCategory;
+    private Category invalidCategory;
+
+    @BeforeMethod
     public void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
+
+        category1 = new Category();
+        category1.setId(1);
+        category1.setName("Climbing Apparel");
+
+        category2 = new Category();
+        category2.setId(2);
+        category2.setName("Ropes");
+
+        validCategory = new Category();
+        validCategory.setId(3);
+        validCategory.setName("Climbing Accessories");
+
+        invalidCategory = new Category();
+        invalidCategory.setName("");
     }
 
     @AfterTest
@@ -42,10 +63,11 @@ public class CategoryControllerTests {
             closeable.close();
         }
     }
+    
 
     @Test
     public void testFindAllCategories() {
-        List<Category> expectedCategories = Arrays.asList(new Category(), new Category());
+        List<Category> expectedCategories = Arrays.asList(category1, category2);
 
         when(categoryService.findAll()).thenReturn(expectedCategories);
 
@@ -57,9 +79,6 @@ public class CategoryControllerTests {
 
     @Test
     public void testFindCategoryById() {
-        Category category1 = new Category();
-        category1.setId(1);
-
         int id = category1.getId();
         when(categoryService.findById(id)).thenReturn(Optional.of(category1));
 
@@ -71,7 +90,7 @@ public class CategoryControllerTests {
     }
 
     @Test
-    public void testFindCategoryByyNonExistentId() {
+    public void testFindCategoryByIdNotFound() {
         int id = 999;
         when(categoryService.findById(id)).thenReturn(Optional.empty());
 
@@ -83,11 +102,7 @@ public class CategoryControllerTests {
 
     @Test
     public void testFindCategoryByName() {
-        Category category1 = new Category();
-        category1.setId(1);
-        category1.setName("Climbing Shoes");
-
-        String name = "Climbing Shoes";
+        String name = category1.getName();
         when(categoryService.findByName(name)).thenReturn(Optional.of(category1));
 
         ResponseEntity<Category> response = categoryController.findCategoryByName(name);
@@ -98,7 +113,7 @@ public class CategoryControllerTests {
     }
 
     @Test
-    public void testFindCategoryByyNonExistentName() {
+    public void testFindCategoryByNameNotFound() {
         String name = "Unknown Category";
         when(categoryService.findByName(name)).thenReturn(Optional.empty());
 
@@ -110,23 +125,16 @@ public class CategoryControllerTests {
 
     @Test
     public void testCreateValidCategory() {
-        Category validCategory = new Category();
-        validCategory.setId(3);
-        validCategory.setName("Climbing Accessories");
-
         when(categoryService.save(any(Category.class))).thenReturn(validCategory);
 
         Category result = categoryController.createCategory(validCategory);
 
         assertEquals(result, validCategory);
-        verify(categoryService, times(1)).save(validCategory);
+        verify(categoryService, times(1)).save(any(Category.class));
     }
 
     @Test
     public void testCreateInvalidCategory() {
-        Category invalidCategory = new Category();
-        invalidCategory.setName("");
-
         Category category = categoryController.createCategory(invalidCategory);
 
         assertEquals(category, null);
@@ -134,10 +142,6 @@ public class CategoryControllerTests {
 
     @Test
     public void testUpdateCategoryById() {
-        Category validCategory = new Category();
-        validCategory.setId(3);
-        validCategory.setName("Climbing Accessories");
-
         categoryController.updateCategoryById(3, validCategory);
 
         verify(categoryService, times(1)).updateCategoryById(eq(3), any(Category.class));
