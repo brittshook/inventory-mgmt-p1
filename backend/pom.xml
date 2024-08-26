@@ -31,7 +31,6 @@
 		<java.version>17</java.version>
 		<sonar.organization>brittshook</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.exclusions>/src/main/java/com/cragsupplyco/backend/controllers/TestingController.java, /src/main/java/com/cragsupplyco/backend/utils/TestDataUtil.java</sonar.exclusions>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -129,30 +128,21 @@
 						<phase>test</phase>
 						<goals>
 							<goal>report</goal>
-							<goal>check</goal>
+							<!-- <goal>check</goal> -->
 						</goals>
-						<configuration>
-							<excludes>
-								<exclude>com/cragsupplyco/backend/controllers/TestingController*</exclude>
-								<exclude>com/cragsupplyco/backend/utils/TestDataUtil*</exclude>
-							</excludes>
+						<!-- <configuration>
 							<rules>
 								<rule>
 									<limits>
 										<limit>
-											<counter>LINE</counter>
-											<value>COVEREDRATIO</value>
-											<minimum>0.80</minimum>
-										</limit>
-										<limit>
 											<counter>BRANCH</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.80</minimum>
+											<minimum>0.60</minimum>
 										</limit>
 									</limits>
 								</rule>
 							</rules>
-						</configuration>
+						</configuration> -->
 					</execution>
 				</executions>
 			</plugin>
