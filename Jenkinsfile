@@ -75,7 +75,7 @@ pipeline {
         stage('Perform Functional Tests') {
             steps {
                 script {
-                    // capture id's to later terminate pipeline project test servers
+                    // capture IDs to later terminate pipeline project test servers
                     def backendPid
                     def frontendPid
                     withCredentials([
@@ -97,36 +97,53 @@ pipeline {
                         ''', returnStdout: true).trim()
                     }
 
+                    // wait for the backend and frontend to be ready
                     sh '''
-                        until curl --output /dev/null --silent http://localhost:5000; do
+                        TRIES_REMAINING=16
+
+                        echo 'Waiting for backend to be ready...'
+                        while ! curl --output /dev/null --silent http://localhost:5000; do
+                            TRIES_REMAINING=$((TRIES_REMAINING - 1))
+                            if [ $TRIES_REMAINING -le 0 ]; then
+                                echo 'backend did not start within expected time.'
+                                exit 1
+                            fi
                             echo 'waiting for backend...'
                             sleep 5
                         done
-                        echo "***backend is ready***"
-                    '''
+                        echo '***backend is ready***'
 
-                    sh '''
-                        until curl --output /dev/null --silent http://localhost:5173; do
+                        TRIES_REMAINING=16
+
+                        echo 'Waiting for frontend to be ready...'
+                        while ! curl --output /dev/null --silent http://localhost:5173; do
+                            TRIES_REMAINING=$((TRIES_REMAINING - 1))
+                            if [ $TRIES_REMAINING -le 0 ]; then
+                                echo 'frontend did not start within expected time.'
+                                exit 1
+                            fi
                             echo 'waiting for frontend...'
                             sleep 5
                         done
-                        echo "***frontend is ready***"
+                        echo '***frontend is ready***'
                     '''
 
-                    withCredentials([string(credentialsId: 'CUCUMBER_PUBLISH_TOKEN', variable: 'CUCUMBER_TOKEN')]) {
-                        sh '''
-                            git clone https://github.com/daniel413x/project-two-functional-tests.git
-                            cd project-two-functional-tests
-                            mvn test -Dheadless=true -Dcucumber.publish.token=${CUCUMBER_TOKEN}
-                        '''
-                    }
+                    sh '''
+                        git clone https://github.com/daniel413x/project-two-functional-tests.git
+                        cd project-two-functional-tests
+                        mvn test -Dheadless=true
+                    '''
 
+                    // Clean up project-two-functional-tests repo
+                    sh 'rm -rf project-two-functional-tests'
+
+                    // Kill backend and frontend processes
                     sh "kill ${backendPid} || true"
                     sh "kill ${frontendPid} || true"
-                    sh 'rm -rf project-two-functional-tests'
                 }
             }
         }
+
 
         stage('Deploy Backend') {
             steps {
