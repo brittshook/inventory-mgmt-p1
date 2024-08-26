@@ -14,14 +14,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.testng.annotations.AfterTest;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -31,9 +25,6 @@ import com.cragsupplyco.backend.services.ProductService;
 
 public class ProductControllerTests {
 
-
-    private MockMvc mockMvc;
-
     @Mock
     private ProductService productService;
 
@@ -41,57 +32,13 @@ public class ProductControllerTests {
     private ProductController productController;
     private AutoCloseable closeable;
 
-    private Product product1;
-    private Product product2;
-
-    private Product validProduct;
-    private Product invalidProduct;
-    private String invalidProductJson;
-
     @BeforeMethod
     public void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
         MockitoAnnotations.openMocks(this);
-
-        mockMvc = MockMvcBuilders.standaloneSetup(productController)
-                        .setValidator(new LocalValidatorFactoryBean())
-                        .build();
-        Category category1 = new Category();
-        category1.setId(1);
-        category1.setName("Climbing Gear");
-
-        product1 = new Product();
-        product1.setId(1);
-        product1.setName("Climbing Shoes");
-        product1.setBrand("PenguinPro");
-        product1.setDescription("Durable climbing shoes");
-        product1.setPrice(150.0);
-        product1.setCategory(category1);
-
-        product2 = new Product();
-        product2.setId(2);
-        product2.setName("Rope");
-        product2.setBrand("EverStrong");
-        product2.setDescription("Tough climbing rope");
-        product2.setPrice(80.0);
-        product2.setCategory(category1);
-
-
-        validProduct = new Product();
-        validProduct.setId(4);
-        validProduct.setName("Hiking Boots");
-        validProduct.setBrand("HikersInc");
-        validProduct.setDescription("Durable hiking boots");
-        validProduct.setPrice(150.0);
-        validProduct.setCategory(category1);
-
-        invalidProduct = new Product();
-        invalidProduct.setPrice(0.0);
-        invalidProduct.setCategory(category1);
-        invalidProductJson = "{\"id\":4,\"brand\":\"\",\"name\":\"\",\"description\":\"\",\"price\":0.0,\"category\":{\"id\":1,\"name\":\"Climbing Gear\"},\"inventory\":null}";
     }
 
-    @AfterTest
+    @AfterMethod
     public void teardown() throws Exception {
         if (closeable != null) {
             closeable.close();
@@ -100,105 +47,177 @@ public class ProductControllerTests {
 
     @Test
     public void testFindAllProducts() {
-        List<Product> expectedProducts = Arrays.asList(product1, product2);
+        List<Product> expectedProducts = Arrays.asList(new Product(), new Product());
 
         when(productService.findAll()).thenReturn(expectedProducts);
 
         Iterable<Product> result = productController.findAllProducts();
 
-        assertEquals(result, expectedProducts);
+        assertEquals(expectedProducts, result);
+        verify(productService, times(1)).findAll();
+    }
+
+    @Test
+    public void testFindAllProductsDetailed() {
+        List<Product> expectedProducts = Arrays.asList(new Product(), new Product());
+
+        when(productService.findAll()).thenReturn(expectedProducts);
+
+        Iterable<Product> result = productController.findAllProducts(null);
+
+        assertEquals(expectedProducts, result);
         verify(productService, times(1)).findAll();
     }
 
     @Test
     public void testFindAllProductsWithCategoryId() {
         int categoryId = 1;
-        List<Product> expectedProducts = Arrays.asList(product1, product2, validProduct);
+        List<Product> expectedProducts = Arrays.asList(new Product(), new Product(), new Product());
         when(productService.findAllByCategoryId(categoryId)).thenReturn(expectedProducts);
 
         Iterable<Product> result = productController.findAllProducts(categoryId);
 
-        assertEquals(result, expectedProducts);
-
+        assertEquals(expectedProducts, result);
         verify(productService, times(1)).findAllByCategoryId(categoryId);
     }
 
     @Test
     public void testFindById() {
-        int id = product1.getId();
+        Product product1 = new Product();
+        product1.setId(1);
+
+        int id = 1;
         when(productService.findById(id)).thenReturn(Optional.of(product1));
 
         ResponseEntity<Product> response = productController.findProductById(id);
 
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
-        assertEquals(response.getBody(), product1);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(product1, response.getBody());
+
+        verify(productService, times(1)).findById(id);
+    }
+
+    @Test
+    public void testFindByNonExistentId() {
+        int id = 10;
+        when(productService.findById(id)).thenReturn(Optional.empty());
+
+        ResponseEntity<Product> response = productController.findProductById(id);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(null, response.getBody());
 
         verify(productService, times(1)).findById(id);
     }
 
     @Test
     public void testFindByIdDetailed() {
-        int id = product1.getId();
-        when(productService.findById(id)).thenReturn(Optional.of(product1));
+        Product product1 = new Product();
+        product1.setId(1);
+        product1.setName("Climbing Shoes");
+        product1.setBrand("PenguinPro");
         
+        int id = 1;
+        when(productService.findById(id)).thenReturn(Optional.of(product1));
+
         ResponseEntity<Product> response = productController.findProductByIdDetailed(id);
 
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
-        assertEquals(response.getBody(), product1);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(product1, response.getBody());
+
+        verify(productService, times(1)).findById(id);
+    }
+
+    @Test
+    public void testFindByNonExistentIdDetailed() {
+        int id = 10;
+        when(productService.findById(id)).thenReturn(Optional.empty());
+
+        ResponseEntity<Product> response = productController.findProductByIdDetailed(id);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(null, response.getBody());
 
         verify(productService, times(1)).findById(id);
     }
 
     @Test
     public void testFindProductByBrandAndName() {
-        String brand = product1.getBrand();
-        String name = product1.getName();
+        Product product1 = new Product();
+        product1.setId(1);
+        product1.setName("Climbing Shoes");
+        product1.setBrand("PenguinPro");
+
+        String brand = "Penguin Pro";
+        String name = "Climbing Shoes";
         when(productService.findByBrandAndName(brand, name)).thenReturn(Optional.of(product1));
 
         ResponseEntity<Product> response = productController.findProductByBrandAndName(brand, name);
 
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
-        assertEquals(response.getBody(), product1);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(product1, response.getBody());
 
         verify(productService, times(1)).findByBrandAndName(brand, name);
     }
 
     @Test
-    public void testFindProductByBrandAndName404() throws Exception {
+    public void testFindProductByNonExistentBrandAndyNonExistentName() throws Exception {
         String brand = "invalidBrand";
         String name = "invalidName";
         when(productService.findByBrandAndName(brand, name)).thenReturn(Optional.empty());
-        mockMvc.perform(get("/api/product/byProps")
-                .param("name", name)
-                .param("brand", brand)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+
+        ResponseEntity<Product> response = productController.findProductByBrandAndName(brand, name);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(null, response.getBody());
+
+        verify(productService, times(1)).findByBrandAndName(brand, name);
     }
 
     @Test
     public void testCreateValidProduct() {
+        Product validProduct = new Product();
+        validProduct.setId(4);
+        validProduct.setName("Hiking Boots");
+        validProduct.setBrand("HikersInc");
+        validProduct.setDescription("Durable hiking boots");
+        validProduct.setPrice(150.0);
+        validProduct.setCategory(new Category());
+
         when(productService.save(any(Product.class))).thenReturn(validProduct);
 
         Product result = productController.createProduct(validProduct);
 
-        assertEquals(result, validProduct);
+        assertEquals(validProduct, result);
 
         verify(productService, times(1)).save(any(Product.class));
     }
 
     @Test
     public void testCreateInvalidProduct() {
+        Product invalidProduct = new Product();
+        invalidProduct.setPrice(0.0);
+        invalidProduct.setCategory(new Category());
+
         Product result = productController.createProduct(invalidProduct);
 
-        assertEquals(result, null);
+        assertEquals(null, result);
     }
 
     @Test
     public void testUpdateProductById() {
+        Product validProduct = new Product();
+        validProduct.setId(4);
+        validProduct.setName("Hiking Boots");
+        validProduct.setBrand("HikersInc");
+        validProduct.setDescription("Durable hiking boots");
+        validProduct.setPrice(150.0);
+        validProduct.setCategory(new Category());
+
         productController.updateProductById(4, validProduct);
 
         verify(productService, times(1))
-        .updateProductById(eq(4), any(Product.class));
+                .updateProductById(eq(4), any(Product.class));
     }
 
     @Test
@@ -206,6 +225,6 @@ public class ProductControllerTests {
         productController.deleteProductById(4);
 
         verify(productService, times(1))
-        .deleteById(4);
+                .deleteById(4);
     }
 }
