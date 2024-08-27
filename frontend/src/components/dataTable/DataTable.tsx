@@ -10,9 +10,9 @@ import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
 import "./DataTable.css";
-import { deleteInventoryById } from "../api/inventory";
-import { ButtonWithModal } from "./ButtonWithModal";
-import { useScreenSize } from "../context/ScreenSizeContext";
+import { deleteInventoryById } from "../../api/inventory";
+import { ButtonWithModal } from ".././ButtonWithModal";
+import { useScreenSize } from "../../context/ScreenSizeContext";
 
 type props = {
   initialData?: DataType[];
