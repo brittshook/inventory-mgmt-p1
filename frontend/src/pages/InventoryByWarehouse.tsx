@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DataTable, DataType } from "../components/DataTable";
+import { DataTable, DataType } from "../components/dataTable/DataTable";
 import { useLocation } from "react-router-dom";
 import { getWarehouseById } from "../api/warehouse";
 import { getProductById, ProductDataType } from "../api/product";
