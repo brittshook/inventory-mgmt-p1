@@ -63,6 +63,7 @@ export const Products = () => {
     }
   };
 
+  if (loading) return <div>Loading...</div>;
   if (error) return <ErrorPage messageText={error.message} />;
 
   return (
