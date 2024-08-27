@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DataTable, DataType } from "../components/DataTable";
+import { DataTable, DataType } from "../components/dataTable/DataTable";
 import { ProductDataType, getProductsWithInventory } from "../api/product";
 import { Breadcrumb } from "../components/breadcrumb/Breadcrumb";
 import productIcon from "../assets/icons/items.svg";

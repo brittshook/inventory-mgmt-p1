@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getInventory } from "../api/inventory";
 import { Card } from "antd";
-import { DataType } from "../components/DataTable";
+import { DataType } from "../components/dataTable/DataTable";
 import { getWarehouses, WarehouseDataType } from "../api/warehouse";
 import { ErrorPage } from "./ErrorPage";
 
