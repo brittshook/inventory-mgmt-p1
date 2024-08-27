@@ -5,7 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 jest.mock("../../api/warehouse");
 
 describe("Warehouses Page", () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 

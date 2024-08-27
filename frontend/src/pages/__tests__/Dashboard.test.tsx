@@ -6,7 +6,7 @@ jest.mock("../../api/inventory");
 jest.mock("../../api/warehouse");
 
 describe("Dashboard Page", () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
