@@ -31,7 +31,7 @@ pipeline {
                                 -Dsonar.projectKey=mgmt-p1 \
                                 -Dsonar.projectName=inventory-mgmt-p1-frontend \
                                 -Dsonar.sources=src \
-                                -Dsonar.exclusions=**/__test__/** \
+                                -Dsonar.exclusions=**/__tests__/** \
                                 -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
                             '''
                         }
