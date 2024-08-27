@@ -5,7 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 jest.mock("../../api/inventory");
 jest.mock("../../api/warehouse");
 
-describe("Dashboard Component", () => {
+describe("Dashboard Page", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -18,6 +18,9 @@ describe("Dashboard Component", () => {
     );
 
     expect(screen.getByText("Loading...")).toBeDefined();
-
   });
+
+  test("should display total inventory and total capacity", async () => {});
+
+  test("should display 'N/A' if API calls fail", async () => {});
 });
