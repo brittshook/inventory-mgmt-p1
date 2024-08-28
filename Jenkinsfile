@@ -18,14 +18,18 @@ pipeline {
             }
         }
 
-        stage('Build and Analyze Frontend') {
+        stage('Build Frontend') {
+            steps {
+                sh 'cd frontend && npm install && npm run build'
+            }
+        }
+
+        stage('Test and Analyze Frontend') {
             steps {
                 script {
                     withSonarQubeEnv('SonarCloud') {
                         dir('frontend') {
                             sh '''
-                            npm install
-                            npm run build
                             npm run test -- --coverage
                             npx sonar-scanner \
                                 -Dsonar.projectKey=mgmt-p1 \
@@ -40,10 +44,16 @@ pipeline {
             }
         }
 
-        stage('Build and Analyze Backend') {
+        stage('Build Backend') {
+            steps {
+                sh 'cd backend && mvn clean install -DskipTests=true -Dspring.profiles.active=build'
+            }
+        }
+
+        stage('Test and Analyze Backend') {
             steps {
                 dir('backend') {
-                    sh 'mvn clean verify -Pcoverage -Dspring.profiles.active=build'
+                    sh 'mvn clean verify -Pcoverage -Dspring.profiles.active=test'
 
                     withSonarQubeEnv('SonarCloud') {
                         sh '''
@@ -55,13 +65,6 @@ pipeline {
                         '''
                     }
                 }
-                sh 'cd backend && mvn clean install -DskipTests=true -Dspring.profiles.active=build'
-            }
-        }
-
-        stage('Test Backend') {
-            steps {
-                sh 'cd backend && mvn test -Dspring.profiles.active=test'
             }
         }
 
