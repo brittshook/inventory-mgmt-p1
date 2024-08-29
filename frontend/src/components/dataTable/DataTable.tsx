@@ -23,6 +23,7 @@ type props = {
   editModalFormItems: ReactElement;
   categoryName?: string | null;
   warehouseName?: string | null;
+  testId?: string;
 };
 
 export type DataType = {
@@ -48,6 +49,7 @@ export const DataTable = ({
   editModalFormItems,
   categoryName,
   warehouseName,
+  testId,
 }: props) => {
   const { isLargerThan1250 } = useScreenSize();
 
@@ -310,6 +312,7 @@ export const DataTable = ({
       render: (_, record, index) => (
         <Space>
           <ButtonWithModal
+            id={`edit-inventory-${index}`}
             title="Update Inventory Item"
             buttonType="link"
             buttonSize="small"
@@ -365,6 +368,7 @@ export const DataTable = ({
 
   return (
     <Table
+      data-testid={testId}
       columns={columns}
       dataSource={data}
       onChange={onChange}

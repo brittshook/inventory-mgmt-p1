@@ -15,6 +15,7 @@ type props = {
   recordId?: number;
   setWarehouse?: string | null;
   setCategory?: string | null;
+  id?: string;
 };
 
 export const ButtonWithModal = ({
@@ -31,6 +32,7 @@ export const ButtonWithModal = ({
   recordId,
   setCategory,
   setWarehouse,
+  id,
 }: props) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -63,6 +65,7 @@ export const ButtonWithModal = ({
   return (
     <>
       <Button
+        id={id}
         type={buttonType}
         onClick={showModal}
         disabled={disabled}
