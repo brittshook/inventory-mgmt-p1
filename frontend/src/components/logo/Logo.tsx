@@ -1,5 +1,6 @@
 import logoFull from "/logo.webp";
 import logoShort from "/logo_short.webp";
+import "./Logo.css";
 
 type props = {
   type: "full" | "short";

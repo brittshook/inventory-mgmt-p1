@@ -5,7 +5,7 @@ import productIcon from "../../assets/icons/items.svg";
 import logoutIcon from "../../assets/icons/logout.svg";
 import inventoryIcon from "../../assets/icons/inventory.svg";
 import profileImage from "/sample_user.webp";
-import { Logo } from "../Logo";
+import { Logo } from "../logo/Logo";
 import { Link, useLocation } from "react-router-dom";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 
