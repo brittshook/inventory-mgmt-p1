@@ -3,7 +3,7 @@ import { DataTable, DataType } from "../dataTable/DataTable";
 import { deleteInventoryById, putInventory } from "../../api/inventory";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 import "@testing-library/jest-dom";
-import { Form, Input, Select, Space } from "antd";
+import { Form, Input } from "antd";
 
 // Set up mocks
 jest.mock("../../api/inventory", () => ({
