@@ -91,7 +91,7 @@ export const Products = () => {
           </Form>
         </ButtonWithModal>
       </div>
-      <section className="cards">
+      <section className="cards" data-testid="category-cards-section">
         {categories?.map((category) => (
           <Card
             key={category.id}
