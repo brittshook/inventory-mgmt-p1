@@ -71,7 +71,7 @@ describe("Data Table Component", () => {
       description:
         "High-performance climbing shoes with excellent grip and comfort.",
       price: 129.99,
-      size: "M",
+      size: "42",
       quantity: 100,
       categoryName: "Climbing Shoes",
       warehouseName: "NY1",
