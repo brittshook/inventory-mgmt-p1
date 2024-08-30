@@ -86,7 +86,7 @@ export const Products = () => {
                 { required: true, message: "Please input the category name" },
               ]}
             >
-              <Input />
+              <Input data-testid="create-category-name-field" />
             </Form.Item>
           </Form>
         </ButtonWithModal>
@@ -115,7 +115,7 @@ export const Products = () => {
                     },
                   ]}
                 >
-                  <Input />
+                  <Input data-testid="edit-category-name-field" />
                 </Form.Item>
               </Form>
             }

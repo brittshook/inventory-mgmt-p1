@@ -62,9 +62,9 @@ export const Card = ({
   };
 
   const actions: React.ReactNode[] = [
-    <EditOutlined key="edit" onClick={handleEditClick} />,
+    <EditOutlined data-testid="edit-card-button" key="edit" onClick={handleEditClick} />,
     <Dropdown menu={menuProps}>
-      <EllipsisOutlined key="ellipsis" />
+      <EllipsisOutlined key="ellipsis" data-testid="card-ellipsis-button" />
     </Dropdown>,
   ];
 
