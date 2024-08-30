@@ -16,7 +16,11 @@ import { Form, Input, Select, Space } from "antd";
 import { CategoryDataType, getCategories } from "../api/category";
 import { ErrorPage } from "./ErrorPage";
 
-export const InventoryByWarehouse = () => {
+type props = {
+  testId?: string;
+};
+
+export const InventoryByWarehouse = ({ testId }: props) => {
   const path = useLocation().pathname;
   const search = useLocation().search;
   const id = search.match(/\d+/)![0];
@@ -240,7 +244,7 @@ export const InventoryByWarehouse = () => {
   if (error) return <ErrorPage messageText={error.message} />;
 
   return (
-    <>
+    <div data-testid={testId}>
       <Breadcrumb
         items={[
           {
@@ -255,10 +259,7 @@ export const InventoryByWarehouse = () => {
           {
             href: `${path + search}`,
             title: (
-              <div
-                id={`breadcrumb-warehouse-name`}
-                className="breadcrumb-item"
-              >
+              <div id={`breadcrumb-warehouse-name`} className="breadcrumb-item">
                 {warehouse}
               </div>
             ),
@@ -300,6 +301,6 @@ export const InventoryByWarehouse = () => {
           warehouseName={warehouse}
         />
       </section>
-    </>
+    </div>
   );
 };
