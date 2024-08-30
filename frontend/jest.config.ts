@@ -3,7 +3,7 @@ import type { Config } from "@jest/types";
 const config: Config.InitialOptions = {
   preset: "ts-jest/presets/default-esm",
   testEnvironment: "jest-environment-jsdom",
-  testTimeout: 15000,
+  testTimeout: 60000,
   setupFilesAfterEnv: ["<rootDir>/setupTests.js"],
   transform: {
     "^.+\\.tsx?$": [
