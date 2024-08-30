@@ -231,12 +231,12 @@ describe("Products Page", () => {
       </MemoryRouter>
     );
 
+    let cardsSection;
     await waitFor(() => {
-      const cardsSection = screen.getByTestId("category-cards-section");
+      cardsSection = screen.getByTestId("category-cards-section");
       expect(cardsSection).toBeDefined();
     });
-    const cardsSection = screen.getByTestId("category-cards-section");
-    const ellipsisButton= within(cardsSection).getByTestId("card-ellipsis-button");
+    const ellipsisButton= within(cardsSection!).getByTestId("card-ellipsis-button");
     // simulate hover action
     fireEvent.mouseOver(ellipsisButton);
 

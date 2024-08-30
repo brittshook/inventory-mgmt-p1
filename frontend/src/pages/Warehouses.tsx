@@ -89,7 +89,7 @@ export const Warehouses = () => {
                 { required: true, message: "Please input the warehouse name!" },
               ]}
             >
-              <Input addonBefore="Warehouse" />
+              <Input addonBefore="Warehouse" data-testid="warehouse-modal-name-field" />
             </Form.Item>
             <Form.Item
               label="Max Capacity"
@@ -101,7 +101,7 @@ export const Warehouses = () => {
                 },
               ]}
             >
-              <Input type="number" />
+              <Input type="number" data-testid="warehouse-modal-max-capacity-field" />
             </Form.Item>
             <Form.Item
               label="Street Address"
@@ -110,7 +110,7 @@ export const Warehouses = () => {
                 { required: true, message: "Please input the street address!" },
               ]}
             >
-              <Input />
+              <Input data-testid="warehouse-modal-street-address-field" />
             </Form.Item>
             <Input.Group compact>
               <Form.Item
@@ -118,7 +118,7 @@ export const Warehouses = () => {
                 name="city"
                 rules={[{ required: true, message: "Please input the city!" }]}
               >
-                <Input style={{ width: 150 }} />
+                <Input style={{ width: 150 }} data-testid="warehouse-modal-city-field" />
               </Form.Item>
               <Form.Item
                 label="State"
@@ -130,7 +130,9 @@ export const Warehouses = () => {
                 <Select
                   style={{ width: 170, marginLeft: 15, marginRight: 15 }}
                   placeholder="State"
+                  open
                   showSearch
+                  data-testid="warehouse-modal-state-select"
                   filterOption={(input, option) =>
                     (`${option?.label}` ?? "")
                       .toLowerCase()
@@ -152,13 +154,13 @@ export const Warehouses = () => {
                   { required: true, message: "Please input the zip code!" },
                 ]}
               >
-                <Input style={{ width: 120 }} />
+                <Input style={{ width: 120 }} data-testid="warehouse-modal-zip-code-field" />
               </Form.Item>
             </Input.Group>
           </Form>
         </ButtonWithModal>
       </div>
-      <section className="cards">
+      <section className="cards" data-testid="warehouse-cards-section">
         {warehouses?.map((warehouse) => (
           <Card
             key={warehouse.id}
@@ -182,7 +184,7 @@ export const Warehouses = () => {
                     },
                   ]}
                 >
-                  <Input addonBefore="Warehouse" />
+                  <Input addonBefore="Warehouse" data-testid="warehouse-modal-name-field" />
                 </Form.Item>
                 <Form.Item
                   label="Max Capacity"
@@ -194,7 +196,7 @@ export const Warehouses = () => {
                     },
                   ]}
                 >
-                  <Input type="number" />
+                  <Input type="number" data-testid="warehouse-modal-max-capacity-field" />
                 </Form.Item>
                 <Form.Item
                   label="Street Address"
@@ -206,7 +208,7 @@ export const Warehouses = () => {
                     },
                   ]}
                 >
-                  <Input />
+                  <Input data-testid="warehouse-modal-street-address-field" />
                 </Form.Item>
                 <Input.Group compact>
                   <Form.Item
@@ -216,7 +218,7 @@ export const Warehouses = () => {
                       { required: true, message: "Please input the city!" },
                     ]}
                   >
-                    <Input style={{ width: 150 }} />
+                    <Input style={{ width: 150 }} data-testid="warehouse-modal-city-field" />
                   </Form.Item>
                   <Form.Item
                     label="State"
@@ -229,6 +231,7 @@ export const Warehouses = () => {
                       style={{ width: 170, marginLeft: 15, marginRight: 15 }}
                       placeholder="State"
                       showSearch
+                      data-testid="warehouse-modal-state-select"
                       filterOption={(input, option) =>
                         (`${option?.label}` ?? "")
                           .toLowerCase()
@@ -250,7 +253,7 @@ export const Warehouses = () => {
                       { required: true, message: "Please input the zip code!" },
                     ]}
                   >
-                    <Input style={{ width: 120 }} />
+                    <Input style={{ width: 120 }} data-testid="warehouse-modal-zip-code-field" />
                   </Form.Item>
                 </Input.Group>
               </Form>
