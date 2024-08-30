@@ -1,7 +1,6 @@
 package com.cragsupplyco.backend.models;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -33,20 +32,20 @@ public class WarehouseTest {
 
     @Test
     public void testCategoryGettersAndSetters() {
-        assertEquals(warehouse.getId(), 1);
-        assertEquals(warehouse.getName(), "Name");
-        assertEquals(warehouse.getStreetAddress(), "Street Address");
-        assertEquals(warehouse.getCity(), "City");
-        assertEquals(warehouse.getState(), "ST");
-        assertEquals(warehouse.getZipCode(), "00000");
-        assertEquals(warehouse.getMaxCapacity(), 1000);
-        assertEquals(warehouse.getInventory(), inventoryItems);
+        Assert.assertEquals(warehouse.getId(), 1);
+        Assert.assertEquals(warehouse.getName(), "Name");
+        Assert.assertEquals(warehouse.getStreetAddress(), "Street Address");
+        Assert.assertEquals(warehouse.getCity(), "City");
+        Assert.assertEquals(warehouse.getState(), "ST");
+        Assert.assertEquals(warehouse.getZipCode(), "00000");
+        Assert.assertEquals(warehouse.getMaxCapacity(), 1000);
+        Assert.assertEquals(warehouse.getInventory(), inventoryItems);
     }
 
     @Test
     public void testToString() {
         String expectedToString = "Warehouse [id=1, name=Name, maxCapacity=1000, streetAddress=Street Address, city=City, state=ST, zipCode=00000, inventory="
                 + inventoryItems + "]";
-        assertEquals(warehouse.toString(), expectedToString);
+        Assert.assertEquals(warehouse.toString(), expectedToString);
     }
 }

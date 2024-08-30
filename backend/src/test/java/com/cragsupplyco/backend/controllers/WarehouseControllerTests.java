@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
@@ -15,6 +14,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -51,7 +51,7 @@ public class WarehouseControllerTests {
 
         Iterable<Warehouse> result = warehouseController.findAllWarehouses();
 
-        assertEquals(expectedWarehouses, result);
+        Assert.assertEquals(expectedWarehouses, result);
         verify(warehouseService, times(1)).findAll();
     }
 
@@ -65,8 +65,8 @@ public class WarehouseControllerTests {
 
         ResponseEntity<Warehouse> response = warehouseController.findWarehouseById(id);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(warehouse1, response.getBody());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assert.assertEquals(warehouse1, response.getBody());
 
         verify(warehouseService, times(1)).findById(id);
     }
@@ -78,8 +78,8 @@ public class WarehouseControllerTests {
 
         ResponseEntity<Warehouse> response = warehouseController.findWarehouseById(id);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals(null, response.getBody());
+        Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        Assert.assertEquals(null, response.getBody());
 
         verify(warehouseService, times(1)).findById(id);
     }
@@ -95,8 +95,8 @@ public class WarehouseControllerTests {
 
         ResponseEntity<Warehouse> response = warehouseController.findWarehouseByName(name);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(warehouse1, response.getBody());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assert.assertEquals(warehouse1, response.getBody());
 
         verify(warehouseService, times(1)).findByName(name);
     }
@@ -108,8 +108,8 @@ public class WarehouseControllerTests {
 
         ResponseEntity<Warehouse> response = warehouseController.findWarehouseByName(name);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals(null, response.getBody());
+        Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        Assert.assertEquals(null, response.getBody());
 
         verify(warehouseService, times(1)).findByName(name);
     }
@@ -129,7 +129,7 @@ public class WarehouseControllerTests {
 
         Warehouse result = warehouseController.createWarehouse(validWarehouse);
 
-        assertEquals(validWarehouse, result);
+        Assert.assertEquals(validWarehouse, result);
         verify(warehouseService, times(1)).save(validWarehouse);
     }
 
@@ -144,7 +144,7 @@ public class WarehouseControllerTests {
         invalidWarehouse.setZipCode("");
 
         Warehouse result = warehouseController.createWarehouse(invalidWarehouse);
-        assertEquals(null, result);
+        Assert.assertEquals(null, result);
     }
 
     @Test

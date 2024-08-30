@@ -1,7 +1,6 @@
 package com.cragsupplyco.backend.models;
 
-import static org.junit.Assert.assertEquals;
-
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -32,14 +31,14 @@ public class CategoryTest {
 
     @Test
     public void testCategoryGettersAndSetters() {
-        assertEquals(category.getId(), 1);
-        assertEquals(category.getName(), "Name");
-        assertEquals(category.getProducts(), products);
+        Assert.assertEquals(category.getId(), 1);
+        Assert.assertEquals(category.getName(), "Name");
+        Assert.assertEquals(category.getProducts(), products);
     }
 
     @Test
     public void testToString() {
         String expectedToString = "Category [id=1, name=Name, products=" + products + "]";
-        assertEquals(category.toString(), expectedToString);
+        Assert.assertEquals(category.toString(), expectedToString);
     }
 }
