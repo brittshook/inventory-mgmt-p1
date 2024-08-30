@@ -40,6 +40,7 @@ const config: Config.InitialOptions = {
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageReporters: ["lcov", "json", "text"],
+  coveragePathIgnorePatterns: ["/node_modules/", "/src/api/"],
 };
 
 export default config;

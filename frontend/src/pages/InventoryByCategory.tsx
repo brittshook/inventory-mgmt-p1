@@ -18,7 +18,11 @@ import {
 } from "../api/inventory";
 import { ErrorPage } from "./ErrorPage";
 
-export const InventoryByCategory = () => {
+type props = {
+  testId?: string;
+};
+
+export const InventoryByCategory = ({testId}: props) => {
   const path = useLocation().pathname;
   const search = useLocation().search;
   const id = search.match(/\d+/)![0];
@@ -229,7 +233,7 @@ export const InventoryByCategory = () => {
   if (error) return <ErrorPage messageText={error.message} />;
 
   return (
-    <>
+    <div data-testid={testId}>
       <Breadcrumb
         items={[
           {
@@ -285,6 +289,6 @@ export const InventoryByCategory = () => {
           categoryName={category}
         />
       </section>
-    </>
+    </div>
   );
 };
