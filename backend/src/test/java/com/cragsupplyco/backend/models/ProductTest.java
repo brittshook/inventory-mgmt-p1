@@ -1,7 +1,6 @@
 package com.cragsupplyco.backend.models;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -35,20 +34,20 @@ public class ProductTest {
 
     @Test
     public void testCategoryGettersAndSetters() {
-        assertEquals(product.getId(), 1);
-        assertEquals(product.getBrand(), "Brand");
-        assertEquals(product.getName(), "Name");
-        assertEquals(product.getDescription(), "Description");
-        assertEquals(product.getPrice(), 2.0);
-        assertEquals(product.getCategory(), category);
-        assertEquals(product.getInventory(), inventoryItems);
+        Assert.assertEquals(product.getId(), 1);
+        Assert.assertEquals(product.getBrand(), "Brand");
+        Assert.assertEquals(product.getName(), "Name");
+        Assert.assertEquals(product.getDescription(), "Description");
+        Assert.assertEquals(product.getPrice(), 2.0);
+        Assert.assertEquals(product.getCategory(), category);
+        Assert.assertEquals(product.getInventory(), inventoryItems);
     }
 
     @Test
     public void testToString() {
         String expectedToString = "Product [id=1, brand=Brand, name=Name, description=Description, price=2.0, category="
                 + category + ", inventory=" + inventoryItems + "]";
-        assertEquals(product.toString(), expectedToString);
+        Assert.assertEquals(product.toString(), expectedToString);
     }
 
 }

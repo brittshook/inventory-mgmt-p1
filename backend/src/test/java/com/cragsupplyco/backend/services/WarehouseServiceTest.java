@@ -1,7 +1,5 @@
 package com.cragsupplyco.backend.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -89,7 +87,7 @@ public class WarehouseServiceTest {
         int warehouseId = 2;
 
         Optional<Warehouse> result = warehouseService.findById(warehouseId);
-        assertTrue(result.isEmpty());
+        Assert.assertTrue(result.isEmpty());
     }
 
     @Test
@@ -100,7 +98,7 @@ public class WarehouseServiceTest {
 
         when(warehouseRepository.save(expectedWarehouse)).thenReturn(expectedWarehouse);
         Warehouse result = warehouseService.save(expectedWarehouse);
-        assertEquals(expectedWarehouse, result);
+        Assert.assertEquals(expectedWarehouse, result);
     }
 
     @Test
@@ -111,7 +109,7 @@ public class WarehouseServiceTest {
 
         when(warehouseRepository.save(expectedWarehouse)).thenReturn(expectedWarehouse);
         Warehouse result = warehouseService.updateWarehouseById(warehouseId, expectedWarehouse);
-        assertEquals(expectedWarehouse, result);
+        Assert.assertEquals(expectedWarehouse, result);
     }
 
     @Test

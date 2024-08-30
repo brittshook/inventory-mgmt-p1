@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
@@ -15,6 +14,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -54,7 +54,7 @@ public class InventoryControllerTests {
 
         Iterable<Inventory> result = inventoryController.findAllInventory();
 
-        assertEquals(result, expectedInventory);
+        Assert.assertEquals(result, expectedInventory);
         verify(inventoryService, times(1)).findAll();
     }
 
@@ -71,8 +71,8 @@ public class InventoryControllerTests {
 
         ResponseEntity<Inventory> response = inventoryController.findInventoryById(id);
 
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
-        assertEquals(response.getBody(), inventory1);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(response.getBody(), inventory1);
         verify(inventoryService, times(1)).findById(id);
     }
 
@@ -83,7 +83,7 @@ public class InventoryControllerTests {
 
         ResponseEntity<Inventory> response = inventoryController.findInventoryById(id);
 
-        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
         verify(inventoryService, times(1)).findById(id);
     }
 
@@ -100,7 +100,7 @@ public class InventoryControllerTests {
 
         Inventory result = inventoryController.createInventory(validInventory);
 
-        assertEquals(result, validInventory);
+        Assert.assertEquals(result, validInventory);
         verify(inventoryService, times(1)).save(validInventory);
     }
 
@@ -114,7 +114,7 @@ public class InventoryControllerTests {
 
         Inventory result = inventoryController.createInventory(inventory1);
 
-        assertEquals(result, null);
+        Assert.assertEquals(result, null);
     }
 
     @Test
