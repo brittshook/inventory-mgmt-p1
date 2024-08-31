@@ -177,5 +177,20 @@ pipeline {
                 }
             }
         }
+
+        stage('Performance Test Deployed App') {
+            steps {
+                sh '''
+                git clone https://github.com/daniel413x/project-two-performance-tests.git
+                cd project-two-performance-tests
+                '''
+                bzt "project-two-performance-tests/stepping.yml"
+            }
+            post {
+                always {
+                    sh "rm -rf project-two-performance-tests"
+                }
+            }
+        }
     }
 }
