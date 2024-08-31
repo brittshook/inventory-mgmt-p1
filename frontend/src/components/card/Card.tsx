@@ -69,7 +69,7 @@ export const Card = ({
       key="edit"
       onClick={handleEditClick}
     />,
-    <Dropdown menu={menuProps}>
+    <Dropdown key="dropdown" menu={menuProps}>
       <EllipsisOutlined
         key="ellipsis"
         data-testid={testId && "card-ellipsis-button"}
