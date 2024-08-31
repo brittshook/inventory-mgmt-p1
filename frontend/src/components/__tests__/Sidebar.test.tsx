@@ -1,9 +1,6 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { DataTable, DataType } from "../dataTable/DataTable";
-import { deleteInventoryById, putInventory } from "../../api/inventory";
+import { render, screen } from "@testing-library/react";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 import "@testing-library/jest-dom";
-import { Form, Input } from "antd";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { Sidebar } from "../sidebar/Sidebar";
 
