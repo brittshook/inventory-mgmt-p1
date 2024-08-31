@@ -4,10 +4,7 @@ import "@testing-library/jest-dom";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 import { getCategoryById } from "../../api/category";
-import {
-  getProductsWithInventory,
-  getProductsWithInventoryByCategoryId,
-} from "../../api/product";
+import { getProductsWithInventoryByCategoryId } from "../../api/product";
 
 // Set up mocks
 jest.mock("../../context/ScreenSizeContext", () => ({
