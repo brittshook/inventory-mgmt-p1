@@ -88,4 +88,20 @@ describe("Inventory By Warehouse Page", () => {
       expect(rows).toHaveLength(2); // 1 result + 1 header row
     });
   });
+
+  test("should display an error if fetching items fails", async () => {
+    (getProductsWithInventory as jest.Mock).mockResolvedValue(new Error());
+
+    render(
+      <MemoryRouter>
+        <InventoryByWarehouse />
+      </MemoryRouter>
+    );
+    await waitFor(() => {
+      const text = screen.getByText(
+        "Sorry, looks like we encountered an error"
+      );
+      expect(text).toBeInTheDocument();
+    });
+  });
 });

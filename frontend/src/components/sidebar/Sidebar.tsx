@@ -9,14 +9,21 @@ import { Logo } from "../logo/Logo";
 import { Link, useLocation } from "react-router-dom";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 
-export const Sidebar = () => {
+type props = {
+  testId?: string;
+};
+
+export const Sidebar = ({ testId }: props) => {
   const { isSmallerThan900 } = useScreenSize();
 
   const path = useLocation().pathname;
   const search = useLocation().search;
 
   return (
-    <aside className={isSmallerThan900 ? "collapsed" : "expanded"}>
+    <aside
+      data-testid={testId}
+      className={isSmallerThan900 ? "collapsed" : "expanded"}
+    >
       <nav>
         <Link to="/">
           {isSmallerThan900 ? <Logo type="short" /> : <Logo type="full" />}
@@ -109,8 +116,7 @@ export const Sidebar = () => {
       <div id="user-account">
         {!isSmallerThan900 && (
           <div id="user-details">
-            <img id="profile" src={profileImage} />
-            {/* TODO: grab name &  role from DB */}
+            <img id="profile" src={profileImage} alt="profile" />
             <div className="text">
               <h3>Jo Klein</h3>
               <p>Administrator</p>

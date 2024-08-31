@@ -4,7 +4,10 @@ import "@testing-library/jest-dom";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 import { getCategoryById } from "../../api/category";
-import { getProductsWithInventory } from "../../api/product";
+import {
+  getProductsWithInventory,
+  getProductsWithInventoryByCategoryId,
+} from "../../api/product";
 
 // Set up mocks
 jest.mock("../../context/ScreenSizeContext", () => ({
@@ -21,7 +24,7 @@ jest.mock("../../api/category", () => ({
 }));
 
 jest.mock("../../api/product", () => ({
-  getProductsWithInventory: jest.fn(),
+  getProductsWithInventoryByCategoryId: jest.fn(),
 }));
 
 describe("Inventory By Category Page", () => {
@@ -39,7 +42,7 @@ describe("Inventory By Category Page", () => {
       id: 1,
       name: "Climbing Shoes",
     });
-    (getProductsWithInventory as jest.Mock).mockResolvedValue({
+    (getProductsWithInventoryByCategoryId as jest.Mock).mockResolvedValue({
       id: 2,
       brand: "SummtKing",
       name: "Peak Performance Climbing Shoes",
@@ -79,6 +82,24 @@ describe("Inventory By Category Page", () => {
     await waitFor(() => {
       const rows = screen.getAllByRole("row");
       expect(rows).toHaveLength(2); // 1 result + 1 header row
+    });
+  });
+
+  test("should display an error if fetching items fails", async () => {
+    (getProductsWithInventoryByCategoryId as jest.Mock).mockResolvedValue(
+      new Error()
+    );
+
+    render(
+      <MemoryRouter>
+        <InventoryByCategory />
+      </MemoryRouter>
+    );
+    await waitFor(() => {
+      const text = screen.getByText(
+        "Sorry, looks like we encountered an error"
+      );
+      expect(text).toBeInTheDocument();
     });
   });
 });
