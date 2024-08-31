@@ -32,7 +32,7 @@ export type DataType = {
   name: string;
   description: string;
   price: number;
-  size: string | "N/A";
+  size: string;
   quantity: number;
   categoryName: string;
   warehouseName: string;
