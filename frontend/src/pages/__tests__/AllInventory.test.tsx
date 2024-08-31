@@ -76,9 +76,7 @@ describe("All Inventory Page", () => {
           "Durable and lightweight climbing rope, 60 meters long, perfect for lead climbing.",
         price: 199.99,
         category: "Ropes",
-        inventory: [
-          { id: 1, product: 1, warehouse: "CA1", size: "N/A", quantity: 200 },
-        ],
+        inventory: [{ id: 1, product: 1, warehouse: "CA1", quantity: 200 }],
       },
       {
         id: 2,
@@ -121,6 +119,23 @@ describe("All Inventory Page", () => {
     await waitFor(() => {
       const rows = screen.getAllByRole("row");
       expect(rows).toHaveLength(3); // 2 results + 1 header row
+    });
+  });
+
+  test("should display an error if fetching items fails", async () => {
+    (getProductsWithInventory as jest.Mock).mockResolvedValue(new Error());
+
+    render(
+      <MemoryRouter>
+        <AllInventory />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      const text = screen.getByText(
+        "Sorry, looks like we encountered an error"
+      );
+      expect(text).toBeInTheDocument();
     });
   });
 });
