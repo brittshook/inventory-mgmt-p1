@@ -12,9 +12,10 @@ import {
 import { Breadcrumb } from "../components/breadcrumb/Breadcrumb";
 import warehouseIcon from "../assets/icons/warehouse.svg";
 import { ButtonWithModal } from "../components/ButtonWithModal";
-import { Form, Input, Select, Space } from "antd";
+import { Form } from "antd";
 import { CategoryDataType, getCategories } from "../api/category";
 import { ErrorPage } from "./ErrorPage";
+import { InventoryForm } from "../components/InventoryForm";
 
 type props = {
   testId?: string;
@@ -26,7 +27,6 @@ export const InventoryByWarehouse = ({ testId }: props) => {
   const id = search.match(/\d+/)![0];
 
   const [form] = Form.useForm();
-  const { TextArea } = Input;
 
   const [warehouse, setWarehouse] = useState<string | null>(null);
   const [totalCapacity, setTotalCapacity] = useState(0);
@@ -112,135 +112,6 @@ export const InventoryByWarehouse = ({ testId }: props) => {
     }
   };
 
-  const formItems = (
-    <>
-      <Form.Item
-        label="Brand"
-        name="brand"
-        rules={[
-          {
-            required: true,
-            message: "Please input the brand name!",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        label="Product Name"
-        name="name"
-        rules={[
-          {
-            required: true,
-            message: "Please input the product name!",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        label="Description"
-        name="description"
-        rules={[
-          {
-            required: true,
-            message: "Please input the product description!",
-          },
-        ]}
-      >
-        <TextArea rows={3} />
-      </Form.Item>
-      <Space.Compact>
-        <Form.Item
-          style={{ marginRight: 7.5 }}
-          label="Product Type"
-          name="categoryName"
-          rules={[
-            {
-              required: true,
-              message: "Please select the product type!",
-            },
-          ]}
-        >
-          <Select
-            style={{ width: 250 }}
-            placeholder="Product Type"
-            showSearch
-            filterOption={(input, option) =>
-              (`${option?.label}` ?? "")
-                .toLowerCase()
-                .includes(input.toLowerCase())
-            }
-            options={categories?.map((category) => {
-              return {
-                key: category.id,
-                value: category.name,
-                label: category.name,
-              };
-            })}
-          />
-        </Form.Item>
-        <Form.Item
-          style={{ marginLeft: 7.5 }}
-          label="Warehouse"
-          name="warehouseName"
-          rules={[
-            {
-              required: false,
-            },
-          ]}
-        >
-          <Select
-            style={{ width: 207 }}
-            disabled
-            value={warehouse}
-            options={[{ value: warehouse, label: warehouse }]}
-          />
-        </Form.Item>
-      </Space.Compact>
-      <Space.Compact>
-        <Form.Item
-          style={{ width: 148 }}
-          label="Price"
-          name="price"
-          rules={[
-            {
-              required: true,
-              message: "Please input the product price!",
-            },
-          ]}
-        >
-          <Input type="number" step="0.01" min="0" />
-        </Form.Item>
-        <Form.Item
-          style={{ width: 148, marginLeft: 15, marginRight: 15 }}
-          label="Size"
-          name="size"
-          rules={[
-            {
-              required: false,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          style={{ width: 147 }}
-          label="Quantity"
-          name="quantity"
-          rules={[
-            {
-              required: true,
-              message: "Please input the quantity!",
-            },
-          ]}
-        >
-          <Input type="number" step="1" min="1" />
-        </Form.Item>
-      </Space.Compact>
-    </>
-  );
-
   if (error) return <ErrorPage messageText={error.message} />;
 
   return (
@@ -281,14 +152,14 @@ export const InventoryByWarehouse = ({ testId }: props) => {
             form={form}
             disabled={totalCapacity >= maxCapacity}
           >
-            <Form
-              layout="vertical"
+            <InventoryForm
+              includeParentForm={true}
               form={form}
-              name="form_in_modal"
+              categories={categories}
               initialValues={{ warehouseName: warehouse }}
-            >
-              {formItems}
-            </Form>
+              disableWarehouse
+              defaultWarehouse={warehouse}
+            />
           </ButtonWithModal>
         </div>
         <DataTable
@@ -297,7 +168,13 @@ export const InventoryByWarehouse = ({ testId }: props) => {
           showWarehouses={false}
           initialData={inventory}
           updateHandler={handlePut}
-          editModalFormItems={formItems}
+          editModalFormItems={
+            <InventoryForm
+              categories={categories}
+              disableWarehouse
+              defaultWarehouse={warehouse}
+            />
+          }
           warehouseName={warehouse}
         />
       </section>
