@@ -174,6 +174,52 @@ pipeline {
                         --source-bundle S3Bucket=crag-supply-co-backend,S3Key=$JAR_FILENAME
                     aws elasticbeanstalk update-environment --environment-name Crag-supply-co-env-4 --version-label ${VERSION}
                     '''
+                
+                    // wait for the deployed backend to be ready
+                    sh '''
+                    aws elasticbeanstalk wait environment-updated --environment-name Crag-supply-co-env-4
+                    echo "Deployment successful."
+                    '''
+                }
+            }
+        }
+
+        stage('Performance Test Deployed App') {
+            steps {
+                // wait for the deployed frontend to be ready
+                sh '''
+                    TRIES_REMAINING=16
+
+                    echo 'Waiting for frontend to be ready...'
+                    while ! curl --output /dev/null --silent http://crag-supply-co-client.s3-website-us-east-1.amazonaws.com; do
+                        TRIES_REMAINING=$((TRIES_REMAINING - 1))
+                        if [ $TRIES_REMAINING -le 0 ]; then
+                            echo 'frontend did not start within expected time.'
+                            exit 1
+                        fi
+                        echo 'waiting for frontend...'
+                        sleep 5
+                    done
+                    echo '***frontend is ready***'
+                '''
+                
+                // wait for the deployed backend to be ready
+                withAWS(region: 'us-east-1', credentials: 'AWS_CREDENTIALS') {
+                    sh '''
+                    aws elasticbeanstalk wait environment-updated --environment-name Crag-supply-co-env-4
+                    echo '***backend is ready***'
+                    '''
+                }
+                
+                sh '''
+                git clone https://github.com/daniel413x/project-two-performance-tests.git
+                cd project-two-performance-tests
+                '''
+                bzt "project-two-performance-tests/stepping.yml"
+            }
+            post {
+                always {
+                    sh "rm -rf project-two-performance-tests"
                 }
             }
         }
