@@ -51,7 +51,7 @@ public class WarehouseControllerTests {
 
         Iterable<Warehouse> result = warehouseController.findAllWarehouses();
 
-        Assert.assertEquals(expectedWarehouses, result);
+        Assert.assertEquals(result, expectedWarehouses);
         verify(warehouseService, times(1)).findAll();
     }
 
@@ -65,8 +65,8 @@ public class WarehouseControllerTests {
 
         ResponseEntity<Warehouse> response = warehouseController.findWarehouseById(id);
 
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assert.assertEquals(warehouse1, response.getBody());
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(response.getBody(), warehouse1);
 
         verify(warehouseService, times(1)).findById(id);
     }
@@ -78,8 +78,8 @@ public class WarehouseControllerTests {
 
         ResponseEntity<Warehouse> response = warehouseController.findWarehouseById(id);
 
-        Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        Assert.assertEquals(null, response.getBody());
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        Assert.assertEquals(response.getBody(), null);
 
         verify(warehouseService, times(1)).findById(id);
     }
@@ -95,8 +95,8 @@ public class WarehouseControllerTests {
 
         ResponseEntity<Warehouse> response = warehouseController.findWarehouseByName(name);
 
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assert.assertEquals(warehouse1, response.getBody());
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(response.getBody(), warehouse1);
 
         verify(warehouseService, times(1)).findByName(name);
     }
@@ -108,8 +108,8 @@ public class WarehouseControllerTests {
 
         ResponseEntity<Warehouse> response = warehouseController.findWarehouseByName(name);
 
-        Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        Assert.assertEquals(null, response.getBody());
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        Assert.assertEquals(response.getBody(), null);
 
         verify(warehouseService, times(1)).findByName(name);
     }
@@ -129,7 +129,7 @@ public class WarehouseControllerTests {
 
         Warehouse result = warehouseController.createWarehouse(validWarehouse);
 
-        Assert.assertEquals(validWarehouse, result);
+        Assert.assertEquals(result, validWarehouse);
         verify(warehouseService, times(1)).save(validWarehouse);
     }
 
@@ -144,7 +144,7 @@ public class WarehouseControllerTests {
         invalidWarehouse.setZipCode("");
 
         Warehouse result = warehouseController.createWarehouse(invalidWarehouse);
-        Assert.assertEquals(null, result);
+        Assert.assertEquals(result, null);
     }
 
     @Test
