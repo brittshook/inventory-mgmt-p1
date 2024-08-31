@@ -1,4 +1,4 @@
-import { Form, FormInstance, Input, Select } from "antd";
+import { Form, FormInstance, Input, Select, Space } from "antd";
 import { US_STATES_AND_DC } from "../utils/states";
 
 type props = {
@@ -30,6 +30,7 @@ export const WarehouseForm = ({ form, initialValues, testId }: props) => {
         ]}
       >
         <Input
+          id="form_in_modal_name"
           addonBefore="Warehouse"
           data-testid={testId && "warehouse-modal-name-field"}
         />
@@ -42,6 +43,7 @@ export const WarehouseForm = ({ form, initialValues, testId }: props) => {
         ]}
       >
         <Input
+          id="form_in_modal_maxCapacity"
           type="number"
           data-testid={testId && "warehouse-modal-max-capacity-field"}
         />
@@ -53,15 +55,19 @@ export const WarehouseForm = ({ form, initialValues, testId }: props) => {
           { required: true, message: "Please input the street address!" },
         ]}
       >
-        <Input data-testid={testId && "warehouse-modal-street-address-field"} />
+        <Input
+          id="form_in_modal_streetAddress"
+          data-testid={testId && "warehouse-modal-street-address-field"}
+        />
       </Form.Item>
-      <Input.Group compact>
+      <Space.Compact>
         <Form.Item
           label="City"
           name="city"
           rules={[{ required: true, message: "Please input the city!" }]}
         >
           <Input
+            id="form_in_modal_city"
             style={{ width: 150 }}
             data-testid={testId && "warehouse-modal-city-field"}
           />
@@ -72,6 +78,7 @@ export const WarehouseForm = ({ form, initialValues, testId }: props) => {
           rules={[{ required: true, message: "Please select the state!" }]}
         >
           <Select
+            id="form_in_modal_state"
             style={{ width: 170, marginLeft: 15, marginRight: 15 }}
             placeholder="State"
             showSearch
@@ -94,11 +101,12 @@ export const WarehouseForm = ({ form, initialValues, testId }: props) => {
           rules={[{ required: true, message: "Please input the zip code!" }]}
         >
           <Input
+            id="form_in_modal_zipCode"
             style={{ width: 120 }}
             data-testid={testId && "warehouse-modal-zip-code-field"}
           />
         </Form.Item>
-      </Input.Group>
+      </Space.Compact>
     </Form>
   );
 };
