@@ -12,7 +12,11 @@ import { useEffect, useState } from "react";
 import { Form, Input } from "antd";
 import { ErrorPage } from "./ErrorPage";
 
-export const Products = () => {
+type props = {
+  testId?: string;
+};
+
+export const Products = ({ testId }: props) => {
   const [form] = Form.useForm();
   const [updateForm] = Form.useForm();
 
@@ -67,7 +71,7 @@ export const Products = () => {
   if (error) return <ErrorPage messageText={error.message} />;
 
   return (
-    <section id="products">
+    <section data-testid={testId} id="products">
       <div className="section-heading">
         <h1>Products</h1>
         <ButtonWithModal
@@ -86,14 +90,18 @@ export const Products = () => {
                 { required: true, message: "Please input the category name" },
               ]}
             >
-              <Input data-testid="create-category-name-field" />
+              <Input data-testid={testId && "create-category-name-field"} />
             </Form.Item>
           </Form>
         </ButtonWithModal>
       </div>
-      <section className="cards" data-testid="category-cards-section">
+      <section
+        className="cards"
+        data-testid={testId && "category-cards-section"}
+      >
         {categories?.map((category) => (
           <Card
+            testId={testId && `category-card-${category.id}`}
             key={category.id}
             id={category.id}
             loaded={loading}
@@ -115,7 +123,7 @@ export const Products = () => {
                     },
                   ]}
                 >
-                  <Input data-testid="edit-category-name-field" />
+                  <Input data-testid={testId && "edit-category-name-field"} />
                 </Form.Item>
               </Form>
             }

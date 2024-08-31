@@ -16,6 +16,7 @@ type props = {
   editForm?: ReactElement;
   form?: FormInstance<any>;
   initialValues?: {};
+  testId?: string;
 };
 
 export const Card = ({
@@ -28,7 +29,8 @@ export const Card = ({
   id,
   editForm,
   form,
-  initialValues
+  initialValues,
+  testId,
 }: props) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -62,9 +64,16 @@ export const Card = ({
   };
 
   const actions: React.ReactNode[] = [
-    <EditOutlined data-testid="edit-card-button" key="edit" onClick={handleEditClick} />,
+    <EditOutlined
+      data-testid={testId && "edit-card-button"}
+      key="edit"
+      onClick={handleEditClick}
+    />,
     <Dropdown menu={menuProps}>
-      <EllipsisOutlined key="ellipsis" data-testid="card-ellipsis-button" />
+      <EllipsisOutlined
+        key="ellipsis"
+        data-testid={testId && "card-ellipsis-button"}
+      />
     </Dropdown>,
   ];
 
@@ -83,7 +92,6 @@ export const Card = ({
     form?.resetFields();
     setOpen(false);
   };
-
 
   return (
     <>

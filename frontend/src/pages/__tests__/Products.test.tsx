@@ -1,7 +1,18 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { Products } from "../Products";
 import { MemoryRouter } from "react-router-dom";
-import { getCategories, postCategory, putCategory, deleteCategoryById } from "../../api/category";
+import {
+  getCategories,
+  postCategory,
+  putCategory,
+  deleteCategoryById,
+} from "../../api/category";
 import userEvent from "@testing-library/user-event";
 
 jest.mock("../../api/category");
@@ -14,7 +25,7 @@ describe("Products Page", () => {
   test("should display loading state initially", () => {
     render(
       <MemoryRouter>
-        <Products />
+        <Products testId="products" />
       </MemoryRouter>
     );
     expect(screen.getByText("Loading...")).toBeDefined();
@@ -28,7 +39,7 @@ describe("Products Page", () => {
 
     render(
       <MemoryRouter>
-        <Products />
+        <Products testId="products" />
       </MemoryRouter>
     );
 
@@ -47,12 +58,14 @@ describe("Products Page", () => {
 
     render(
       <MemoryRouter>
-        <Products />
+        <Products testId="products" />
       </MemoryRouter>
     );
 
     await waitFor(() => {
-      const text = screen.getByText("Sorry, looks like we encountered an error");
+      const text = screen.getByText(
+        "Sorry, looks like we encountered an error"
+      );
       expect(text).toBeDefined();
     });
   });
@@ -64,7 +77,7 @@ describe("Products Page", () => {
 
     render(
       <MemoryRouter>
-        <Products />
+        <Products testId="products" />
       </MemoryRouter>
     );
 
@@ -77,7 +90,7 @@ describe("Products Page", () => {
     await waitFor(() => {
       const addCategoryButton = screen.getByText("Add Category");
       userEvent.click(addCategoryButton);
-      const nameField = screen.getByTestId('create-category-name-field');
+      const nameField = screen.getByTestId("create-category-name-field");
       userEvent.type(nameField, "Backpacks");
     });
 
@@ -105,14 +118,14 @@ describe("Products Page", () => {
 
     render(
       <MemoryRouter>
-        <Products />
+        <Products testId="products" />
       </MemoryRouter>
     );
 
     await waitFor(() => {
       const addCategoryButton = screen.getByText("Add Category");
       userEvent.click(addCategoryButton);
-      const nameField = screen.getByTestId('create-category-name-field');
+      const nameField = screen.getByTestId("create-category-name-field");
       userEvent.type(nameField, "Backpacks");
     });
 
@@ -122,7 +135,9 @@ describe("Products Page", () => {
     });
 
     await waitFor(() => {
-      const errorText = screen.getByText("Sorry, looks like we encountered an error");
+      const errorText = screen.getByText(
+        "Sorry, looks like we encountered an error"
+      );
       expect(errorText).toBeDefined();
     });
   });
@@ -134,13 +149,13 @@ describe("Products Page", () => {
 
     render(
       <MemoryRouter>
-        <Products />
+        <Products testId="products" />
       </MemoryRouter>
     );
 
     await waitFor(() => {
       const cardsSection = screen.getByTestId("category-cards-section");
-      const categoryCard= within(cardsSection).getByTestId("edit-card-button");
+      const categoryCard = within(cardsSection).getByTestId("edit-card-button");
       userEvent.click(categoryCard);
       const nameField = screen.getByTestId("edit-category-name-field");
       userEvent.type(nameField, "Penguin Shoes");
@@ -166,13 +181,13 @@ describe("Products Page", () => {
 
     render(
       <MemoryRouter>
-        <Products />
+        <Products testId="products" />
       </MemoryRouter>
     );
 
     await waitFor(() => {
       const cardsSection = screen.getByTestId("category-cards-section");
-      const categoryCard= within(cardsSection).getByTestId("edit-card-button");
+      const categoryCard = within(cardsSection).getByTestId("edit-card-button");
       userEvent.click(categoryCard);
       const nameField = screen.getByTestId("edit-category-name-field");
       userEvent.type(nameField, "Penguin Shoes");
@@ -181,7 +196,9 @@ describe("Products Page", () => {
     });
 
     await waitFor(() => {
-      const errorText = screen.getByText("Sorry, looks like we encountered an error");
+      const errorText = screen.getByText(
+        "Sorry, looks like we encountered an error"
+      );
       expect(errorText).toBeDefined();
     });
   });
@@ -193,7 +210,7 @@ describe("Products Page", () => {
 
     render(
       <MemoryRouter>
-        <Products />
+        <Products testId="products" />
       </MemoryRouter>
     );
 
@@ -202,7 +219,9 @@ describe("Products Page", () => {
       expect(cardsSection).toBeDefined();
     });
     const cardsSection = screen.getByTestId("category-cards-section");
-    const ellipsisButton= within(cardsSection).getByTestId("card-ellipsis-button");
+    const ellipsisButton = within(cardsSection).getByTestId(
+      "card-ellipsis-button"
+    );
     // simulate hover action
     fireEvent.mouseOver(ellipsisButton);
 
@@ -227,7 +246,7 @@ describe("Products Page", () => {
 
     render(
       <MemoryRouter>
-        <Products />
+        <Products testId="products" />
       </MemoryRouter>
     );
 
@@ -236,7 +255,9 @@ describe("Products Page", () => {
       expect(cardsSection).toBeDefined();
     });
     const cardsSection = screen.getByTestId("category-cards-section");
-    const ellipsisButton= within(cardsSection).getByTestId("card-ellipsis-button");
+    const ellipsisButton = within(cardsSection).getByTestId(
+      "card-ellipsis-button"
+    );
     // simulate hover action
     fireEvent.mouseOver(ellipsisButton);
 
@@ -248,7 +269,9 @@ describe("Products Page", () => {
     });
 
     await waitFor(() => {
-      const errorText = screen.getByText("Sorry, looks like we encountered an error");
+      const errorText = screen.getByText(
+        "Sorry, looks like we encountered an error"
+      );
       expect(errorText).toBeDefined();
     });
   });
