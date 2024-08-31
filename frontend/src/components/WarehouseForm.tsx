@@ -84,9 +84,7 @@ export const WarehouseForm = ({ form, initialValues, testId }: props) => {
             showSearch
             data-testid={testId && "warehouse-modal-state-select"}
             filterOption={(input, option) =>
-              (`${option?.label}` ?? "")
-                .toLowerCase()
-                .includes(input.toLowerCase())
+              `${option?.label}`.toLowerCase().includes(input.toLowerCase())
             }
             options={US_STATES_AND_DC.map((state) => ({
               key: state.value,
