@@ -85,6 +85,7 @@ export const InventoryForm = ({
         >
           {disableCategory ? (
             <Select
+              id="form_in_modal_categoryName"
               style={{ width: 250 }}
               placeholder="Product Type"
               disabled
@@ -98,9 +99,7 @@ export const InventoryForm = ({
               placeholder="Product Type"
               showSearch
               filterOption={(input, option) =>
-                (`${option?.label}` ?? "")
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
+                `${option?.label}`.toLowerCase().includes(input.toLowerCase())
               }
               options={categories?.map((category) => {
                 return {
@@ -129,6 +128,7 @@ export const InventoryForm = ({
         >
           {disableWarehouse ? (
             <Select
+              id="form_in_modal_warehouseName"
               style={{ width: 207 }}
               disabled
               value={defaultWarehouse}
@@ -141,9 +141,7 @@ export const InventoryForm = ({
               placeholder="Warehouse"
               showSearch
               filterOption={(input, option) =>
-                (`${option?.label}` ?? "")
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
+                `${option?.label}`.toLowerCase().includes(input.toLowerCase())
               }
               options={warehouses?.map((warehouse) => {
                 return {
