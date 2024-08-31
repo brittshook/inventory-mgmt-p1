@@ -152,6 +152,7 @@ export const InventoryByCategory = ({ testId }: props) => {
           showCategories={false}
           initialData={inventory}
           updateHandler={handlePut}
+          categoryName={category}
           editModalFormItems={
             <InventoryForm
               warehouses={warehouses}
