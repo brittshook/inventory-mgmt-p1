@@ -53,7 +53,7 @@ public class ProductControllerTests {
 
         Iterable<Product> result = productController.findAllProducts();
 
-        Assert.assertEquals(expectedProducts, result);
+        Assert.assertEquals(result, expectedProducts);
         verify(productService, times(1)).findAll();
     }
 
@@ -65,7 +65,7 @@ public class ProductControllerTests {
 
         Iterable<Product> result = productController.findAllProducts(null);
 
-        Assert.assertEquals(expectedProducts, result);
+        Assert.assertEquals(result, expectedProducts);
         verify(productService, times(1)).findAll();
     }
 
@@ -77,7 +77,7 @@ public class ProductControllerTests {
 
         Iterable<Product> result = productController.findAllProducts(categoryId);
 
-        Assert.assertEquals(expectedProducts, result);
+        Assert.assertEquals(result, expectedProducts);
         verify(productService, times(1)).findAllByCategoryId(categoryId);
     }
 
@@ -91,8 +91,8 @@ public class ProductControllerTests {
 
         ResponseEntity<Product> response = productController.findProductById(id);
 
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assert.assertEquals(product1, response.getBody());
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(response.getBody(), product1);
 
         verify(productService, times(1)).findById(id);
     }
@@ -104,8 +104,8 @@ public class ProductControllerTests {
 
         ResponseEntity<Product> response = productController.findProductById(id);
 
-        Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        Assert.assertEquals(null, response.getBody());
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        Assert.assertEquals(response.getBody(), null);
 
         verify(productService, times(1)).findById(id);
     }
@@ -116,14 +116,14 @@ public class ProductControllerTests {
         product1.setId(1);
         product1.setName("Climbing Shoes");
         product1.setBrand("PenguinPro");
-        
+
         int id = 1;
         when(productService.findById(id)).thenReturn(Optional.of(product1));
 
         ResponseEntity<Product> response = productController.findProductByIdDetailed(id);
 
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assert.assertEquals(product1, response.getBody());
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(response.getBody(), product1);
 
         verify(productService, times(1)).findById(id);
     }
@@ -135,8 +135,8 @@ public class ProductControllerTests {
 
         ResponseEntity<Product> response = productController.findProductByIdDetailed(id);
 
-        Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        Assert.assertEquals(null, response.getBody());
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        Assert.assertEquals(response.getBody(), null);
 
         verify(productService, times(1)).findById(id);
     }
@@ -154,8 +154,8 @@ public class ProductControllerTests {
 
         ResponseEntity<Product> response = productController.findProductByBrandAndName(brand, name);
 
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assert.assertEquals(product1, response.getBody());
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(response.getBody(), product1);
 
         verify(productService, times(1)).findByBrandAndName(brand, name);
     }
@@ -168,8 +168,8 @@ public class ProductControllerTests {
 
         ResponseEntity<Product> response = productController.findProductByBrandAndName(brand, name);
 
-        Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        Assert.assertEquals(null, response.getBody());
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        Assert.assertEquals(response.getBody(), null);
 
         verify(productService, times(1)).findByBrandAndName(brand, name);
     }
@@ -188,7 +188,7 @@ public class ProductControllerTests {
 
         Product result = productController.createProduct(validProduct);
 
-        Assert.assertEquals(validProduct, result);
+        Assert.assertEquals(result, validProduct);
 
         verify(productService, times(1)).save(any(Product.class));
     }
@@ -201,7 +201,7 @@ public class ProductControllerTests {
 
         Product result = productController.createProduct(invalidProduct);
 
-        Assert.assertEquals(null, result);
+        Assert.assertEquals(result, null);
     }
 
     @Test
