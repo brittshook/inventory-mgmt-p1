@@ -71,7 +71,7 @@ export const Sidebar = ({ testId }: props) => {
           </li>
           <li>
             <Link id={"warehouses"} to="/warehouses">
-              <img src={warehouseIcon} alt="warehouse" />
+              <img src={warehouseIcon} />
               {!isSmallerThan900 && "Warehouses"}
             </Link>
             {!isSmallerThan900 &&

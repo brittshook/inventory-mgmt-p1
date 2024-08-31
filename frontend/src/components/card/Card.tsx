@@ -28,7 +28,7 @@ export const Card = ({
   id,
   editForm,
   form,
-  initialValues,
+  initialValues
 }: props) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -62,12 +62,8 @@ export const Card = ({
   };
 
   const actions: React.ReactNode[] = [
-    <EditOutlined
-      data-testid="edit-card-button"
-      key="edit"
-      onClick={handleEditClick}
-    />,
-    <Dropdown key="ellipsis-dropdown" menu={menuProps}>
+    <EditOutlined data-testid="edit-card-button" key="edit" onClick={handleEditClick} />,
+    <Dropdown menu={menuProps}>
       <EllipsisOutlined key="ellipsis" data-testid="card-ellipsis-button" />
     </Dropdown>,
   ];
@@ -87,6 +83,7 @@ export const Card = ({
     form?.resetFields();
     setOpen(false);
   };
+
 
   return (
     <>

@@ -23,8 +23,7 @@ type props = {
 export const InventoryByWarehouse = ({ testId }: props) => {
   const path = useLocation().pathname;
   const search = useLocation().search;
-  const match = /\d+/.exec(search);
-  const id = match ? match[0] : null;
+  const id = search.match(/\d+/)![0];
 
   const [form] = Form.useForm();
   const { TextArea } = Input;
@@ -168,7 +167,9 @@ export const InventoryByWarehouse = ({ testId }: props) => {
             placeholder="Product Type"
             showSearch
             filterOption={(input, option) =>
-              `${option?.label}`.toLowerCase().includes(input.toLowerCase())
+              (`${option?.label}` ?? "")
+                .toLowerCase()
+                .includes(input.toLowerCase())
             }
             options={categories?.map((category) => {
               return {

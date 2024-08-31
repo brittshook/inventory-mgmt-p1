@@ -22,11 +22,10 @@ type props = {
   testId?: string;
 };
 
-export const InventoryByCategory = ({ testId }: props) => {
+export const InventoryByCategory = ({testId}: props) => {
   const path = useLocation().pathname;
   const search = useLocation().search;
-  const match = /\d+/.exec(search);
-  const id = match ? match[0] : null;
+  const id = search.match(/\d+/)![0];
 
   const [form] = Form.useForm();
   const { TextArea } = Input;
@@ -174,7 +173,9 @@ export const InventoryByCategory = ({ testId }: props) => {
             placeholder="Warehouse"
             showSearch
             filterOption={(input, option) =>
-              `${option?.label}`.toLowerCase().includes(input.toLowerCase())
+              (`${option?.label}` ?? "")
+                .toLowerCase()
+                .includes(input.toLowerCase())
             }
             options={warehouses?.map((warehouse) => {
               return {
@@ -247,7 +248,10 @@ export const InventoryByCategory = ({ testId }: props) => {
           {
             href: `${path + search}`,
             title: (
-              <div id={`breadcrumb-product-type`} className="breadcrumb-item">
+              <div
+                id={`breadcrumb-product-type`}
+                className="breadcrumb-item"
+              >
                 {category}
               </div>
             ),
