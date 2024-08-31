@@ -83,8 +83,25 @@ describe("Sidebar Component", () => {
   test("should display sublist under Products when on products or inventory category page", () => {
     (useScreenSize as jest.Mock).mockReturnValue({ isSmallerThan900: false });
     (useLocation as jest.Mock).mockReturnValue({
-      pathname: "/products",
+      pathname: "/inventory",
       search: "?category=1",
+    });
+
+    render(
+      <MemoryRouter>
+        <Sidebar testId="sidebar" />
+      </MemoryRouter>
+    );
+
+    // Verify Inventory sub-link is displayed
+    expect(screen.getByText("Inventory")).toBeInTheDocument();
+  });
+
+  test("should display sublist under Warehouses when on warehouses or inventory warehouse page", () => {
+    (useScreenSize as jest.Mock).mockReturnValue({ isSmallerThan900: false });
+    (useLocation as jest.Mock).mockReturnValue({
+      pathname: "/inventory",
+      search: "?warehouse=1",
     });
 
     render(

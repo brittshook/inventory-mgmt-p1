@@ -65,4 +65,30 @@ describe("Screen Size Provider", () => {
       "Screen is not smaller than 900px"
     );
   });
+
+  test("should display correct size information when the screen is between 900px and 1250px", () => {
+    window.innerWidth = 1000; // Mock window width
+    render(
+      <ScreenSizeProvider>
+        <TestComponent />
+      </ScreenSizeProvider>
+    );
+    expect(screen.getByTestId("larger-than-1250")).toHaveTextContent(
+      "Screen is not larger than 1250px"
+    );
+    expect(screen.getByTestId("smaller-than-900")).toHaveTextContent(
+      "Screen is not smaller than 900px"
+    );
+  });
+
+  test("should throw an error when useScreenSize is used outside of ScreenSizeProvider", () => {
+    const TestComponentWithoutProvider = () => {
+      useScreenSize(); // This should trigger the error
+      return <div>Test</div>;
+    };
+
+    expect(() => render(<TestComponentWithoutProvider />)).toThrow(
+      "useScreenSize must be used within a ScreenSizeProvider"
+    );
+  });
 });
