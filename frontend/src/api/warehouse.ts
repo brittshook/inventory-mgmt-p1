@@ -5,6 +5,7 @@ export type WarehouseDataType = {
   id: number;
   name: string;
   maxCapacity: number;
+  currentCapacity: number;
   streetAddress: string;
   city: string;
   state: string;
