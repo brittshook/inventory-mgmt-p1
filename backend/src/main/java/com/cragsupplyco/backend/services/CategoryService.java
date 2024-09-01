@@ -28,11 +28,20 @@ public class CategoryService {
     }
 
     public Category save(Category category) {
+        if (repo.existsByName(category.getName())) {
+            throw new IllegalArgumentException("Category with this name already exists.");
+        }
+
         return repo.save(category);
     }
 
     public Category updateCategoryById(int id, Category category) {
         category.setId(id);
+        Category existingCategory = repo.findById(id).get();
+
+        if (!category.getName().equals(existingCategory.getName()) && repo.existsByName(category.getName())) {
+            throw new IllegalArgumentException("Category with this name already exists.");
+        }
         return repo.save(category);
     }
 
