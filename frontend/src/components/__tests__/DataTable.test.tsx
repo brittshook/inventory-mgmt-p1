@@ -93,6 +93,7 @@ describe("Data Table Component", () => {
         showCategories
         showWarehouses
         updateHandler={putInventory}
+        deleteHandler={deleteInventoryById}
         editModalFormItems={mockEditModalFormItems}
       />
     );
@@ -111,6 +112,7 @@ describe("Data Table Component", () => {
         showCategories
         showWarehouses
         updateHandler={putInventory}
+        deleteHandler={deleteInventoryById}
         editModalFormItems={mockEditModalFormItems}
       />
     );
@@ -142,6 +144,7 @@ describe("Data Table Component", () => {
         showCategories
         showWarehouses
         updateHandler={putInventory}
+        deleteHandler={deleteInventoryById}
         editModalFormItems={mockEditModalFormItems}
       />
     );
@@ -175,6 +178,7 @@ describe("Data Table Component", () => {
         showCategories
         showWarehouses
         updateHandler={putInventory}
+        deleteHandler={deleteInventoryById}
         editModalFormItems={mockEditModalFormItems}
       />
     );
@@ -209,6 +213,7 @@ describe("Data Table Component", () => {
         showCategories
         showWarehouses
         updateHandler={putInventory}
+        deleteHandler={deleteInventoryById}
         editModalFormItems={mockEditModalFormItems}
       />
     );
@@ -272,6 +277,7 @@ describe("Data Table Component", () => {
         showCategories
         showWarehouses
         updateHandler={putInventory}
+        deleteHandler={deleteInventoryById}
         editModalFormItems={mockEditModalFormItems}
       />
     );
