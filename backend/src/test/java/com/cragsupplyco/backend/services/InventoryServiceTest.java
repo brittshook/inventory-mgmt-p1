@@ -1,15 +1,16 @@
 package com.cragsupplyco.backend.services;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
@@ -98,6 +99,28 @@ public class InventoryServiceTest {
     }
 
     @Test
+    public void testSaveInventoryButExceedsWarehouseCapacity() {
+        int inventoryId = 4;
+
+        // inventory has quantity 10
+        Inventory inventory = new Inventory();
+        inventory.setId(inventoryId);
+        inventory.setQuantity(10);
+
+        // but warehouse is already at capacity
+        Warehouse warehouse = new Warehouse();
+        warehouse.setCurrentCapacity(1000);
+        warehouse.setMaxCapacity(1000);
+        inventory.setWarehouse(warehouse);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            inventoryService.save(inventory);
+        });
+
+        assertEquals("Cannot save inventory. It exceeds the warehouse capacity.", exception.getMessage());
+    }
+
+    @Test
     public void testUpdateInventoryById() {
         int inventoryId = 1;
 
@@ -124,6 +147,107 @@ public class InventoryServiceTest {
         when(warehouseRepository.save(warehouse)).thenReturn(warehouse);
         Inventory result = inventoryService.updateInventoryById(inventoryId, updatedInventory);
         Assert.assertEquals(result, updatedInventory);
+    }
+
+    @Test
+    public void testUpdateInventoryByIdButExceedsCapacity() {
+        int inventoryId = 4;
+
+        Inventory inventory = new Inventory();
+        inventory.setId(inventoryId);
+        inventory.setQuantity(10);
+
+        Warehouse warehouse = new Warehouse();
+        warehouse.setCurrentCapacity(1000);
+        warehouse.setMaxCapacity(1000);
+        inventory.setWarehouse(warehouse);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            inventoryService.save(inventory);
+        });
+
+        assertEquals("Cannot save inventory. It exceeds the warehouse capacity.", exception.getMessage());
+    }
+
+    public void testUpdateInventoryByIdButExceedsCapacityInSameWarehouse() {
+        int inventoryId = 4;
+
+        Warehouse warehouse = new Warehouse();
+        warehouse.setCurrentCapacity(990);
+        warehouse.setMaxCapacity(1000);
+
+        Inventory existingInventory = new Inventory();
+        existingInventory.setId(inventoryId);
+        existingInventory.setWarehouse(warehouse);
+
+        Inventory updatedInventory = new Inventory();
+        // over by 10
+        updatedInventory.setQuantity(20); 
+
+        when(inventoryRepository.findById(inventoryId)).thenReturn(Optional.of(existingInventory));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            inventoryService.updateInventoryById(inventoryId, updatedInventory);
+        });
+
+        assertEquals("Cannot update inventory. It exceeds the warehouse capacity.", exception.getMessage());
+    }
+
+    @Test
+    public void testUpdateInventoryByIdButExceedsCapacityInNewWarehouse() {
+        int inventoryId = 4;
+
+        Warehouse currentWarehouse = new Warehouse();
+        currentWarehouse.setCurrentCapacity(990);
+        currentWarehouse.setMaxCapacity(1000);
+
+        Warehouse newWarehouse = new Warehouse();
+        // new warehouse doesn't have the capacity
+        newWarehouse.setCurrentCapacity(995);
+        newWarehouse.setMaxCapacity(1000);
+
+        Inventory existingInventory = new Inventory();
+        existingInventory.setId(inventoryId);
+        existingInventory.setQuantity(10);
+        existingInventory.setWarehouse(currentWarehouse);
+
+        Inventory updatedInventory = new Inventory();
+        updatedInventory.setQuantity(10);
+        updatedInventory.setWarehouse(newWarehouse);
+
+        when(inventoryRepository.findById(inventoryId)).thenReturn(Optional.of(existingInventory));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            inventoryService.updateInventoryById(inventoryId, updatedInventory);
+        });
+
+        assertEquals("Cannot move inventory. It exceeds the new warehouse capacity.", exception.getMessage());
+    }
+
+    @Test
+    public void testUpdateInventoryByIdButExceedsCapacityAfterQuantityChange() {
+        int inventoryId = 4;
+
+        Warehouse warehouse = new Warehouse();
+        warehouse.setCurrentCapacity(1000);
+        warehouse.setMaxCapacity(1000);
+
+        Inventory existingInventory = new Inventory();
+        existingInventory.setId(inventoryId);
+        existingInventory.setQuantity(10);
+        existingInventory.setWarehouse(warehouse);
+
+        Inventory updatedInventory = new Inventory();
+        updatedInventory.setQuantity(15);
+        updatedInventory.setWarehouse(warehouse);
+
+        when(inventoryRepository.findById(inventoryId)).thenReturn(Optional.of(existingInventory));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            inventoryService.updateInventoryById(inventoryId, updatedInventory);
+        });
+
+        assertEquals("Cannot update inventory. It exceeds the warehouse capacity.", exception.getMessage());
     }
 
     @Test
@@ -154,6 +278,60 @@ public class InventoryServiceTest {
         Inventory result = inventoryService.updateQuantityById(inventoryId, inventoryOperation, inventoryAddQuantity);
 
         Assert.assertEquals(result, updatedInventory);
+    }
+
+    @Test
+    public void testIncrementQuantityByIdButExceedsCapacity() {
+        int inventoryId = 4;
+
+        Warehouse warehouse = new Warehouse();
+        warehouse.setCurrentCapacity(1000);
+        warehouse.setMaxCapacity(1000);
+
+        Inventory inventory = new Inventory();
+        inventory.setId(inventoryId);
+        inventory.setQuantity(10);
+        inventory.setWarehouse(warehouse);
+
+        when(inventoryRepository.findById(inventoryId)).thenReturn(Optional.of(inventory));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            inventoryService.updateQuantityById(inventoryId, "increment", 10);
+        });
+
+        assertEquals("Cannot update inventory. It exceeds the warehouse capacity.", exception.getMessage());
+    }
+
+    @Test
+    public void testDecrementQuantityByIdButExceedsCapacity() {
+        int inventoryId = 4;
+
+        Warehouse warehouse = new Warehouse();
+        warehouse.setCurrentCapacity(1000);
+        warehouse.setMaxCapacity(900);
+
+        Inventory inventory = new Inventory();
+        inventory.setId(inventoryId);
+        inventory.setQuantity(10);
+        inventory.setWarehouse(warehouse);
+
+        when(inventoryRepository.findById(inventoryId)).thenReturn(Optional.of(inventory));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            inventoryService.updateQuantityById(inventoryId, "decrement", 10);
+        });
+
+        assertEquals("Cannot update inventory. It exceeds the warehouse capacity.", exception.getMessage());
+    }
+
+    @Test
+    public void testDecrementQuantityByIdButNotFound() {
+        int id = 33;
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            inventoryService.updateQuantityById(id, "increment", 10);
+        });
+
+        assertEquals("Inventory not found with id " + id, exception.getMessage());
     }
 
     @Test
