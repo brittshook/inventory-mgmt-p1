@@ -12,6 +12,7 @@ import { ButtonWithModal } from "../components/ButtonWithModal";
 import { Form } from "antd";
 import { getWarehouses, WarehouseDataType } from "../api/warehouse";
 import {
+  deleteInventoryById,
   InventoryFormValues,
   postInventory,
   putInventory,
@@ -100,6 +101,15 @@ export const InventoryByCategory = ({ testId }: props) => {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteInventoryById(id);
+      await fetchData();
+    } catch (e) {
+      e instanceof Error && setError(e);
+    }
+  };
+
   if (error) return <ErrorPage messageText={error.message} />;
 
   return (
@@ -152,6 +162,7 @@ export const InventoryByCategory = ({ testId }: props) => {
           showCategories={false}
           initialData={inventory}
           updateHandler={handlePut}
+          deleteHandler={handleDelete}
           categoryName={category}
           editModalFormItems={
             <InventoryForm
