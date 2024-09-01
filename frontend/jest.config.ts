@@ -3,6 +3,10 @@ import type { Config } from "@jest/types";
 const config: Config.InitialOptions = {
   preset: "ts-jest/presets/default-esm",
   testEnvironment: "jest-environment-jsdom",
+  // solve cross origin errors
+  testEnvironmentOptions: {
+    url: "http://localhost:5173"
+  },
   testTimeout: 60000,
   setupFilesAfterEnv: ["<rootDir>/setupTests.js"],
   transform: {
