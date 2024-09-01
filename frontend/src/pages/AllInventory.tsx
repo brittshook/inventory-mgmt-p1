@@ -10,6 +10,7 @@ import { Form } from "antd";
 import { CategoryDataType, getCategories } from "../api/category";
 import { getWarehouses, WarehouseDataType } from "../api/warehouse";
 import {
+  deleteInventoryById,
   InventoryFormValues,
   postInventory,
   putInventory,
@@ -92,6 +93,15 @@ export const AllInventory = ({ testId }: props) => {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteInventoryById(id);
+      await fetchData();
+    } catch (e) {
+      e instanceof Error && setError(e);
+    }
+  };
+
   if (error) return <ErrorPage messageText={error.message} />;
 
   return (
@@ -143,6 +153,7 @@ export const AllInventory = ({ testId }: props) => {
           showCategories
           initialData={inventory}
           updateHandler={handlePut}
+          deleteHandler={handleDelete}
           editModalFormItems={
             <InventoryForm categories={categories} warehouses={warehouses} />
           }

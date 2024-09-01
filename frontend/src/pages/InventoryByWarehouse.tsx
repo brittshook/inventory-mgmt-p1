@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { getWarehouseById } from "../api/warehouse";
 import { getProductById, ProductDataType } from "../api/product";
 import {
+  deleteInventoryById,
   InventoryDataType,
   InventoryFormValues,
   postInventory,
@@ -29,7 +30,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
   const [form] = Form.useForm();
 
   const [warehouse, setWarehouse] = useState<string | null>(null);
-  const [totalCapacity, setTotalCapacity] = useState(0);
+  const [currentCapacity, setCurrentCapacity] = useState(0);
   const [maxCapacity, setMaxCapacity] = useState(0);
   const [inventory, setInventory] = useState<DataType[]>();
   const [categories, setCategories] = useState<CategoryDataType[] | null>(null);
@@ -43,6 +44,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
 
         if (result) {
           setWarehouse(result.name);
+          setCurrentCapacity(result.currentCapacity);
           setMaxCapacity(result.maxCapacity);
 
           if (result.inventory) {
@@ -83,17 +85,6 @@ export const InventoryByWarehouse = ({ testId }: props) => {
     fetchData();
   }, []);
 
-  const calculateTotalCapacity = (data: DataType[]) => {
-    const total = data.reduce((sum, item) => sum + item.quantity, 0);
-    setTotalCapacity(total);
-  };
-
-  useEffect(() => {
-    if (inventory && inventory.length > 0) {
-      calculateTotalCapacity(inventory);
-    }
-  }, [inventory]);
-
   const handlePost = async (data: InventoryFormValues) => {
     try {
       await postInventory(data);
@@ -106,6 +97,15 @@ export const InventoryByWarehouse = ({ testId }: props) => {
   const handlePut = async (data: InventoryFormValues) => {
     try {
       await putInventory(data);
+      await fetchData();
+    } catch (e) {
+      e instanceof Error && setError(e);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteInventoryById(id);
       await fetchData();
     } catch (e) {
       e instanceof Error && setError(e);
@@ -140,7 +140,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
       <section id="inventory">
         <div className="section-heading">
           <h1>
-            Inventory ({totalCapacity}/{maxCapacity})
+            Inventory ({currentCapacity}/{maxCapacity})
           </h1>
 
           <ButtonWithModal
@@ -150,7 +150,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
             title="New Inventory Item"
             confirmHandler={handlePost}
             form={form}
-            disabled={totalCapacity >= maxCapacity}
+            disabled={currentCapacity >= maxCapacity}
           >
             <InventoryForm
               includeParentForm={true}
@@ -168,6 +168,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
           showWarehouses={false}
           initialData={inventory}
           updateHandler={handlePut}
+          deleteHandler={handleDelete}
           editModalFormItems={
             <InventoryForm
               categories={categories}

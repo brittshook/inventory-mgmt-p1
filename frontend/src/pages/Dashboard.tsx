@@ -1,25 +1,24 @@
 import { useEffect, useState } from "react";
-import { getInventory } from "../api/inventory";
 import { Card } from "antd";
-import { DataType } from "../components/dataTable/DataTable";
 import { getWarehouses, WarehouseDataType } from "../api/warehouse";
 import { ErrorPage } from "./ErrorPage";
 
 export const Dashboard = () => {
-  const [totalInventory, setTotalInventory] = useState<number>(0);
+  const [currentCapacity, setCurrentCapacity] = useState<number>(0);
   const [totalCapacity, setTotalCapacity] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const fetchData = async () => {
     try {
-      const inventoryResult = await getInventory();
-      const total = inventoryResult.reduce(
-        (sum: number, item: DataType) => sum + item.quantity,
+      const warehouseResult = await getWarehouses();
+
+      const current = warehouseResult.reduce(
+        (sum: number, warehouse: WarehouseDataType) =>
+          sum + warehouse.currentCapacity,
         0
       );
-      setTotalInventory(total);
+      setCurrentCapacity(current);
 
-      const warehouseResult = await getWarehouses();
       const capacity = warehouseResult.reduce(
         (sum: number, warehouse: WarehouseDataType) =>
           sum + warehouse.maxCapacity,
@@ -47,7 +46,7 @@ export const Dashboard = () => {
         title="Total Items in Inventory"
         extra={<a href="#">More</a>}
       >
-        <h1 style={{ padding: 20 }}>{totalInventory}</h1>
+        <h1 style={{ padding: 20 }}>{currentCapacity}</h1>
       </Card>
       <Card
         style={{ marginTop: 16 }}

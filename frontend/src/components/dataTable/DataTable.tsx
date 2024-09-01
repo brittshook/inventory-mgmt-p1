@@ -10,7 +10,6 @@ import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
 import "./DataTable.css";
-import { deleteInventoryById } from "../../api/inventory";
 import { ButtonWithModal } from ".././ButtonWithModal";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 
@@ -20,6 +19,7 @@ type props = {
   showWarehouses: boolean;
   showCategories: boolean;
   updateHandler: (data: any) => Promise<void>;
+  deleteHandler: (id: number) => Promise<void>;
   editModalFormItems: ReactElement;
   categoryName?: string | null;
   warehouseName?: string | null;
@@ -46,6 +46,7 @@ export const DataTable = ({
   showCategories,
   showWarehouses,
   updateHandler,
+  deleteHandler,
   editModalFormItems,
   categoryName,
   warehouseName,
@@ -67,18 +68,6 @@ export const DataTable = ({
     }
   }, [initialData]);
 
-  const handleDelete = async (key: number) => {
-    setConfirmLoading(true);
-    try {
-      await deleteInventoryById(key);
-      setData(data.filter((item) => item.key !== key));
-    } catch (error) {
-      console.error("Failed to delete item:", error);
-    } finally {
-      setConfirmLoading(false);
-    }
-  };
-
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps["confirm"],
@@ -99,7 +88,11 @@ export const DataTable = ({
       clearFilters,
       close,
     }) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+      <div
+        role="presentation"
+        style={{ padding: 8 }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
         <Input
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
@@ -338,7 +331,7 @@ export const DataTable = ({
           <Popconfirm
             title="Confirm delete?"
             onConfirm={() => {
-              handleDelete(record.key);
+              deleteHandler(record.key);
             }}
             okButtonProps={{
               type: "primary",
