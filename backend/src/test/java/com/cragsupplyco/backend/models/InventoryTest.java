@@ -19,6 +19,7 @@ public class InventoryTest {
 
         warehouse = new Warehouse();
         warehouse.setName("Warehouse");
+        warehouse.setMaxCapacity(1000);
 
         inventory.setId(1);
         inventory.setProduct(product);

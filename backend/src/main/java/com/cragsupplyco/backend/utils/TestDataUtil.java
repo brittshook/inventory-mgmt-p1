@@ -20,28 +20,30 @@ public class TestDataUtil {
     final private ProductRepository productRepository;
     final private CategoryRepository categoryRepository;
     final private InventoryRepository inventoryRepository;
-    
-    public TestDataUtil(WarehouseRepository warehouseRepository, ProductRepository productRepository, 
-                                  CategoryRepository categoryRepository, InventoryRepository inventoryRepository) {
+
+    public TestDataUtil(WarehouseRepository warehouseRepository, ProductRepository productRepository,
+            CategoryRepository categoryRepository, InventoryRepository inventoryRepository) {
         this.warehouseRepository = warehouseRepository;
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.inventoryRepository = inventoryRepository;
     }
-  
+
     public void clearDatabase() {
         warehouseRepository.deleteAll();
         productRepository.deleteAll();
         categoryRepository.deleteAll();
         inventoryRepository.deleteAll();
-        // reset id auto generation sequences, otherwise the id's will increment where they left off 
+        // reset id auto generation sequences, otherwise the id's will increment where
+        // they left off
         // on each reset/reseed, making them unreliable for testing
         warehouseRepository.resetIdSequence();
         categoryRepository.resetIdSequence();
     }
 
     public void generateTestData() {
-        if (warehouseRepository.findAll().isEmpty() && productRepository.findAll().isEmpty() && categoryRepository.findAll().isEmpty() && inventoryRepository.findAll().isEmpty()) {
+        if (warehouseRepository.findAll().isEmpty() && productRepository.findAll().isEmpty()
+                && categoryRepository.findAll().isEmpty() && inventoryRepository.findAll().isEmpty()) {
 
             // Seeding Categories
             Category categoryClimbingShoes = new Category();
@@ -67,7 +69,9 @@ public class TestDataUtil {
             Category categoryApparel = new Category();
             categoryApparel.setName("Climbing Apparel");
 
-            categoryRepository.saveAll(Arrays.asList(categoryClimbingShoes, categoryRopes, categoryCarabiners, categoryHelmets, categoryBelayDevices, categoryCrashPads, categoryAccessories, categoryBackpacks, categoryHarnesses, categoryChalk, categoryApparel));
+            categoryRepository.saveAll(Arrays.asList(categoryClimbingShoes, categoryRopes, categoryCarabiners,
+                    categoryHelmets, categoryBelayDevices, categoryCrashPads, categoryAccessories, categoryBackpacks,
+                    categoryHarnesses, categoryChalk, categoryApparel));
 
             // Seeding Warehouses
             Warehouse ca1 = new Warehouse();
@@ -100,14 +104,16 @@ public class TestDataUtil {
             Product productBackpack = new Product();
             productBackpack.setBrand("SilkRun");
             productBackpack.setName("Alpine Explorer Backpack 40L");
-            productBackpack.setDescription("Spacious and ergonomic backpack designed for carrying climbing gear, 40 liters capacity.");
+            productBackpack.setDescription(
+                    "Spacious and ergonomic backpack designed for carrying climbing gear, 40 liters capacity.");
             productBackpack.setPrice(149.99);
             productBackpack.setCategory(categoryBackpacks);
 
             Product productRope = new Product();
             productRope.setBrand("PeakPro");
             productRope.setName("Titanium Ascend Rope 60m");
-            productRope.setDescription("Durable and lightweight climbing rope, 60 meters long, perfect for lead climbing.");
+            productRope.setDescription(
+                    "Durable and lightweight climbing rope, 60 meters long, perfect for lead climbing.");
             productRope.setPrice(199.99);
             productRope.setCategory(categoryRopes);
 
@@ -139,50 +145,55 @@ public class TestDataUtil {
             productHelmet.setPrice(89.99);
             productHelmet.setCategory(categoryHelmets);
 
-            productRepository.saveAll(Arrays.asList(productBackpack, productRope, productCarabinerSet, productClimbingShoes, productBelayDevice, productHelmet));
+            productRepository.saveAll(Arrays.asList(productBackpack, productRope, productCarabinerSet,
+                    productClimbingShoes, productBelayDevice, productHelmet));
 
             // Seeding Inventory
             Inventory inv1 = new Inventory();
-            inv1.setQuantity(100);
             inv1.setProduct(productRope);
             inv1.setWarehouse(ca1);
             inv1.setSize(null);
+            inv1.setQuantity(100);
 
             Inventory inv2 = new Inventory();
-            inv2.setQuantity(150);
             inv2.setProduct(productClimbingShoes);
             inv2.setWarehouse(ny1);
             inv2.setSize("M");
+            inv2.setQuantity(150);
 
             Inventory inv3 = new Inventory();
-            inv3.setQuantity(200);
             inv3.setProduct(productBackpack);
             inv3.setWarehouse(ny1);
             inv3.setSize("L");
+            inv3.setQuantity(200);
 
             Inventory inv4 = new Inventory();
-            inv4.setQuantity(300);
             inv4.setProduct(productCarabinerSet);
             inv4.setWarehouse(ny1);
             inv4.setSize("S");
+            inv4.setQuantity(300);
 
             Inventory inv5 = new Inventory();
-            inv5.setQuantity(150);
             inv5.setProduct(productHelmet);
             inv5.setWarehouse(ca1);
             inv5.setSize("S");
+            inv5.setQuantity(150);
 
             Inventory inv6 = new Inventory();
-            inv6.setQuantity(75);
             inv6.setProduct(productBelayDevice);
             inv6.setWarehouse(ca1);
             inv6.setSize("L");
+            inv6.setQuantity(75);
 
             Inventory inv7 = new Inventory();
-            inv7.setQuantity(170);
             inv7.setProduct(productHelmet);
             inv7.setWarehouse(tx1);
             inv7.setSize("S");
+            inv7.setQuantity(170);
+
+            ca1.setCurrentCapacity(325);
+            tx1.setCurrentCapacity(170);
+            ny1.setCurrentCapacity(650);
 
             inventoryRepository.saveAll(Arrays.asList(inv1, inv2, inv3, inv4, inv5, inv6, inv7));
         }

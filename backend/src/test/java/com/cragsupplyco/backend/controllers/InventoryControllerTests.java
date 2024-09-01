@@ -62,8 +62,23 @@ public class InventoryControllerTests {
     public void testFindInventoryById() {
         Inventory inventory1 = new Inventory();
         inventory1.setId(1);
-        inventory1.setProduct(new Product());
-        inventory1.setWarehouse(new Warehouse());
+
+        Product newProduct = new Product();
+        newProduct.setId(1);
+        newProduct.setBrand("Brand");
+        newProduct.setName("Name");
+        newProduct.setDescription("Description");
+        inventory1.setProduct(newProduct);
+
+        Warehouse newWarehouse = new Warehouse();
+        newWarehouse.setId(1);
+        newWarehouse.setName("CA1");
+        newWarehouse.setMaxCapacity(1000);
+        newWarehouse.setCity("Fresno");
+        newWarehouse.setState("CA");
+        newWarehouse.setZipCode("83942");
+        inventory1.setWarehouse(newWarehouse);
+
         inventory1.setQuantity(50);
 
         int id = inventory1.getId();
@@ -91,8 +106,23 @@ public class InventoryControllerTests {
     public void testCreateValidInventory() {
         Inventory validInventory = new Inventory();
         validInventory.setId(3);
-        validInventory.setProduct(new Product());
-        validInventory.setWarehouse(new Warehouse());
+
+        Product newProduct = new Product();
+        newProduct.setId(1);
+        newProduct.setBrand("Brand");
+        newProduct.setName("Name");
+        newProduct.setDescription("Description");
+        validInventory.setProduct(newProduct);
+
+        Warehouse newWarehouse = new Warehouse();
+        newWarehouse.setId(1);
+        newWarehouse.setName("CA1");
+        newWarehouse.setMaxCapacity(1000);
+        newWarehouse.setCity("Fresno");
+        newWarehouse.setState("CA");
+        newWarehouse.setZipCode("83942");
+        validInventory.setWarehouse(newWarehouse);
+
         validInventory.setSize("Small");
         validInventory.setQuantity(10);
 
@@ -106,13 +136,28 @@ public class InventoryControllerTests {
 
     @Test
     public void testCreateInvalidInventory() {
-        Inventory inventory1 = new Inventory();
-        inventory1.setId(1);
-        inventory1.setProduct(new Product());
-        inventory1.setWarehouse(new Warehouse());
-        inventory1.setQuantity(50);
+        Inventory invalidInventory = new Inventory();
+        invalidInventory.setId(1);
 
-        Inventory result = inventoryController.createInventory(inventory1);
+        Product newProduct = new Product();
+        newProduct.setId(1);
+        newProduct.setBrand("Brand");
+        newProduct.setName("Name");
+        newProduct.setDescription("Description");
+        invalidInventory.setProduct(newProduct);
+
+        Warehouse newWarehouse = new Warehouse();
+        newWarehouse.setId(1);
+        newWarehouse.setName("CA1");
+        newWarehouse.setMaxCapacity(1000);
+        newWarehouse.setCity("Fresno");
+        newWarehouse.setState("CA");
+        newWarehouse.setZipCode("83942");
+        invalidInventory.setWarehouse(newWarehouse);
+
+        invalidInventory.setQuantity(-1);
+
+        Inventory result = inventoryController.createInventory(invalidInventory);
 
         Assert.assertEquals(result, null);
     }
@@ -121,8 +166,23 @@ public class InventoryControllerTests {
     public void testUpdateInventoryById() {
         Inventory validInventory = new Inventory();
         validInventory.setId(3);
-        validInventory.setProduct(new Product());
-        validInventory.setWarehouse(new Warehouse());
+
+        Product newProduct = new Product();
+        newProduct.setId(1);
+        newProduct.setBrand("Brand");
+        newProduct.setName("Name");
+        newProduct.setDescription("Description");
+        validInventory.setProduct(newProduct);
+
+        Warehouse newWarehouse = new Warehouse();
+        newWarehouse.setId(1);
+        newWarehouse.setName("CA1");
+        newWarehouse.setMaxCapacity(1000);
+        newWarehouse.setCity("Fresno");
+        newWarehouse.setState("CA");
+        newWarehouse.setZipCode("83942");
+        validInventory.setWarehouse(newWarehouse);
+
         validInventory.setSize("Small");
         validInventory.setQuantity(10);
 

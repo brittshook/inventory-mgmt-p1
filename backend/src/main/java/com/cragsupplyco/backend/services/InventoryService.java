@@ -5,14 +5,18 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.cragsupplyco.backend.models.Inventory;
+import com.cragsupplyco.backend.models.Warehouse;
 import com.cragsupplyco.backend.repositories.InventoryRepository;
+import com.cragsupplyco.backend.repositories.WarehouseRepository;
 
 @Service
 public class InventoryService {
     private InventoryRepository repo;
+    private WarehouseRepository warehouseRepo;
 
-    public InventoryService(InventoryRepository repo) {
+    public InventoryService(InventoryRepository repo, WarehouseRepository warehouseRepo) {
         this.repo = repo;
+        this.warehouseRepo = warehouseRepo;
     }
 
     public Iterable<Inventory> findAll() {
@@ -24,6 +28,18 @@ public class InventoryService {
     }
 
     public Inventory save(Inventory inventory) {
+        Warehouse warehouse = inventory.getWarehouse();
+        int newQuantity = inventory.getQuantity();
+        int currentQuantity = warehouse.getCurrentCapacity();
+        int potentialQuantity = currentQuantity + newQuantity;
+
+        if (potentialQuantity > warehouse.getMaxCapacity()) {
+            throw new RuntimeException("Cannot save inventory. It exceeds the warehouse capacity.");
+        }
+
+        warehouse.setCurrentCapacity(potentialQuantity);
+        warehouseRepo.save(warehouse);
+
         return repo.save(inventory);
     }
 
