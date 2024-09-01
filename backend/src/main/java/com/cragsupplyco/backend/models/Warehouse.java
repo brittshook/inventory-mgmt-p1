@@ -38,6 +38,11 @@ public class Warehouse {
     @JsonView(Views.Public.class)
     private int maxCapacity;
 
+    @Min(value = 0)
+    @NotNull
+    @JsonView(Views.Public.class)
+    private int currentCapacity;
+
     @Column(length = 255)
     @NotBlank
     @JsonView(Views.Public.class)
@@ -129,9 +134,18 @@ public class Warehouse {
         this.inventory = inventory;
     }
 
+    public int getCurrentCapacity() {
+        return currentCapacity;
+    }
+
+    public void setCurrentCapacity(int currentCapacity) {
+        this.currentCapacity = currentCapacity;
+    }
+
     @Override
     public String toString() {
-        return "Warehouse [id=" + id + ", name=" + name + ", maxCapacity=" + maxCapacity + ", streetAddress="
+        return "Warehouse [id=" + id + ", name=" + name + ", maxCapacity=" + maxCapacity + ", currentCapacity="
+                + currentCapacity + ", streetAddress="
                 + streetAddress + ", city=" + city + ", state=" + state + ", zipCode=" + zipCode + ", inventory="
                 + inventory + "]";
     }
