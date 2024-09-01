@@ -340,10 +340,11 @@ export const DataTable = ({
               danger: true,
               loading: confirmLoading,
               id: `confirm-delete-inventory-${index}`,
+              "data-testid": `confirm-delete-inventory-${index}`,
             }}
             okText="Delete"
           >
-            <Button type="link" size="small" id={`delete-inventory-${index}`}>
+            <Button type="link" size="small" id={`delete-inventory-${index}`} data-testid={`delete-inventory-${index}`}>
               Delete
             </Button>
           </Popconfirm>
