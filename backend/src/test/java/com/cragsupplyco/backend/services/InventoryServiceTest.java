@@ -17,7 +17,9 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.cragsupplyco.backend.models.Inventory;
+import com.cragsupplyco.backend.models.Warehouse;
 import com.cragsupplyco.backend.repositories.InventoryRepository;
+import com.cragsupplyco.backend.repositories.WarehouseRepository;
 
 public class InventoryServiceTest {
 
@@ -27,6 +29,9 @@ public class InventoryServiceTest {
 
     @Mock
     private InventoryRepository inventoryRepository;
+
+    @Mock
+    private WarehouseRepository warehouseRepository;
 
     @BeforeTest
     public void setUp() {
@@ -81,7 +86,12 @@ public class InventoryServiceTest {
         Inventory expectedInventory = new Inventory();
         expectedInventory.setId(inventoryId);
 
+        Warehouse warehouse = new Warehouse();
+        warehouse.setMaxCapacity(1000);
+        expectedInventory.setWarehouse(warehouse);
+
         when(inventoryRepository.save(expectedInventory)).thenReturn(expectedInventory);
+        when(warehouseRepository.save(warehouse)).thenReturn(warehouse);
         Inventory result = inventoryService.save(expectedInventory);
         Assert.assertEquals(expectedInventory, result);
     }
@@ -105,12 +115,18 @@ public class InventoryServiceTest {
         int inventoryAddQuantity = 100;
         int inventoryExpectedQuantity = 200;
 
+        Warehouse warehouse = new Warehouse();
+        warehouse.setId(1);
+        warehouse.setMaxCapacity(1000);
+
         Inventory initialInventory = new Inventory();
         initialInventory.setId(inventoryId);
+        initialInventory.setWarehouse(warehouse);
         initialInventory.setQuantity(inventoryInitialQuantity);
 
         Inventory updatedInventory = new Inventory();
         updatedInventory.setId(inventoryId);
+        updatedInventory.setWarehouse(warehouse);
         updatedInventory.setQuantity(inventoryExpectedQuantity);
 
         when(inventoryRepository.findById(inventoryId)).thenReturn(Optional.of(initialInventory));

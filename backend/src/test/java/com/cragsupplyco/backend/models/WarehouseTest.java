@@ -44,7 +44,7 @@ public class WarehouseTest {
 
     @Test
     public void testToString() {
-        String expectedToString = "Warehouse [id=1, name=Name, maxCapacity=1000, streetAddress=Street Address, city=City, state=ST, zipCode=00000, inventory="
+        String expectedToString = "Warehouse [id=1, name=Name, maxCapacity=1000, currentCapacity=0, streetAddress=Street Address, city=City, state=ST, zipCode=00000, inventory="
                 + inventoryItems + "]";
         Assert.assertEquals(warehouse.toString(), expectedToString);
     }
