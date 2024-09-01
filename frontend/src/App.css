@@ -16,7 +16,14 @@ main {
   overflow: scroll;
 }
 
-main > section {
+main > div {
+  width: 100%;
+  padding: 10px;
+  height: 100%;
+}
+
+main > section,
+main > div > section {
   padding: 24px 14px;
   display: flex;
   flex-direction: column;
