@@ -17,6 +17,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.cragsupplyco.backend.models.Inventory;
+import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.models.Warehouse;
 import com.cragsupplyco.backend.repositories.InventoryRepository;
 import com.cragsupplyco.backend.repositories.WarehouseRepository;
@@ -93,18 +94,36 @@ public class InventoryServiceTest {
         when(inventoryRepository.save(expectedInventory)).thenReturn(expectedInventory);
         when(warehouseRepository.save(warehouse)).thenReturn(warehouse);
         Inventory result = inventoryService.save(expectedInventory);
-        Assert.assertEquals(expectedInventory, result);
+        Assert.assertEquals(result, expectedInventory);
     }
 
     @Test
     public void testUpdateInventoryById() {
         int inventoryId = 1;
-        Inventory expectedInventory = new Inventory();
-        expectedInventory.setId(inventoryId);
 
-        when(inventoryRepository.save(expectedInventory)).thenReturn(expectedInventory);
-        Inventory result = inventoryService.updateInventoryById(inventoryId, expectedInventory);
-        Assert.assertEquals(expectedInventory, result);
+        Warehouse warehouse = new Warehouse();
+        warehouse.setId(1);
+        warehouse.setMaxCapacity(1000);
+
+        Inventory existingInventory = new Inventory();
+        existingInventory.setId(inventoryId);
+        existingInventory.setProduct(new Product());
+        existingInventory.setWarehouse(warehouse);
+        existingInventory.setSize("S");
+        existingInventory.setQuantity(100);
+
+        Inventory updatedInventory = new Inventory();
+        updatedInventory.setId(inventoryId);
+        updatedInventory.setProduct(new Product());
+        updatedInventory.setWarehouse(warehouse);
+        updatedInventory.setSize("M");
+        updatedInventory.setQuantity(100);
+
+        when(inventoryRepository.findById(inventoryId)).thenReturn(Optional.of(existingInventory));
+        when(inventoryRepository.save(updatedInventory)).thenReturn(updatedInventory);
+        when(warehouseRepository.save(warehouse)).thenReturn(warehouse);
+        Inventory result = inventoryService.updateInventoryById(inventoryId, updatedInventory);
+        Assert.assertEquals(result, updatedInventory);
     }
 
     @Test
@@ -134,7 +153,7 @@ public class InventoryServiceTest {
 
         Inventory result = inventoryService.updateQuantityById(inventoryId, inventoryOperation, inventoryAddQuantity);
 
-        Assert.assertEquals(updatedInventory, result);
+        Assert.assertEquals(result, updatedInventory);
     }
 
     @Test
