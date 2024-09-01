@@ -331,7 +331,9 @@ export const DataTable = ({
           <Popconfirm
             title="Confirm delete?"
             onConfirm={() => {
+              setConfirmLoading(true);
               deleteHandler(record.key);
+              setConfirmLoading(false);
             }}
             okButtonProps={{
               type: "primary",
