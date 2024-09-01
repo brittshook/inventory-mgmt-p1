@@ -37,11 +37,11 @@ export const InventoryForm = ({
         rules={[
           {
             required: true,
-            message: "Please input the brand name!",
+            message: "Please input the brand name",
           },
         ]}
       >
-        <Input id="form_in_modal_brand" />
+        <Input id="form_in_modal_brand" maxLength={255} />
       </Form.Item>
       <Form.Item
         label="Product Name"
@@ -49,11 +49,11 @@ export const InventoryForm = ({
         rules={[
           {
             required: true,
-            message: "Please input the product name!",
+            message: "Please input the product name",
           },
         ]}
       >
-        <Input id="form_in_modal_name" />
+        <Input id="form_in_modal_name" maxLength={255} />
       </Form.Item>
       <Form.Item
         label="Description"
@@ -61,11 +61,11 @@ export const InventoryForm = ({
         rules={[
           {
             required: true,
-            message: "Please input the product description!",
+            message: "Please input the product description",
           },
         ]}
       >
-        <TextArea id="form_in_modal_description" rows={3} />
+        <TextArea id="form_in_modal_description" rows={3} maxLength={1000} />
       </Form.Item>
       <Space.Compact>
         <Form.Item
@@ -78,7 +78,7 @@ export const InventoryForm = ({
               : [
                   {
                     required: true,
-                    message: "Please select the product type!",
+                    message: "Please select the product type",
                   },
                 ]
           }
@@ -121,7 +121,7 @@ export const InventoryForm = ({
               : [
                   {
                     required: true,
-                    message: "Please select the Warehouse!",
+                    message: "Please select the warehouse",
                   },
                 ]
           }
@@ -162,7 +162,15 @@ export const InventoryForm = ({
           rules={[
             {
               required: true,
-              message: "Please input the product price!",
+              message: "Please input the product price",
+            },
+            {
+              validator: (_, value) => {
+                if (value !== undefined && value !== null) {
+                  return value >= 0.0 ? Promise.resolve() : Promise.reject();
+                }
+              },
+              message: "Price must be at least 0.00",
             },
           ]}
         >
@@ -178,20 +186,33 @@ export const InventoryForm = ({
             },
           ]}
         >
-          <Input id="form_in_modal_size" />
+          <Input id="form_in_modal_size" maxLength={20} />
         </Form.Item>
         <Form.Item
-          style={{ width: 147 }}
+          style={{ width: 148 }}
           label="Quantity"
           name="quantity"
           rules={[
+            { required: true, message: "" },
             {
-              required: true,
-              message: "Please input the quantity!",
+              validator: (_, value) => {
+                // Trim the value and check if it's empty
+                const trimmedValue = value?.toString().trim();
+                if (!trimmedValue) {
+                  return Promise.reject(
+                    new Error("Please input the quantity")
+                  );
+                }
+
+                // Validate if the number is at least 1
+                return value >= 0
+                  ? Promise.resolve()
+                  : Promise.reject(new Error("Quantity must be at least 0"));
+              },
             },
           ]}
         >
-          <Input id="form_in_modal_quantity" type="number" step="1" min="1" />
+          <Input id="form_in_modal_quantity" type="number" step="1" min="0" />
         </Form.Item>
       </Space.Compact>
     </>
