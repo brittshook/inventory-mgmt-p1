@@ -28,6 +28,10 @@ jest.mock("../../api/inventory", () => ({
   deleteInventoryById: jest.fn(),
 }));
 
+jest.mock("../../api/warehouse", () => ({
+  getWarehouses: jest.fn(),
+}));
+
 describe("Inventory By Category Page", () => {
   afterEach(() => {
     jest.clearAllMocks();
