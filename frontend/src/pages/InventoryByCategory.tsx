@@ -121,7 +121,6 @@ export const InventoryByCategory = ({ testId }: props) => {
       await fetchData();
     } catch (e) {
       e instanceof AxiosError && setError(e);
-      throw new Error();
     }
   };
 

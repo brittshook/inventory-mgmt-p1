@@ -57,6 +57,8 @@ export const InventoryByWarehouse = ({ testId }: props) => {
                 const product: ProductDataType = await getProductById(
                   productId
                 );
+                console.log(product);
+
                 return {
                   key: item.id,
                   size: item.size ?? "N/A",
@@ -75,8 +77,10 @@ export const InventoryByWarehouse = ({ testId }: props) => {
         }
 
         const categoriesResult = await getCategories();
+
         if (categoriesResult) setCategories(categoriesResult);
       } catch (e) {
+        console.log("Error fetching items"); // not running in tests
         e instanceof AxiosError && setError(e);
       } finally {
         setLoading(false);
@@ -123,7 +127,6 @@ export const InventoryByWarehouse = ({ testId }: props) => {
       await fetchData();
     } catch (e) {
       e instanceof AxiosError && setError(e);
-      throw new Error();
     }
   };
 

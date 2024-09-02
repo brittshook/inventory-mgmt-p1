@@ -9,7 +9,7 @@ export const generateMockAxiosError = (): AxiosError<unknown, any> => {
   const message = "Request failed with status code 400";
   const code = "400";
   const config: InternalAxiosRequestConfig = {
-    url: "https://test.com/api/data",
+    url: "http://localhost:5000/api/category",
     method: "get",
     headers: new AxiosHeaders({
       "Content-Type": "application/json",

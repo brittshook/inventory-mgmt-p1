@@ -15,7 +15,7 @@ describe("Dashboard Page", () => {
   test("should display loading state initially", () => {
     render(
       <MemoryRouter>
-        <Dashboard />
+        <Dashboard testId="dashboard" />
       </MemoryRouter>
     );
     expect(screen.getByText("Loading...")).toBeDefined();
@@ -29,7 +29,7 @@ describe("Dashboard Page", () => {
 
     render(
       <MemoryRouter>
-        <Dashboard />
+        <Dashboard testId="dashboard" />
       </MemoryRouter>
     );
 
@@ -46,7 +46,7 @@ describe("Dashboard Page", () => {
 
     render(
       <MemoryRouter>
-        <Dashboard />
+        <Dashboard testId="dashboard" />
       </MemoryRouter>
     );
 

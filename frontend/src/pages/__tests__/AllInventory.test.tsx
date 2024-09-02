@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { AllInventory } from "../AllInventory";
 import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom";
@@ -6,6 +6,8 @@ import { useScreenSize } from "../../context/ScreenSizeContext";
 import { getWarehouses } from "../../api/warehouse";
 import { getCategories } from "../../api/category";
 import { getProductsWithInventory } from "../../api/product";
+import { generateMockAxiosError } from "../../test/__mocks__/axiosMock";
+import { deleteInventoryById } from "../../api/inventory";
 
 // Set up mocks
 jest.mock("../../context/ScreenSizeContext", () => ({
@@ -22,6 +24,11 @@ jest.mock("../../api/warehouse", () => ({
 
 jest.mock("../../api/product", () => ({
   getProductsWithInventory: jest.fn(),
+}));
+
+jest.mock("../../api/inventory", () => ({
+  putInventory: jest.fn(),
+  deleteInventoryById: jest.fn(),
 }));
 
 describe("All Inventory Page", () => {
@@ -44,27 +51,22 @@ describe("All Inventory Page", () => {
     (getWarehouses as jest.Mock).mockResolvedValue([
       {
         id: 1,
-        name: "CA1",
+        name: "NY1",
+        currentCapacity: 100,
         maxCapacity: 1000,
         streetAddress: "123 Main St.",
-        city: "San Diego",
-        state: "CA",
-        zipCode: "82042",
-        inventory: [
-          { id: 1, product: 1, warehouse: "CA1", size: "N/A", quantity: 200 },
-        ],
+        city: "Albany",
+        state: "NY",
+        zipCode: "12345",
       },
       {
         id: 2,
-        name: "NY1",
-        maxCapacity: 2000,
-        streetAddress: "4500 B Ave.",
-        city: "Long Island",
-        state: "NY",
-        zipCode: "10042",
-        inventory: [
-          { id: 2, product: 2, warehouse: "NY1", size: "42", quantity: 100 },
-        ],
+        name: "CA1",
+        maxCapacity: 1000,
+        streetAddress: "312 Main St.",
+        city: "San Diego",
+        state: "CA",
+        zipCode: "82042",
       },
     ]);
     (getProductsWithInventory as jest.Mock).mockResolvedValue([
@@ -80,7 +82,7 @@ describe("All Inventory Page", () => {
       },
       {
         id: 2,
-        brand: "SummtKing",
+        brand: "SummitKing",
         name: "Peak Performance Climbing Shoes",
         description:
           "High-performance climbing shoes with excellent grip and comfort.",
@@ -123,19 +125,73 @@ describe("All Inventory Page", () => {
   });
 
   test("should display an error if fetching items fails", async () => {
-    (getProductsWithInventory as jest.Mock).mockResolvedValue(new Error());
+    (getProductsWithInventory as jest.Mock).mockRejectedValue(
+      generateMockAxiosError()
+    );
 
     render(
       <MemoryRouter>
-        <AllInventory />
+        <AllInventory testId="all-inventory" />
       </MemoryRouter>
     );
 
     await waitFor(() => {
-      const text = screen.getByText(
-        "Sorry, looks like we encountered an error"
+      expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
+    });
+  });
+
+  test("should be able to delete inventory", async () => {
+    render(
+      <MemoryRouter>
+        <AllInventory testId="all-inventory" />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      const deleteButton = screen.getAllByText("Delete");
+      fireEvent.click(deleteButton[0]);
+    });
+
+    await waitFor(() => {
+      const confirmDeleteButton = document.querySelector(
+        "#confirm-delete-inventory-0"
       );
-      expect(text).toBeInTheDocument();
+      (getProductsWithInventory as jest.Mock).mockResolvedValue([]);
+      fireEvent.click(confirmDeleteButton!);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("No data")).toBeDefined();
+      expect(deleteInventoryById).toHaveBeenCalled();
+    });
+  });
+
+  test("should show an error if deleting inventory fails", async () => {
+    (deleteInventoryById as jest.Mock).mockRejectedValue(
+      generateMockAxiosError()
+    );
+
+    render(
+      <MemoryRouter>
+        <AllInventory testId="all-inventory" />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      // index-based (not id!)
+      const deleteButton = screen.getAllByText("Delete");
+      fireEvent.click(deleteButton[0]);
+    });
+
+    await waitFor(() => {
+      const confirmDeleteButton = document.querySelector(
+        "#confirm-delete-inventory-0"
+      );
+      fireEvent.click(confirmDeleteButton!);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
   });
 });
