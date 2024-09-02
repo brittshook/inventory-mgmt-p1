@@ -17,6 +17,8 @@ import {
 } from "../api/inventory";
 import { ErrorPage } from "./ErrorPage";
 import { InventoryForm } from "../components/InventoryForm";
+import { ErrorOverlay } from "../components/ErrorOverlay";
+import { AxiosError } from "axios";
 
 type props = {
   testId?: string;
@@ -35,7 +37,8 @@ export const AllInventory = ({ testId }: props) => {
     null
   );
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<AxiosError | null>(null);
+  const [showErrorOverlay, setShowErrorOverlay] = useState<boolean>(false);
 
   const fetchData = async () => {
     try {
@@ -65,7 +68,7 @@ export const AllInventory = ({ testId }: props) => {
       const warehousesResult = await getWarehouses();
       if (warehousesResult) setWarehouses(warehousesResult);
     } catch (e) {
-      e instanceof Error && setError(e);
+      e instanceof AxiosError && setError(e);
     } finally {
       setLoading(false);
     }
@@ -75,12 +78,22 @@ export const AllInventory = ({ testId }: props) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (error) {
+      setShowErrorOverlay(true);
+      setTimeout(() => {
+        setShowErrorOverlay(false);
+      }, 1600);
+    }
+  }, [error]);
+
   const handlePost = async (data: InventoryFormValues) => {
     try {
       await postInventory(data);
       await fetchData();
     } catch (e) {
-      e instanceof Error && setError(e);
+      e instanceof AxiosError && setError(e);
+      throw new Error();
     }
   };
 
@@ -89,7 +102,8 @@ export const AllInventory = ({ testId }: props) => {
       await putInventory(data);
       await fetchData();
     } catch (e) {
-      e instanceof Error && setError(e);
+      e instanceof AxiosError && setError(e);
+      throw new Error();
     }
   };
 
@@ -98,11 +112,13 @@ export const AllInventory = ({ testId }: props) => {
       await deleteInventoryById(id);
       await fetchData();
     } catch (e) {
-      e instanceof Error && setError(e);
+      e instanceof AxiosError && setError(e);
+      throw new Error();
     }
   };
 
-  if (error) return <ErrorPage messageText={error.message} />;
+  if (error?.message.includes("404"))
+    return <ErrorPage testId={testId && "error-page"} />;
 
   return (
     <div data-testid={testId}>
@@ -159,6 +175,19 @@ export const AllInventory = ({ testId }: props) => {
           }
         />
       </section>
+      {showErrorOverlay && !error?.message.includes("404") && (
+        <div data-testid="error-overlay">
+          <ErrorOverlay
+            messageText={
+              error?.message.includes("500")
+                ? "Server Error. Please try again later."
+                : JSON.stringify(error?.response?.data)
+                ? JSON.stringify(error?.response?.data).replace(/"/g, "")
+                : "Error occurred. Please try again."
+            }
+          />
+        </div>
+      )}
     </div>
   );
 };
