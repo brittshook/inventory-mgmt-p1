@@ -30,6 +30,10 @@ jest.mock("../../api/product", () => ({
   getProductById: jest.fn()
 }));
 
+jest.mock("../../api/category", () => ({
+  getCategories: jest.fn()
+}));
+
 describe("Inventory By Warehouse Page", () => {
   afterEach(() => {
     jest.clearAllMocks();
