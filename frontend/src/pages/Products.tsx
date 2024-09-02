@@ -10,6 +10,8 @@ import {
 import { Card } from "../components/card/Card";
 import { useEffect, useState } from "react";
 import { Form, Input } from "antd";
+import { ErrorOverlay } from "../components/ErrorOverlay";
+import { AxiosError } from "axios";
 import { ErrorPage } from "./ErrorPage";
 
 type props = {
@@ -22,14 +24,15 @@ export const Products = ({ testId }: props) => {
 
   const [categories, setCategories] = useState<CategoryDataType[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<AxiosError | null>(null);
+  const [showErrorOverlay, setShowErrorOverlay] = useState<boolean>(false);
 
   const fetchData = async () => {
     try {
       const result = await getCategories();
       setCategories(result);
     } catch (e) {
-      e instanceof Error && setError(e);
+      e instanceof AxiosError && setError(e);
     } finally {
       setLoading(false);
     }
@@ -39,12 +42,22 @@ export const Products = ({ testId }: props) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (error) {
+      setShowErrorOverlay(true);
+      setTimeout(() => {
+        setShowErrorOverlay(false);
+      }, 1600);
+    }
+  }, [error]);
+
   const handleDelete = async (id: number) => {
     try {
       await deleteCategoryById(id);
       await fetchData();
     } catch (e) {
-      e instanceof Error && setError(e);
+      e instanceof AxiosError && setError(e);
+      throw new Error();
     }
   };
 
@@ -53,7 +66,8 @@ export const Products = ({ testId }: props) => {
       await postCategory(data);
       await fetchData();
     } catch (e) {
-      e instanceof Error && setError(e);
+      e instanceof AxiosError && setError(e);
+      throw new Error();
     }
   };
 
@@ -63,12 +77,14 @@ export const Products = ({ testId }: props) => {
       await putCategory(id, data);
       await fetchData();
     } catch (e) {
-      e instanceof Error && setError(e);
+      e instanceof AxiosError && setError(e);
+      throw new Error();
     }
   };
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <ErrorPage messageText={error.message} />;
+  if (error?.message.includes("404"))
+    return <ErrorPage testId={testId && "error-page"} />;
 
   return (
     <section data-testid={testId} id="products">
@@ -130,6 +146,19 @@ export const Products = ({ testId }: props) => {
           ></Card>
         ))}
       </section>
+      {showErrorOverlay && !error?.message.includes("404") && (
+        <div data-testid="error-overlay">
+          <ErrorOverlay
+            messageText={
+              error?.message.includes("500")
+                ? "Server Error. Please try again later."
+                : JSON.stringify(error?.response?.data)
+                ? JSON.stringify(error?.response?.data).replace(/"/g, "")
+                : "Error occurred. Please try again."
+            }
+          />
+        </div>
+      )}
     </section>
   );
 };

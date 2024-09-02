@@ -1,12 +1,15 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { InventoryByCategory } from "../InventoryByCategory";
 import "@testing-library/jest-dom";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 import { getCategoryById } from "../../api/category";
 import { getProductsWithInventoryByCategoryId } from "../../api/product";
+import { generateMockAxiosError } from "../../test/__mocks__/axiosMock";
 import { deleteInventoryById } from "../../api/inventory";
+import { getWarehouses } from "../../api/warehouse";
 
+// Set up mocks
 jest.mock("../../context/ScreenSizeContext", () => ({
   useScreenSize: jest.fn(),
 }));
@@ -33,11 +36,11 @@ jest.mock("../../api/warehouse", () => ({
 }));
 
 describe("Inventory By Category Page", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-  
   beforeEach(() => {
+    // Reset mocks before each test
+    jest.clearAllMocks();
+
+    // Mock data
     (useLocation as jest.Mock).mockReturnValue({
       pathname: "/inventory",
       search: "?category=1",
@@ -47,6 +50,18 @@ describe("Inventory By Category Page", () => {
       id: 1,
       name: "Climbing Shoes",
     });
+    (getWarehouses as jest.Mock).mockResolvedValue([
+      {
+        id: 1,
+        name: "NY1",
+        currentCapacity: 100,
+        maxCapacity: 1000,
+        streetAddress: "123 Main St.",
+        city: "Albany",
+        state: "NY",
+        zipCode: "12345",
+      },
+    ]);
     (getProductsWithInventoryByCategoryId as jest.Mock).mockResolvedValue([
       {
         id: 1,
@@ -59,17 +74,18 @@ describe("Inventory By Category Page", () => {
         inventory: [
           { id: 1, product: 1, warehouse: "NY1", size: "42", quantity: 100 },
         ],
-      }
+      },
     ]);
   });
 
-  test("should display loading state initially", () => {
+  test("should display loading state initially", async () => {
     render(
       <MemoryRouter>
-        <InventoryByCategory />
+        <InventoryByCategory testId="inventory-by-category" />
       </MemoryRouter>
     );
 
+    // Verify loading spinner is displayed
     const spinner = document.querySelector(".ant-spin");
     expect(spinner).toBeInTheDocument();
   });
@@ -77,10 +93,14 @@ describe("Inventory By Category Page", () => {
   test("should display inventory by category page", async () => {
     render(
       <MemoryRouter>
-        <InventoryByCategory />
+        <InventoryByCategory testId="inventory-by-category" />
       </MemoryRouter>
     );
 
+    // Verify page component is displayed
+    expect(screen.getByTestId("inventory-by-category")).toBeInTheDocument();
+
+    // Verify table data rows are visible
     await waitFor(() => {
       expect(screen.getByText("Peak Performance Climbing Shoes")).toBeDefined();
       expect(getCategoryById).toHaveBeenCalled();
@@ -89,41 +109,37 @@ describe("Inventory By Category Page", () => {
   });
 
   test("should display an error if fetching items fails", async () => {
-    (getCategoryById as jest.Mock).mockRejectedValue(
-      new Error()
-    );
+    (getCategoryById as jest.Mock).mockRejectedValue(generateMockAxiosError());
 
     render(
       <MemoryRouter>
-        <InventoryByCategory />
+        <InventoryByCategory testId="inventory-by-category" />
       </MemoryRouter>
     );
+
     await waitFor(() => {
-      const text = screen.getByText(
-        "Sorry, looks like we encountered an error"
-      );
-      expect(text).toBeInTheDocument();
+      expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
   });
 
   test("should be able to delete inventory", async () => {
-
     render(
       <MemoryRouter>
-        <InventoryByCategory />
+        <InventoryByCategory testId="inventory-by-category" />
       </MemoryRouter>
     );
 
     await waitFor(() => {
-      // index-based (not id!)
-      const deleteButton = screen.getByTestId("delete-inventory-0");
-      fireEvent.click(deleteButton);
+      const deleteButton = screen.getAllByText("Delete");
+      fireEvent.click(deleteButton[0]);
     });
 
     await waitFor(() => {
-      const confirmDeleteButton = screen.getByTestId("confirm-delete-inventory-0");
+      const confirmDeleteButton = document.querySelector(
+        "#confirm-delete-inventory-0"
+      );
       (getProductsWithInventoryByCategoryId as jest.Mock).mockResolvedValue([]);
-      fireEvent.click(confirmDeleteButton);
+      fireEvent.click(confirmDeleteButton!);
     });
 
     await waitFor(() => {
@@ -134,32 +150,30 @@ describe("Inventory By Category Page", () => {
 
   test("should show an error if deleting inventory fails", async () => {
     (deleteInventoryById as jest.Mock).mockRejectedValue(
-      new Error()
+      generateMockAxiosError()
     );
 
     render(
       <MemoryRouter>
-        <InventoryByCategory />
+        <InventoryByCategory testId="inventory-by-category" />
       </MemoryRouter>
     );
 
     await waitFor(() => {
       // index-based (not id!)
-      const deleteButton = screen.getByTestId("delete-inventory-0");
-      fireEvent.click(deleteButton);
+      const deleteButton = screen.getAllByText("Delete");
+      fireEvent.click(deleteButton[0]);
     });
 
     await waitFor(() => {
-      const confirmDeleteButton = screen.getByTestId("confirm-delete-inventory-0");
-      fireEvent.click(confirmDeleteButton);
-    });
-
-    await waitFor(() => {
-      const text = screen.getByText(
-        "Sorry, looks like we encountered an error"
+      const confirmDeleteButton = document.querySelector(
+        "#confirm-delete-inventory-0"
       );
-      expect(text).toBeInTheDocument();
-      expect(deleteInventoryById).toHaveBeenCalled();
+      fireEvent.click(confirmDeleteButton!);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
   });
 });

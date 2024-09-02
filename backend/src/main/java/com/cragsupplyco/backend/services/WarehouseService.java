@@ -28,11 +28,20 @@ public class WarehouseService {
     }
 
     public Warehouse save(Warehouse warehouse) {
+        if (repo.existsByName(warehouse.getName())) {
+            throw new IllegalArgumentException("Warehouse with this name already exists.");
+        }
         return repo.save(warehouse);
     }
 
     public Warehouse updateWarehouseById(int id, Warehouse warehouse) {
         warehouse.setId(id);
+        Warehouse existingWarehouse = repo.findById(id).get();
+
+        if (!warehouse.getName().equals(existingWarehouse.getName()) && repo.existsByName(warehouse.getName())) {
+            throw new IllegalArgumentException("Warehouse with this name already exists.");
+        }
+
         return repo.save(warehouse);
     }
 

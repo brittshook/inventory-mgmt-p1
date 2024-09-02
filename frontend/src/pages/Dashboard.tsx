@@ -2,12 +2,19 @@ import { useEffect, useState } from "react";
 import { Card } from "antd";
 import { getWarehouses, WarehouseDataType } from "../api/warehouse";
 import { ErrorPage } from "./ErrorPage";
+import { AxiosError } from "axios";
+import { ErrorOverlay } from "../components/ErrorOverlay";
 
-export const Dashboard = () => {
+type props = {
+  testId?: string;
+};
+export const Dashboard = ({ testId }: props) => {
   const [currentCapacity, setCurrentCapacity] = useState<number>(0);
   const [totalCapacity, setTotalCapacity] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<AxiosError | null>(null);
+  const [showErrorOverlay, setShowErrorOverlay] = useState<boolean>(false);
+
   const fetchData = async () => {
     try {
       const warehouseResult = await getWarehouses();
@@ -26,19 +33,31 @@ export const Dashboard = () => {
       );
       setTotalCapacity(capacity);
     } catch (e) {
-      e instanceof Error && setError(e);
+      e instanceof AxiosError && setError(e);
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (error) {
+      setShowErrorOverlay(true);
+      setTimeout(() => {
+        setShowErrorOverlay(false);
+      }, 1600);
+    }
+  }, [error]);
+
   if (loading) return <div>Loading...</div>;
-  if (error) return <ErrorPage messageText={error.message} />;
+  if (error?.message.includes("404"))
+    return <ErrorPage testId={testId && "error-page"} />;
+
   return (
-    <section id="dashboard">
+    <section data-testid={testId} id="dashboard">
       <h1>Dashboard</h1>
       <Card
         style={{ marginTop: 16 }}
@@ -56,6 +75,19 @@ export const Dashboard = () => {
       >
         <h1 style={{ padding: 20 }}>{totalCapacity}</h1>
       </Card>
+      {showErrorOverlay && !error?.message.includes("404") && (
+        <div data-testid="error-overlay">
+          <ErrorOverlay
+            messageText={
+              error?.message.includes("500")
+                ? "Server Error. Please try again later."
+                : JSON.stringify(error?.response?.data)
+                ? JSON.stringify(error?.response?.data).replace(/"/g, "")
+                : "Error occurred. Please try again."
+            }
+          />
+        </div>
+      )}
     </section>
   );
 };

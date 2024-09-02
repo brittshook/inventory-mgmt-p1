@@ -30,6 +30,13 @@ public class InventoryService {
     public Inventory save(Inventory inventory) {
         Warehouse warehouse = inventory.getWarehouse();
         int newQuantity = inventory.getQuantity();
+
+        if (repo.existsByProductAndWarehouseAndSize(inventory.getProduct(), warehouse, inventory.getSize())) {
+            Inventory existingInventory = repo.findByProductAndWarehouseAndSize(inventory.getProduct(),
+                    warehouse, inventory.getSize()).get();
+            return updateQuantityById(existingInventory.getId(), "increment", newQuantity);
+        }
+
         int currentQuantity = warehouse.getCurrentCapacity();
         int updatedCapacity = currentQuantity + newQuantity;
 
@@ -77,6 +84,8 @@ public class InventoryService {
 
                 newWarehouse.setCurrentCapacity(newWarehouseCapacity);
                 warehouseRepo.save(newWarehouse);
+
+                existingInventory.setWarehouse(newWarehouse);
             } else {
                 // Update warehouse capacity based on the change in quantity
                 int currentCapacity = currentWarehouse.getCurrentCapacity();
@@ -94,7 +103,7 @@ public class InventoryService {
             existingInventory.setQuantity(newQuantity);
             existingInventory.setProduct(updatedInventory.getProduct());
             existingInventory.setSize(updatedInventory.getSize());
-            return repo.save(updatedInventory);
+            return repo.save(existingInventory);
         } else {
             updatedInventory.setId(id);
 

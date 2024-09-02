@@ -14,7 +14,10 @@ import com.cragsupplyco.backend.models.Category;
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
     Optional<Category> findByName(String name);
 
-    // reset the PSQL id incrementing sequence for the sake of test data and facilitating tests
+    boolean existsByName(String name);
+
+    // reset the PSQL id incrementing sequence for the sake of test data and
+    // facilitating tests
     @Modifying
     @Transactional
     @Query(value = "ALTER SEQUENCE category_id_seq RESTART WITH 1", nativeQuery = true)

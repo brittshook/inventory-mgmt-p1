@@ -13,11 +13,13 @@ import {
   putWarehouse,
 } from "../../api/warehouse";
 import userEvent from "@testing-library/user-event";
+import { generateMockAxiosError } from "../../test/__mocks__/axiosMock";
+import "@testing-library/jest-dom";
 
 jest.mock("../../api/warehouse");
 
 describe("Warehouses Page", () => {
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks();
   });
 
@@ -53,7 +55,7 @@ describe("Warehouses Page", () => {
 
   test("should display an error if fetching warehouses fails", async () => {
     (getWarehouses as jest.Mock).mockResolvedValue([testWarehouse1]);
-    (getWarehouses as jest.Mock).mockRejectedValue(new Error());
+    (getWarehouses as jest.Mock).mockRejectedValue(generateMockAxiosError());
 
     render(
       <MemoryRouter>
@@ -62,10 +64,7 @@ describe("Warehouses Page", () => {
     );
 
     await waitFor(() => {
-      const text = screen.getByText(
-        "Sorry, looks like we encountered an error"
-      );
-      expect(text).toBeDefined();
+      expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
   });
 
@@ -136,7 +135,7 @@ describe("Warehouses Page", () => {
 
   test("should show an error if editing warehouses fails", async () => {
     (getWarehouses as jest.Mock).mockResolvedValue([testWarehouse1]);
-    (putWarehouse as jest.Mock).mockRejectedValue(new Error());
+    (putWarehouse as jest.Mock).mockRejectedValue(generateMockAxiosError());
 
     render(
       <MemoryRouter>
@@ -155,10 +154,7 @@ describe("Warehouses Page", () => {
     userEvent.click(submitButton);
 
     await waitFor(() => {
-      const errorText = screen.getByText(
-        "Sorry, looks like we encountered an error"
-      );
-      expect(errorText).toBeDefined();
+      expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
   });
 
@@ -200,7 +196,9 @@ describe("Warehouses Page", () => {
 
   test("should show an error if deleting warehouses fails", async () => {
     (getWarehouses as jest.Mock).mockResolvedValue([testWarehouse1]);
-    (deleteWarehouseById as jest.Mock).mockRejectedValue(new Error());
+    (deleteWarehouseById as jest.Mock).mockRejectedValue(
+      generateMockAxiosError()
+    );
 
     render(
       <MemoryRouter>
@@ -226,10 +224,7 @@ describe("Warehouses Page", () => {
     });
 
     await waitFor(() => {
-      const errorText = screen.getByText(
-        "Sorry, looks like we encountered an error"
-      );
-      expect(errorText).toBeDefined();
+      expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
       expect(deleteWarehouseById).toHaveBeenCalled();
       expect(cardsSection.children).toHaveLength(1);
     });
