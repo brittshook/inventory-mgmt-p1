@@ -106,6 +106,7 @@ public class WarehouseServiceTest {
         int warehouseId = 1;
         Warehouse expectedWarehouse = new Warehouse();
         expectedWarehouse.setId(warehouseId);
+        expectedWarehouse.setName("CA1");
 
         when(warehouseRepository.save(expectedWarehouse)).thenReturn(expectedWarehouse);
         Warehouse result = warehouseService.updateWarehouseById(warehouseId, expectedWarehouse);

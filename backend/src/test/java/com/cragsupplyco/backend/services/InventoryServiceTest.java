@@ -34,9 +34,16 @@ public class InventoryServiceTest {
     @Mock
     private WarehouseRepository warehouseRepository;
 
+    @Mock
+    private Warehouse warehouse;
+
     @BeforeTest
     public void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
+
+        warehouse.setId(1);
+        warehouse.setName("CA1");
+        warehouse.setMaxCapacity(100);
     }
 
     @AfterTest
@@ -86,9 +93,6 @@ public class InventoryServiceTest {
         int inventoryId = 4;
         Inventory expectedInventory = new Inventory();
         expectedInventory.setId(inventoryId);
-
-        Warehouse warehouse = new Warehouse();
-        warehouse.setMaxCapacity(1000);
         expectedInventory.setWarehouse(warehouse);
 
         when(inventoryRepository.save(expectedInventory)).thenReturn(expectedInventory);
@@ -98,62 +102,130 @@ public class InventoryServiceTest {
     }
 
     @Test
-    public void testUpdateInventoryById() {
-        int inventoryId = 1;
-
-        Warehouse warehouse = new Warehouse();
-        warehouse.setId(1);
-        warehouse.setMaxCapacity(1000);
+    public void testUpdateInventoryInSameWarehouse() {
+        Warehouse currentWarehouse = new Warehouse();
+        currentWarehouse.setId(2);
+        currentWarehouse.setName("CA2");
+        currentWarehouse.setCurrentCapacity(50);
+        currentWarehouse.setMaxCapacity(100);
 
         Inventory existingInventory = new Inventory();
-        existingInventory.setId(inventoryId);
+        existingInventory.setId(1);
         existingInventory.setProduct(new Product());
-        existingInventory.setWarehouse(warehouse);
-        existingInventory.setSize("S");
-        existingInventory.setQuantity(100);
+        existingInventory.setWarehouse(currentWarehouse);
+        existingInventory.setQuantity(10);
+        existingInventory.setSize("M");
 
         Inventory updatedInventory = new Inventory();
-        updatedInventory.setId(inventoryId);
+        updatedInventory.setId(1);
         updatedInventory.setProduct(new Product());
-        updatedInventory.setWarehouse(warehouse);
+        updatedInventory.setWarehouse(currentWarehouse);
+        updatedInventory.setQuantity(15);
         updatedInventory.setSize("M");
-        updatedInventory.setQuantity(100);
 
-        when(inventoryRepository.findById(inventoryId)).thenReturn(Optional.of(existingInventory));
-        when(inventoryRepository.save(updatedInventory)).thenReturn(updatedInventory);
-        when(warehouseRepository.save(warehouse)).thenReturn(warehouse);
-        Inventory result = inventoryService.updateInventoryById(inventoryId, updatedInventory);
-        Assert.assertEquals(result, updatedInventory);
+        when(inventoryRepository.findById(1)).thenReturn(Optional.of(existingInventory));
+        when(warehouseRepository.save(any(Warehouse.class))).thenReturn(currentWarehouse);
+        when(inventoryRepository.save(any(Inventory.class))).thenReturn(existingInventory);
+
+        Inventory result = inventoryService.updateInventoryById(1, updatedInventory);
+
+        Assert.assertEquals(result.getQuantity(), 15);
+        Assert.assertEquals(result.getSize(), "M");
+        Assert.assertEquals(result.getWarehouse(), currentWarehouse);
+        verify(warehouseRepository).save(currentWarehouse);
+        verify(inventoryRepository).save(existingInventory);
     }
 
     @Test
-    public void testUpdateQuantityById() {
-        int inventoryId = 1;
-        String inventoryOperation = "increment";
-        int inventoryInitialQuantity = 100;
-        int inventoryAddQuantity = 100;
-        int inventoryExpectedQuantity = 200;
+    public void testUpdateInventoryInDifferentWarehouse() {
+        Warehouse currentWarehouse = new Warehouse();
+        currentWarehouse.setId(2);
+        currentWarehouse.setName("CA2");
+        currentWarehouse.setCurrentCapacity(50);
+        currentWarehouse.setMaxCapacity(100);
 
-        Warehouse warehouse = new Warehouse();
-        warehouse.setId(1);
-        warehouse.setMaxCapacity(1000);
+        Warehouse newWarehouse = new Warehouse();
+        newWarehouse.setId(3);
+        currentWarehouse.setName("NY1");
+        newWarehouse.setCurrentCapacity(30);
+        newWarehouse.setMaxCapacity(200);
 
-        Inventory initialInventory = new Inventory();
-        initialInventory.setId(inventoryId);
-        initialInventory.setWarehouse(warehouse);
-        initialInventory.setQuantity(inventoryInitialQuantity);
+        Inventory existingInventory = new Inventory();
+        existingInventory.setId(1);
+        existingInventory.setProduct(new Product());
+        existingInventory.setWarehouse(currentWarehouse);
+        existingInventory.setQuantity(10);
+        existingInventory.setSize("M");
 
         Inventory updatedInventory = new Inventory();
-        updatedInventory.setId(inventoryId);
-        updatedInventory.setWarehouse(warehouse);
-        updatedInventory.setQuantity(inventoryExpectedQuantity);
+        updatedInventory.setId(1);
+        updatedInventory.setProduct(new Product());
+        updatedInventory.setWarehouse(newWarehouse);
+        updatedInventory.setQuantity(15);
+        updatedInventory.setSize("M");
 
-        when(inventoryRepository.findById(inventoryId)).thenReturn(Optional.of(initialInventory));
-        when(inventoryRepository.save(any(Inventory.class))).thenReturn(updatedInventory);
+        when(inventoryRepository.findById(1)).thenReturn(Optional.of(existingInventory));
+        when(warehouseRepository.save(any(Warehouse.class))).thenReturn(newWarehouse);
+        when(inventoryRepository.save(any(Inventory.class))).thenReturn(existingInventory);
 
-        Inventory result = inventoryService.updateQuantityById(inventoryId, inventoryOperation, inventoryAddQuantity);
+        Inventory result = inventoryService.updateInventoryById(1, updatedInventory);
 
-        Assert.assertEquals(result, updatedInventory);
+        Assert.assertEquals(result.getQuantity(), 15);
+        Assert.assertEquals(result.getSize(), "M");
+        Assert.assertEquals(result.getWarehouse(), newWarehouse);
+        verify(warehouseRepository).save(currentWarehouse);
+        verify(warehouseRepository).save(newWarehouse);
+        verify(inventoryRepository).save(existingInventory);
+    }
+
+    @Test
+    public void testIncrementQuantity() {
+        Warehouse currentWarehouse = new Warehouse();
+        currentWarehouse.setId(2);
+        currentWarehouse.setName("CA2");
+        currentWarehouse.setCurrentCapacity(50);
+        currentWarehouse.setMaxCapacity(100);
+
+        Inventory inventory = new Inventory();
+        inventory.setId(1);
+        inventory.setProduct(new Product());
+        inventory.setWarehouse(currentWarehouse);
+        inventory.setQuantity(10);
+        inventory.setSize("M");
+
+        int incrementValue = 20;
+        when(inventoryRepository.findById(1)).thenReturn(Optional.of(inventory));
+        when(inventoryRepository.save(inventory)).thenReturn(inventory);
+
+        Inventory result = inventoryService.updateQuantityById(1, "increment", incrementValue);
+
+        Assert.assertEquals(result.getQuantity(), 30);
+        verify(inventoryRepository).save(result);
+    }
+
+    @Test
+    public void testDecrementQuantity() {
+        Warehouse currentWarehouse = new Warehouse();
+        currentWarehouse.setId(2);
+        currentWarehouse.setName("CA2");
+        currentWarehouse.setCurrentCapacity(50);
+        currentWarehouse.setMaxCapacity(100);
+
+        Inventory inventory = new Inventory();
+        inventory.setId(1);
+        inventory.setProduct(new Product());
+        inventory.setWarehouse(currentWarehouse);
+        inventory.setQuantity(10);
+        inventory.setSize("M");
+
+        int decrementValue = 5;
+        when(inventoryRepository.findById(1)).thenReturn(Optional.of(inventory));
+        when(inventoryRepository.save(inventory)).thenReturn(inventory);
+
+        Inventory result = inventoryService.updateQuantityById(1, "decrement", decrementValue);
+
+        Assert.assertEquals(result.getQuantity(), 5);
+        verify(inventoryRepository).save(result);
     }
 
     @Test

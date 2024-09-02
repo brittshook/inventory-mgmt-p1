@@ -105,6 +105,7 @@ public class CategoryServiceTest {
         int categoryId = 1;
         Category expectedCategory = new Category();
         expectedCategory.setId(categoryId);
+        expectedCategory.setName("Climbing Shoes");
 
         when(categoryRepository.save(expectedCategory)).thenReturn(expectedCategory);
         Category result = categoryService.updateCategoryById(categoryId, expectedCategory);
