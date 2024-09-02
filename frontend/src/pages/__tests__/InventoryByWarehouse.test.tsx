@@ -108,45 +108,57 @@ describe("Inventory By Warehouse Page", () => {
     });
   });
 
-  // test("should display an error if fetching items fails", async () => {
-  //   (getProductById as jest.Mock).mockResolvedValue(generateMockAxiosError());
+  test("should display an error if fetching items fails", async () => {
+    (getWarehouseById as jest.Mock).mockRejectedValue(generateMockAxiosError());
 
-  //   render(
-  //     <MemoryRouter>
-  //       <InventoryByWarehouse testId="inventory-by-warehouse" />
-  //     </MemoryRouter>
-  //   );
-  //   await waitFor(() => {
-  //     expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
-  //   });
-  // });
+    render(
+      <MemoryRouter>
+        <InventoryByWarehouse testId="inventory-by-warehouse" />
+      </MemoryRouter>
+    );
+    await waitFor(() => {
+      expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
+    });
+  });
 
-  // test("should be able to delete inventory", async () => {
-  //   render(
-  //     <MemoryRouter>
-  //       <InventoryByWarehouse testId="inventory-by-warehouse" />
-  //     </MemoryRouter>
-  //   );
+  test("should be able to delete inventory", async () => {
+    render(
+      <MemoryRouter>
+        <InventoryByWarehouse testId="inventory-by-warehouse" />
+      </MemoryRouter>
+    );
 
-  //   await waitFor(() => {
-  //     const deleteButton = screen.getAllByText("Delete");
-  //     fireEvent.click(deleteButton[0]);
-  //   });
+    await waitFor(() => {
+      const deleteButton = screen.getAllByText("Delete");
+      fireEvent.click(deleteButton[0]);
+    });
 
-  //   await waitFor(() => {
-  //     const confirmDeleteButton = document.querySelector(
-  //       "#confirm-delete-inventory-0"
-  //     );
-  //     (getWarehouseById as jest.Mock).mockResolvedValue([]);
-  //     (getProductById as jest.Mock).mockResolvedValue([]);
-  //     fireEvent.click(confirmDeleteButton!);
-  //   });
+    await waitFor(() => {
+      const confirmDeleteButton = document.querySelector(
+        "#confirm-delete-inventory-0"
+      );
+      (getWarehouseById as jest.Mock).mockResolvedValue({
+        id: 1,
+        name: "NY1",
+        currentCapacity: 100,
+        maxCapacity: 1000,
+        streetAddress: "123 Main St.",
+        city: "Albany",
+        state: "NY",
+        zipCode: "12345",
+        inventory: [],
+      });
+      fireEvent.click(confirmDeleteButton!);
+    });
 
-  //   await waitFor(() => {
-  //     expect(screen.getByText("No data")).toBeDefined();
-  //     expect(deleteInventoryById).toHaveBeenCalled();
-  //   });
-  // });
+    (getWarehouseById as jest.Mock).mockResolvedValue([]);
+    (getProductById as jest.Mock).mockResolvedValue([]);
+
+    await waitFor(() => {
+      expect(screen.getByText("No data")).toBeDefined();
+      expect(deleteInventoryById).toHaveBeenCalled();
+    });
+  });
 
   test("should show an error if deleting inventory fails", async () => {
     (deleteInventoryById as jest.Mock).mockRejectedValue(
