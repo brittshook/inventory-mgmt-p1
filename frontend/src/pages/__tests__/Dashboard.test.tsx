@@ -2,6 +2,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { Dashboard } from "../Dashboard";
 import { MemoryRouter } from "react-router-dom";
 import { getWarehouses } from "../../api/warehouse";
+import { generateMockAxiosError } from "../../test/__mocks__/axiosMock";
+import "@testing-library/jest-dom";
 
 jest.mock("../../api/warehouse");
 
@@ -40,7 +42,7 @@ describe("Dashboard Page", () => {
   });
 
   test("should display error if API calls fail", async () => {
-    (getWarehouses as jest.Mock).mockRejectedValue(new Error());
+    (getWarehouses as jest.Mock).mockRejectedValue(generateMockAxiosError());
 
     render(
       <MemoryRouter>
@@ -49,10 +51,7 @@ describe("Dashboard Page", () => {
     );
 
     await waitFor(() => {
-      const text = screen.getByText(
-        "Sorry, looks like we encountered an error"
-      );
-      expect(text).toBeDefined();
+      expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
   });
 });

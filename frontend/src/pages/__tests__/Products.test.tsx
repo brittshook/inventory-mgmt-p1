@@ -1,4 +1,5 @@
 import {
+  findByTestId,
   fireEvent,
   render,
   screen,
@@ -14,11 +15,13 @@ import {
   deleteCategoryById,
 } from "../../api/category";
 import userEvent from "@testing-library/user-event";
+import "@testing-library/jest-dom";
+import { generateMockAxiosError } from "../../test/__mocks__/axiosMock";
 
 jest.mock("../../api/category");
 
 describe("Products Page", () => {
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks();
   });
 
@@ -54,7 +57,7 @@ describe("Products Page", () => {
   });
 
   test("should display an error if fetching product categories fails", async () => {
-    (getCategories as jest.Mock).mockRejectedValue(new Error());
+    (getCategories as jest.Mock).mockRejectedValue(generateMockAxiosError());
 
     render(
       <MemoryRouter>
@@ -62,12 +65,9 @@ describe("Products Page", () => {
       </MemoryRouter>
     );
 
-    await waitFor(() => {
-      const text = screen.getByText(
-        "Sorry, looks like we encountered an error"
-      );
-      expect(text).toBeDefined();
-    });
+    const container = await screen.findByTestId("products");
+
+    expect(await findByTestId(container, "error-overlay")).toBeInTheDocument();
   });
 
   test("should be able to create categories", async () => {
@@ -114,7 +114,7 @@ describe("Products Page", () => {
     (getCategories as jest.Mock).mockResolvedValue([
       { id: 1, name: "Climbing Shoes" },
     ]);
-    (postCategory as jest.Mock).mockRejectedValue(new Error());
+    (postCategory as jest.Mock).mockRejectedValue(generateMockAxiosError());
 
     render(
       <MemoryRouter>
@@ -135,10 +135,7 @@ describe("Products Page", () => {
     });
 
     await waitFor(() => {
-      const errorText = screen.getByText(
-        "Sorry, looks like we encountered an error"
-      );
-      expect(errorText).toBeDefined();
+      expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
   });
 
@@ -177,7 +174,7 @@ describe("Products Page", () => {
     (getCategories as jest.Mock).mockResolvedValue([
       { id: 1, name: "Climbing Shoes" },
     ]);
-    (putCategory as jest.Mock).mockRejectedValue(new Error());
+    (putCategory as jest.Mock).mockRejectedValue(generateMockAxiosError());
 
     render(
       <MemoryRouter>
@@ -196,10 +193,7 @@ describe("Products Page", () => {
     });
 
     await waitFor(() => {
-      const errorText = screen.getByText(
-        "Sorry, looks like we encountered an error"
-      );
-      expect(errorText).toBeDefined();
+      expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
   });
 
@@ -242,7 +236,9 @@ describe("Products Page", () => {
     (getCategories as jest.Mock).mockResolvedValue([
       { id: 1, name: "Climbing Shoes" },
     ]);
-    (deleteCategoryById as jest.Mock).mockRejectedValue(new Error());
+    (deleteCategoryById as jest.Mock).mockRejectedValue(
+      generateMockAxiosError()
+    );
 
     render(
       <MemoryRouter>
@@ -269,10 +265,7 @@ describe("Products Page", () => {
     });
 
     await waitFor(() => {
-      const errorText = screen.getByText(
-        "Sorry, looks like we encountered an error"
-      );
-      expect(errorText).toBeDefined();
+      expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
   });
 });
