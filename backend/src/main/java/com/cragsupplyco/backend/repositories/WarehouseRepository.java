@@ -14,7 +14,10 @@ import com.cragsupplyco.backend.models.Warehouse;
 public interface WarehouseRepository extends JpaRepository<Warehouse, Integer> {
     Optional<Warehouse> findByName(String name);
 
-    // reset the PSQL id incrementing sequence for the sake of test data and facilitating tests
+    boolean existsByName(String name);
+
+    // reset the PSQL id incrementing sequence for the sake of test data and
+    // facilitating tests
     @Modifying
     @Transactional
     @Query(value = "ALTER SEQUENCE warehouse_id_seq RESTART WITH 1", nativeQuery = true)
