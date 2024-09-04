@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cragsupplyco.backend.dtos.ProductRequestDto;
+import com.cragsupplyco.backend.mappers.ProductMapper;
 import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.models.Views;
 import com.cragsupplyco.backend.services.ProductService;
@@ -25,9 +27,11 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/product")
-@CrossOrigin(origins = {"http://crag-supply-co-client.s3-website-us-east-1.amazonaws.com", "http://localhost:5173"})
+@CrossOrigin(origins = { "http://crag-supply-co-client.s3-website-us-east-1.amazonaws.com", "http://localhost:5173",
+        "http://[::1]:5173/" })
 public class ProductController {
     private ProductService service;
+    private ProductMapper mapper;
 
     public ProductController(ProductService service) {
         this.service = service;
@@ -50,8 +54,8 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Product createProduct(@Valid @RequestBody Product product) {
-        return service.save(product);
+    public Product createProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
+        return service.save(mapper.toProduct(productRequestDto));
     }
 
     @GetMapping("/byProps")
@@ -86,8 +90,8 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void updateProductById(@PathVariable int id, @Valid @RequestBody Product product) {
-        service.updateProductById(id, product);
+    public void updateProductById(@PathVariable int id, @Valid @RequestBody ProductRequestDto productRequestDto) {
+        service.updateProductById(id, mapper.toProduct(productRequestDto));
     }
 
     @DeleteMapping("/{id}")

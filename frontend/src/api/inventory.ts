@@ -59,7 +59,7 @@ export const putInventory = async (data: InventoryFormValues) => {
           name: data.name,
           description: data.description,
           price: data.price,
-          category: category,
+          category: category.id,
         });
         product = await getProductById(product.id);
       }
@@ -70,7 +70,7 @@ export const putInventory = async (data: InventoryFormValues) => {
         name: data.name,
         description: data.description,
         price: data.price,
-        category: category,
+        category: category.id,
       });
     }
 
@@ -78,7 +78,7 @@ export const putInventory = async (data: InventoryFormValues) => {
 
     const response = await axiosInstance.put(`${API_ENDPOINT}/${data.id}`, {
       product: product,
-      warehouse: warehouse,
+      warehouse: warehouse.id,
       size: data.size,
       quantity: data.quantity,
     });
@@ -102,7 +102,7 @@ export const postInventory = async (data: InventoryFormValues) => {
         name: data.name,
         description: data.description,
         price: data.price,
-        category: category,
+        category: category.id,
       });
     }
 
@@ -110,7 +110,7 @@ export const postInventory = async (data: InventoryFormValues) => {
 
     const response = await axiosInstance.post(API_ENDPOINT, {
       product: product,
-      warehouse: warehouse,
+      warehouse: warehouse.id,
       size: data.size,
       quantity: data.quantity,
     });

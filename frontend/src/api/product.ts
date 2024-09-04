@@ -75,7 +75,7 @@ export const postProduct = async (data: {
   name: string;
   description: string;
   price: number;
-  category: string;
+  category: number;
 }) => {
   try {
     const response = await axiosInstance.post(API_ENDPOINT, data);
@@ -93,7 +93,7 @@ export const putProduct = async (
     name: string;
     description: string;
     price: number;
-    category: { id: number; name: string };
+    category: number;
   }
 ) => {
   try {
