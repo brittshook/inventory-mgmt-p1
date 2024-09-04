@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cragsupplyco.backend.dtos.InventoryRequestDto;
 import com.cragsupplyco.backend.dtos.UpdateQuantityRequestDto;
 import com.cragsupplyco.backend.models.Inventory;
 import com.cragsupplyco.backend.services.InventoryService;
@@ -39,7 +40,7 @@ public class InventoryController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Inventory createInventory(@Valid @RequestBody Inventory inventory) {
+    public Inventory createInventory(@Valid @RequestBody InventoryRequestDto inventory) {
         return service.save(inventory);
     }
 

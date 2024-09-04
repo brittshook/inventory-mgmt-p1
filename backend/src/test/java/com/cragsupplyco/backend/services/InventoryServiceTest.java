@@ -1,21 +1,22 @@
 package com.cragsupplyco.backend.services;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import com.cragsupplyco.backend.dtos.InventoryRequestDto;
+import com.cragsupplyco.backend.mappers.InventoryMapper;
 import com.cragsupplyco.backend.models.Inventory;
 import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.models.Warehouse;
@@ -33,6 +34,9 @@ public class InventoryServiceTest {
 
     @Mock
     private WarehouseRepository warehouseRepository;
+
+    @Mock
+    private InventoryMapper inventoryMapper;
 
     @Mock
     private Warehouse warehouse;
@@ -90,14 +94,14 @@ public class InventoryServiceTest {
 
     @Test
     public void testSaveInventory() {
-        int inventoryId = 4;
+        InventoryRequestDto dto = new InventoryRequestDto();
+        dto.setWarehouse(warehouse.getId());
         Inventory expectedInventory = new Inventory();
-        expectedInventory.setId(inventoryId);
         expectedInventory.setWarehouse(warehouse);
-
+        when(inventoryMapper.mapDtoToInventory(dto)).thenReturn(expectedInventory);
         when(inventoryRepository.save(expectedInventory)).thenReturn(expectedInventory);
         when(warehouseRepository.save(warehouse)).thenReturn(warehouse);
-        Inventory result = inventoryService.save(expectedInventory);
+        Inventory result = inventoryService.save(dto);
         Assert.assertEquals(result, expectedInventory);
     }
 

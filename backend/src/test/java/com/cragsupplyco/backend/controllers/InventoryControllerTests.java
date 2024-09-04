@@ -19,6 +19,7 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import com.cragsupplyco.backend.dtos.InventoryRequestDto;
 import com.cragsupplyco.backend.dtos.UpdateQuantityRequestDto;
 import com.cragsupplyco.backend.models.Inventory;
 import com.cragsupplyco.backend.models.Product;
@@ -126,12 +127,18 @@ public class InventoryControllerTests {
         validInventory.setSize("Small");
         validInventory.setQuantity(10);
 
-        when(inventoryService.save(any(Inventory.class))).thenReturn(validInventory);
+        InventoryRequestDto validInventoryDto = new InventoryRequestDto();
+        validInventoryDto.setProduct(newProduct.getId());
+        validInventoryDto.setWarehouse(newWarehouse.getId());
+        validInventoryDto.setSize(validInventory.getSize());
+        validInventoryDto.setQuantity(Integer.toString(validInventory.getQuantity()));
 
-        Inventory result = inventoryController.createInventory(validInventory);
+        when(inventoryService.save(any(InventoryRequestDto.class))).thenReturn(validInventory);
+
+        Inventory result = inventoryController.createInventory(validInventoryDto);
 
         Assert.assertEquals(result, validInventory);
-        verify(inventoryService, times(1)).save(validInventory);
+        verify(inventoryService, times(1)).save(validInventoryDto);
     }
 
     @Test
@@ -157,7 +164,13 @@ public class InventoryControllerTests {
 
         invalidInventory.setQuantity(-1);
 
-        Inventory result = inventoryController.createInventory(invalidInventory);
+        InventoryRequestDto invalidInventoryDto = new InventoryRequestDto();
+        invalidInventoryDto.setProduct(newProduct.getId());
+        invalidInventoryDto.setWarehouse(newWarehouse.getId());
+        invalidInventoryDto.setSize(invalidInventory.getSize());
+        invalidInventoryDto.setQuantity(Integer.toString(invalidInventory.getQuantity()));
+
+        Inventory result = inventoryController.createInventory(invalidInventoryDto);
 
         Assert.assertEquals(result, null);
     }
