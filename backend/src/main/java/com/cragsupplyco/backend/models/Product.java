@@ -28,7 +28,7 @@ import jakarta.validation.constraints.NotNull;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment to generate PK
     @JsonView(Views.Public.class)
     private int id;
 
@@ -53,16 +53,17 @@ public class Product {
     @JsonView(Views.Public.class)
     private double price;
 
-    @ManyToOne
+    @ManyToOne // Many products belong to a single category
     @JoinColumn(name = "category_id")
     @NotNull
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIdentityReference(alwaysAsId = true) // Store only as id
     @JsonView(Views.Public.class)
     private Category category;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product") // One product has mu
     @Cascade(CascadeType.ALL)
-    @JsonView(Views.Internal.class)
+    @JsonView(Views.Internal.class) // Used to hide field on public view; only included when internal view is used
+                                    // on controller method
     private List<Inventory> inventory;
 
     public int getId() {
@@ -93,6 +94,7 @@ public class Product {
         return price;
     }
 
+    // Use 2 decimal points
     public void setPrice(double price) {
         BigDecimal bdValue = BigDecimal.valueOf(price);
         this.price = bdValue.setScale(2, RoundingMode.HALF_UP).doubleValue();
