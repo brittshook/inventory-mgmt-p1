@@ -4,19 +4,27 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.cragsupplyco.backend.dtos.InventoryRequestDto;
+import com.cragsupplyco.backend.mappers.InventoryMapper;
 import com.cragsupplyco.backend.models.Inventory;
+import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.models.Warehouse;
 import com.cragsupplyco.backend.repositories.InventoryRepository;
+import com.cragsupplyco.backend.repositories.ProductRepository;
 import com.cragsupplyco.backend.repositories.WarehouseRepository;
 
 @Service
 public class InventoryService {
+    private InventoryMapper mapper;
     private InventoryRepository repo;
     private WarehouseRepository warehouseRepo;
+    private ProductRepository productRepo;
 
-    public InventoryService(InventoryRepository repo, WarehouseRepository warehouseRepo) {
+    public InventoryService(InventoryRepository repo, WarehouseRepository warehouseRepo, ProductRepository productRepo, InventoryMapper mapper) {
         this.repo = repo;
         this.warehouseRepo = warehouseRepo;
+        this.mapper = mapper;
+        this.productRepo = productRepo;
     }
 
     public Iterable<Inventory> findAll() {
@@ -27,12 +35,14 @@ public class InventoryService {
         return repo.findById(id);
     }
 
-    public Inventory save(Inventory inventory) {
+    public Inventory save(InventoryRequestDto inventoryDto) {
+        Inventory inventory = this.mapper.mapDtoToInventory(inventoryDto);
+        Product product = inventory.getProduct();
         Warehouse warehouse = inventory.getWarehouse();
         int newQuantity = inventory.getQuantity();
-
-        if (repo.existsByProductAndWarehouseAndSize(inventory.getProduct(), warehouse, inventory.getSize())) {
-            Inventory existingInventory = repo.findByProductAndWarehouseAndSize(inventory.getProduct(),
+        
+        if (repo.existsByProductAndWarehouseAndSize(product, warehouse, inventory.getSize())) {
+            Inventory existingInventory = repo.findByProductAndWarehouseAndSize(product,
                     warehouse, inventory.getSize()).get();
             return updateQuantityById(existingInventory.getId(), "increment", newQuantity);
         }
@@ -50,9 +60,10 @@ public class InventoryService {
         return repo.save(inventory);
     }
 
-    public Inventory updateInventoryById(int id, Inventory updatedInventory) {
+    public Inventory updateInventoryById(int id, InventoryRequestDto updatedInventoryDto) {
         Optional<Inventory> optionalInventory = repo.findById(id);
-
+        Inventory updatedInventory = this.mapper.mapDtoToInventory(updatedInventoryDto);
+        
         if (optionalInventory.isPresent()) {
             Inventory existingInventory = optionalInventory.get();
             Warehouse currentWarehouse = existingInventory.getWarehouse();
