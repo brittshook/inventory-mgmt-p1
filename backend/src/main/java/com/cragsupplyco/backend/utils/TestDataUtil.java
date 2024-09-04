@@ -34,11 +34,14 @@ public class TestDataUtil {
         productRepository.deleteAll();
         categoryRepository.deleteAll();
         inventoryRepository.deleteAll();
-        // reset id auto generation sequences, otherwise the id's will increment where
-        // they left off
-        // on each reset/reseed, making them unreliable for testing
+        // reset id auto generation sequences
+        // otherwise the id's will increment
+        // where they left off on each reset/reseed
+        // making them unreliable for testing
         warehouseRepository.resetIdSequence();
         categoryRepository.resetIdSequence();
+        inventoryRepository.resetIdSequence();
+        productRepository.resetIdSequence();
     }
 
     public void generateTestData() {
