@@ -24,6 +24,8 @@ public class ProductRequestDto {
     @Min(value = 0)
     private double price;
 
+    // This is the difference in the DTO and the model - category id is passed as
+    // int
     @NotNull
     private int category;
 

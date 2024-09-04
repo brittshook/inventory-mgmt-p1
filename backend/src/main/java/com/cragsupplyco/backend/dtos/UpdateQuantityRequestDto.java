@@ -8,11 +8,12 @@ public class UpdateQuantityRequestDto {
     private String operation;
 
     @Min(value = 1)
-    private int value = 1;
+    private int value = 1; // Sets default value to 1 if not passed
 
     public UpdateQuantityRequestDto() {
     }
 
+    // This DTO is useful to quickly increment or decrement quantity by X value
     public UpdateQuantityRequestDto(String operation, int value) {
         this.operation = operation;
         this.value = value;
@@ -23,7 +24,7 @@ public class UpdateQuantityRequestDto {
     }
 
     public void setOperation(String operation) {
-        this.operation = operation;
+        this.operation = operation; // e.g., "increment", "decrement"
     }
 
     public int getValue() {
