@@ -26,15 +26,16 @@ public class InventoryMapper {
         
         Optional<Warehouse> optionalWarehouse = warehouseRepo.findById(inventoryDto.getWarehouse());
         if (optionalWarehouse.isEmpty()) {
-            throw new RuntimeException("Cannot save inventory. Associated warehouse was not found.");
+            throw new RuntimeException("Warehouse not found with ID: " + inventoryDto.getWarehouse());
         }
         Warehouse warehouse = optionalWarehouse.get();
         Optional<Product> optionalProduct = productRepo.findById(inventoryDto.getWarehouse());
         if (optionalProduct.isEmpty()) {
-            throw new RuntimeException("Cannot save inventory. Associated product was not found.");
+            throw new RuntimeException("Product not found with ID: " + inventoryDto.getProduct());
         }
         Product product = optionalProduct.get();
         int newQuantity = Integer.parseInt(inventoryDto.getQuantity());
+        inventory.setSize(inventoryDto.getSize());
         inventory.setQuantity(newQuantity);
         inventory.setProduct(product);
         inventory.setWarehouse(warehouse);

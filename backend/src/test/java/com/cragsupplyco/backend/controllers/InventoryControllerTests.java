@@ -199,9 +199,15 @@ public class InventoryControllerTests {
         validInventory.setSize("Small");
         validInventory.setQuantity(10);
 
-        inventoryController.updateInventoryById(3, validInventory);
+        InventoryRequestDto validInventoryDto = new InventoryRequestDto();
+        validInventoryDto.setProduct(newProduct.getId());
+        validInventoryDto.setWarehouse(newWarehouse.getId());
+        validInventoryDto.setSize(validInventory.getSize());
+        validInventoryDto.setQuantity(Integer.toString(validInventory.getQuantity()));
 
-        verify(inventoryService, times(1)).updateInventoryById(eq(3), any(Inventory.class));
+        inventoryController.updateInventoryById(3, validInventoryDto);
+
+        verify(inventoryService, times(1)).updateInventoryById(eq(3), any(InventoryRequestDto.class));
     }
 
     @Test

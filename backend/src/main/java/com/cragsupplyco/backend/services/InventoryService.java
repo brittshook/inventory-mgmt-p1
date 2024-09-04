@@ -60,9 +60,10 @@ public class InventoryService {
         return repo.save(inventory);
     }
 
-    public Inventory updateInventoryById(int id, Inventory updatedInventory) {
+    public Inventory updateInventoryById(int id, InventoryRequestDto updatedInventoryDto) {
         Optional<Inventory> optionalInventory = repo.findById(id);
-
+        Inventory updatedInventory = this.mapper.mapDtoToInventory(updatedInventoryDto);
+        
         if (optionalInventory.isPresent()) {
             Inventory existingInventory = optionalInventory.get();
             Warehouse currentWarehouse = existingInventory.getWarehouse();

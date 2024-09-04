@@ -55,7 +55,7 @@ public class InventoryController {
 
     @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void updateInventoryById(@PathVariable int id, @Valid @RequestBody Inventory inventory) {
+    public void updateInventoryById(@PathVariable int id, @Valid @RequestBody InventoryRequestDto inventory) {
         service.updateInventoryById(id, inventory);
     }
 
