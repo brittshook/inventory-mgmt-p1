@@ -10,7 +10,6 @@ import com.cragsupplyco.backend.models.Inventory;
 import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.models.Warehouse;
 import com.cragsupplyco.backend.repositories.InventoryRepository;
-import com.cragsupplyco.backend.repositories.ProductRepository;
 import com.cragsupplyco.backend.repositories.WarehouseRepository;
 
 @Service
@@ -18,13 +17,11 @@ public class InventoryService {
     private InventoryMapper mapper;
     private InventoryRepository repo;
     private WarehouseRepository warehouseRepo;
-    private ProductRepository productRepo;
 
-    public InventoryService(InventoryRepository repo, WarehouseRepository warehouseRepo, ProductRepository productRepo, InventoryMapper mapper) {
+    public InventoryService(InventoryRepository repo, WarehouseRepository warehouseRepo, InventoryMapper mapper) {
         this.repo = repo;
         this.warehouseRepo = warehouseRepo;
         this.mapper = mapper;
-        this.productRepo = productRepo;
     }
 
     public Iterable<Inventory> findAll() {
@@ -36,11 +33,11 @@ public class InventoryService {
     }
 
     public Inventory save(InventoryRequestDto inventoryDto) {
-        Inventory inventory = this.mapper.mapDtoToInventory(inventoryDto);
+        Inventory inventory = mapper.toInventory(inventoryDto);
         Product product = inventory.getProduct();
         Warehouse warehouse = inventory.getWarehouse();
         int newQuantity = inventory.getQuantity();
-        
+
         if (repo.existsByProductAndWarehouseAndSize(product, warehouse, inventory.getSize())) {
             Inventory existingInventory = repo.findByProductAndWarehouseAndSize(product,
                     warehouse, inventory.getSize()).get();
@@ -62,8 +59,8 @@ public class InventoryService {
 
     public Inventory updateInventoryById(int id, InventoryRequestDto updatedInventoryDto) {
         Optional<Inventory> optionalInventory = repo.findById(id);
-        Inventory updatedInventory = this.mapper.mapDtoToInventory(updatedInventoryDto);
-        
+        Inventory updatedInventory = mapper.toInventory(updatedInventoryDto);
+
         if (optionalInventory.isPresent()) {
             Inventory existingInventory = optionalInventory.get();
             Warehouse currentWarehouse = existingInventory.getWarehouse();
