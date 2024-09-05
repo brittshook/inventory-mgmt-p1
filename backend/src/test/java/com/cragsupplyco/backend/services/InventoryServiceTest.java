@@ -98,7 +98,7 @@ public class InventoryServiceTest {
         dto.setWarehouse(warehouse.getId());
         Inventory expectedInventory = new Inventory();
         expectedInventory.setWarehouse(warehouse);
-        when(inventoryMapper.mapDtoToInventory(dto)).thenReturn(expectedInventory);
+        when(inventoryMapper.toInventory(dto)).thenReturn(expectedInventory);
         when(inventoryRepository.save(expectedInventory)).thenReturn(expectedInventory);
         when(warehouseRepository.save(warehouse)).thenReturn(warehouse);
         Inventory result = inventoryService.save(dto);
@@ -134,7 +134,7 @@ public class InventoryServiceTest {
         InventoryRequestDto dto = new InventoryRequestDto();
         dto.setWarehouse(warehouse.getId());
 
-        when(inventoryMapper.mapDtoToInventory(dto)).thenReturn(updatedInventory);
+        when(inventoryMapper.toInventory(dto)).thenReturn(updatedInventory);
         Inventory result = inventoryService.updateInventoryById(1, dto);
 
         Assert.assertEquals(result.getQuantity(), 15);
@@ -179,7 +179,7 @@ public class InventoryServiceTest {
         InventoryRequestDto dto = new InventoryRequestDto();
         dto.setWarehouse(warehouse.getId());
         
-        when(inventoryMapper.mapDtoToInventory(dto)).thenReturn(updatedInventory);
+        when(inventoryMapper.toInventory(dto)).thenReturn(updatedInventory);
         Inventory result = inventoryService.updateInventoryById(1, dto);
 
         Assert.assertEquals(result.getQuantity(), 15);
