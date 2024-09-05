@@ -20,7 +20,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.cragsupplyco.backend.dtos.ProductRequestDto;
-import com.cragsupplyco.backend.mappers.ProductMapper;
 import com.cragsupplyco.backend.models.Category;
 import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.services.ProductService;
@@ -29,9 +28,6 @@ public class ProductControllerTests {
 
     @Mock
     private ProductService productService;
-
-    @Mock
-    private ProductMapper productMapper;
 
     @InjectMocks
     private ProductController productController;
@@ -185,7 +181,7 @@ public class ProductControllerTests {
         validProductRequestDto.setName("Hiking Boots");
         validProductRequestDto.setBrand("HikersInc");
         validProductRequestDto.setDescription("Durable hiking boots");
-        validProductRequestDto.setPrice(150.0);
+        validProductRequestDto.setPrice("150.0");
         validProductRequestDto.setCategory(1);
 
         Category category = new Category();
@@ -200,20 +196,19 @@ public class ProductControllerTests {
         validProduct.setPrice(150.0);
         validProduct.setCategory(category);
 
-        when(productMapper.toProduct(any(ProductRequestDto.class))).thenReturn(validProduct);
-        when(productService.save(any(Product.class))).thenReturn(validProduct);
+        when(productService.save(any(ProductRequestDto.class))).thenReturn(validProduct);
 
         Product result = productController.createProduct(validProductRequestDto);
 
         Assert.assertEquals(result, validProduct);
 
-        verify(productService, times(1)).save(any(Product.class));
+        verify(productService, times(1)).save(any(ProductRequestDto.class));
     }
 
     @Test
     public void testCreateInvalidProduct() {
         ProductRequestDto invalidProductRequestDto = new ProductRequestDto();
-        invalidProductRequestDto.setPrice(0.0);
+        invalidProductRequestDto.setPrice("0.0");
         invalidProductRequestDto.setCategory(1);
 
         Category category = new Category();
@@ -224,7 +219,6 @@ public class ProductControllerTests {
         invalidProduct.setPrice(0.0);
         invalidProduct.setCategory(category);
 
-        when(productMapper.toProduct(any(ProductRequestDto.class))).thenReturn(invalidProduct);
         Product result = productController.createProduct(invalidProductRequestDto);
 
         Assert.assertEquals(result, null);
@@ -236,7 +230,7 @@ public class ProductControllerTests {
         validProductRequestDto.setName("Hiking Boots");
         validProductRequestDto.setBrand("HikersInc");
         validProductRequestDto.setDescription("Durable hiking boots");
-        validProductRequestDto.setPrice(150.0);
+        validProductRequestDto.setPrice("150.0");
         validProductRequestDto.setCategory(1);
 
         Category category = new Category();
@@ -251,13 +245,12 @@ public class ProductControllerTests {
         validProduct.setPrice(150.0);
         validProduct.setCategory(category);
 
-        when(productMapper.toProduct(any(ProductRequestDto.class))).thenReturn(validProduct);
-        when(productService.save(any(Product.class))).thenReturn(validProduct);
+        when(productService.save(any(ProductRequestDto.class))).thenReturn(validProduct);
 
         productController.updateProductById(4, validProductRequestDto);
 
         verify(productService, times(1))
-                .updateProductById(eq(4), any(Product.class));
+                .updateProductById(eq(4), any(ProductRequestDto.class));
     }
 
     @Test
