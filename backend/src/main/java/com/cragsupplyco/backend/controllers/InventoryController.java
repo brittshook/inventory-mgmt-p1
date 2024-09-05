@@ -25,7 +25,8 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/inventory")
-@CrossOrigin(origins = {"http://crag-supply-co-client.s3-website-us-east-1.amazonaws.com", "http://localhost:5173"})
+@CrossOrigin(origins = { "http://crag-supply-co-client.s3-website-us-east-1.amazonaws.com", "http://localhost:5173",
+        "http://[::1]:5173/" })
 public class InventoryController {
     private InventoryService service;
 
@@ -40,8 +41,8 @@ public class InventoryController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Inventory createInventory(@Valid @RequestBody InventoryRequestDto inventory) {
-        return service.save(inventory);
+    public Inventory createInventory(@Valid @RequestBody InventoryRequestDto inventoryRequestDto) {
+        return service.save(inventoryRequestDto);
     }
 
     @GetMapping("/{id}")
@@ -55,8 +56,8 @@ public class InventoryController {
 
     @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void updateInventoryById(@PathVariable int id, @Valid @RequestBody InventoryRequestDto inventory) {
-        service.updateInventoryById(id, inventory);
+    public void updateInventoryById(@PathVariable int id, @Valid @RequestBody InventoryRequestDto inventoryRequestDto) {
+        service.updateInventoryById(id, inventoryRequestDto);
     }
 
     @PatchMapping("/{id}")
