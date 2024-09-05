@@ -9,8 +9,6 @@ import com.cragsupplyco.backend.models.Category;
 import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.services.CategoryService;
 
-import jakarta.persistence.EntityNotFoundException;
-
 @Configuration
 public class ProductMapper {
     private CategoryService categoryService;
@@ -35,7 +33,7 @@ public class ProductMapper {
             Category category = optionalCategory.get();
             product.setCategory(category);
         } else {
-            throw new EntityNotFoundException("Category not found with ID: " + productRequestDto.getCategory());
+            throw new RuntimeException("Category not found with ID: " + productRequestDto.getCategory());
         }
 
         return product;
