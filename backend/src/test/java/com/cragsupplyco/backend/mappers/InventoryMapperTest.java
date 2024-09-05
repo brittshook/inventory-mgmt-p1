@@ -2,15 +2,14 @@ package com.cragsupplyco.backend.mappers;
 
 import java.util.Optional;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import com.cragsupplyco.backend.dtos.InventoryRequestDto;
 import com.cragsupplyco.backend.models.Inventory;
