@@ -1,6 +1,7 @@
 package com.cragsupplyco.backend.models;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -27,6 +28,12 @@ public class CategoryTest {
         category.setId(1);
         category.setName("Name");
         category.setProducts(products);
+    }
+
+    @AfterMethod
+    public void teardown() {
+        category = null;
+        products = null;
     }
 
     @Test

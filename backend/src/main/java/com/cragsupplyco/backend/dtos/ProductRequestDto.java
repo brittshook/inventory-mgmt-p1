@@ -22,12 +22,23 @@ public class ProductRequestDto {
     @Column(scale = 2)
     @NotNull
     @Min(value = 0)
-    private double price;
+    private String price;
 
     // This is the difference in the DTO and the model - category id is passed as
     // int
     @NotNull
     private int category;
+
+    public ProductRequestDto() {
+    }
+
+    public ProductRequestDto(String brand, String name, String description, String price, int category) {
+        this.brand = brand;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.category = category;
+    }
 
     public String getBrand() {
         return brand;
@@ -53,11 +64,11 @@ public class ProductRequestDto {
         this.description = description;
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 

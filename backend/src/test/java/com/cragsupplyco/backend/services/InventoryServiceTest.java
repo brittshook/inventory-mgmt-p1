@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
@@ -98,11 +101,34 @@ public class InventoryServiceTest {
         dto.setWarehouse(warehouse.getId());
         Inventory expectedInventory = new Inventory();
         expectedInventory.setWarehouse(warehouse);
-        when(inventoryMapper.mapDtoToInventory(dto)).thenReturn(expectedInventory);
+        when(inventoryMapper.toInventory(dto)).thenReturn(expectedInventory);
         when(inventoryRepository.save(expectedInventory)).thenReturn(expectedInventory);
         when(warehouseRepository.save(warehouse)).thenReturn(warehouse);
         Inventory result = inventoryService.save(dto);
         Assert.assertEquals(result, expectedInventory);
+    }
+
+    @Test
+    public void testSaveInventoryExceedsWarehouseCapacity() {
+        InventoryRequestDto dto = new InventoryRequestDto();
+        dto.setWarehouse(warehouse.getId());
+        dto.setQuantity("90");
+        dto.setWarehouse(1);
+
+        Inventory inventory = new Inventory();
+        inventory.setQuantity(90);
+        inventory.setWarehouse(warehouse);
+
+        warehouse.setCurrentCapacity(20);
+
+        when(inventoryMapper.toInventory(dto)).thenReturn(inventory);
+        when(inventoryRepository.existsByProductAndWarehouseAndSize(any(Product.class), any(Warehouse.class),
+                anyString()))
+                .thenReturn(false);
+
+        Assert.assertThrows(RuntimeException.class, () -> {
+            inventoryService.save(dto);
+        });
     }
 
     @Test
@@ -134,7 +160,7 @@ public class InventoryServiceTest {
         InventoryRequestDto dto = new InventoryRequestDto();
         dto.setWarehouse(warehouse.getId());
 
-        when(inventoryMapper.mapDtoToInventory(dto)).thenReturn(updatedInventory);
+        when(inventoryMapper.toInventory(dto)).thenReturn(updatedInventory);
         Inventory result = inventoryService.updateInventoryById(1, dto);
 
         Assert.assertEquals(result.getQuantity(), 15);
@@ -178,8 +204,8 @@ public class InventoryServiceTest {
 
         InventoryRequestDto dto = new InventoryRequestDto();
         dto.setWarehouse(warehouse.getId());
-        
-        when(inventoryMapper.mapDtoToInventory(dto)).thenReturn(updatedInventory);
+
+        when(inventoryMapper.toInventory(dto)).thenReturn(updatedInventory);
         Inventory result = inventoryService.updateInventoryById(1, dto);
 
         Assert.assertEquals(result.getQuantity(), 15);

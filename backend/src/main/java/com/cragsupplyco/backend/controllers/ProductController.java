@@ -31,7 +31,6 @@ import jakarta.validation.Valid;
         "http://[::1]:5173/" })
 public class ProductController {
     private ProductService service;
-    private ProductMapper mapper;
 
     public ProductController(ProductService service) {
         this.service = service;
@@ -55,7 +54,7 @@ public class ProductController {
     @PostMapping // Create new product
     @ResponseStatus(code = HttpStatus.CREATED)
     public Product createProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
-        return service.save(mapper.toProduct(productRequestDto));
+        return service.save(productRequestDto);
     }
 
     @GetMapping("/byProps") // Get product by brand and name (using query params) (without inventory)
@@ -91,7 +90,7 @@ public class ProductController {
     @PutMapping("/{id}") // Update product by id
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void updateProductById(@PathVariable int id, @Valid @RequestBody ProductRequestDto productRequestDto) {
-        service.updateProductById(id, mapper.toProduct(productRequestDto));
+        service.updateProductById(id, productRequestDto);
     }
 
     @DeleteMapping("/{id}") // Delete product by id

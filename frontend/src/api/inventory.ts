@@ -77,7 +77,7 @@ export const putInventory = async (data: InventoryFormValues) => {
     const warehouse = await getWarehouseByName(data.warehouseName);
 
     const response = await axiosInstance.put(`${API_ENDPOINT}/${data.id}`, {
-      product: product,
+      product: product.id,
       warehouse: warehouse.id,
       size: data.size,
       quantity: data.quantity,
@@ -109,7 +109,7 @@ export const postInventory = async (data: InventoryFormValues) => {
     const warehouse = await getWarehouseByName(data.warehouseName);
 
     const response = await axiosInstance.post(API_ENDPOINT, {
-      product: product,
+      product: product.id,
       warehouse: warehouse.id,
       size: data.size,
       quantity: data.quantity,

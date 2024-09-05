@@ -4,15 +4,19 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.cragsupplyco.backend.dtos.ProductRequestDto;
+import com.cragsupplyco.backend.mappers.ProductMapper;
 import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.repositories.ProductRepository;
 
 @Service
 public class ProductService {
     private ProductRepository repo;
+    private ProductMapper mapper;
 
-    public ProductService(ProductRepository repo) {
+    public ProductService(ProductRepository repo, ProductMapper mapper) {
         this.repo = repo;
+        this.mapper = mapper;
     }
 
     public Iterable<Product> findAll() {
@@ -31,11 +35,12 @@ public class ProductService {
         return repo.findByBrandAndName(brand, name);
     }
 
-    public Product save(Product product) {
-        return repo.save(product);
+    public Product save(ProductRequestDto productRequestDto) {
+        return repo.save(mapper.toProduct(productRequestDto));
     }
 
-    public Product updateProductById(int id, Product product) {
+    public Product updateProductById(int id, ProductRequestDto productRequestDto) {
+        Product product = mapper.toProduct(productRequestDto);
         product.setId(id);
         return repo.save(product);
     }
