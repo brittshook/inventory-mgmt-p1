@@ -15,37 +15,41 @@ public class CategoryService {
         this.repo = repo;
     }
 
-    public Iterable<Category> findAll() {
+    public Iterable<Category> findAll() { // Returns all product categories
         return repo.findAll();
     }
 
-    public Optional<Category> findByName(String name) {
+    public Optional<Category> findByName(String name) { // Returns product category by name
         return repo.findByName(name);
     }
 
-    public Optional<Category> findById(int id) {
+    public Optional<Category> findById(int id) { // Returns product category by id
         return repo.findById(id);
     }
 
-    public Category save(Category category) {
-        if (repo.existsByName(category.getName())) {
+    public Category save(Category category) { // Saves new product category
+        if (repo.existsByName(category.getName())) { // Checks if product category exists with the intended name (as
+                                                     // categories must have unique names)
             throw new IllegalArgumentException("Category with this name already exists.");
         }
 
         return repo.save(category);
     }
 
-    public Category updateCategoryById(int id, Category category) {
+    public Category updateCategoryById(int id, Category category) { // Update product category by id
         category.setId(id);
         Category existingCategory = repo.findById(id).get();
 
+        // Checks whether category name is being updated to a new value and checks if
+        // product category exists with the intended name (as categories must have
+        // unique names)
         if (!category.getName().equals(existingCategory.getName()) && repo.existsByName(category.getName())) {
             throw new IllegalArgumentException("Category with this name already exists.");
         }
         return repo.save(category);
     }
 
-    public void deleteById(int id) {
+    public void deleteById(int id) { // Delete product category by id
         repo.deleteById(id);
     }
 
