@@ -101,6 +101,18 @@ public class CategoryServiceTest {
     }
 
     @Test
+    public void testSaveCategoryExistingName() {
+        Category category = new Category();
+        category.setName("Crash Pads");
+
+        when(categoryRepository.existsByName("Crash Pads")).thenReturn(true);
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            categoryService.save(category);
+        });
+    }
+
+    @Test
     public void testUpdateCategoryById() {
         int categoryId = 1;
         Category expectedCategory = new Category();
@@ -108,8 +120,30 @@ public class CategoryServiceTest {
         expectedCategory.setName("Climbing Shoes");
 
         when(categoryRepository.save(expectedCategory)).thenReturn(expectedCategory);
+        when(categoryRepository.existsByName("Climbing Shoes")).thenReturn(false);
+
         Category result = categoryService.updateCategoryById(categoryId, expectedCategory);
         Assert.assertEquals(expectedCategory, result);
+    }
+
+    @Test
+    public void testUpdateCategoryByIdExistingName() {
+        int categoryId = 4;
+        Category category = new Category();
+        category.setId(categoryId);
+        category.setName("Climbing Apparel");
+
+        Category existingCategory = new Category();
+        existingCategory.setId(categoryId);
+        existingCategory.setName("Climbing Accessories");
+
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(existingCategory));
+
+        when(categoryRepository.existsByName("Climbing Apparel")).thenReturn(true);
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            categoryService.updateCategoryById(categoryId, category);
+        });
     }
 
     @Test

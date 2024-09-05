@@ -102,6 +102,18 @@ public class WarehouseServiceTest {
     }
 
     @Test
+    public void testSaveWarehouseExistingName() {
+        Warehouse warehouse = new Warehouse();
+        warehouse.setName("CA1");
+
+        when(warehouseRepository.existsByName("CA1")).thenReturn(true);
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            warehouseService.save(warehouse);
+        });
+    }
+
+    @Test
     public void testUpdateWarehouseById() {
         int warehouseId = 1;
         Warehouse expectedWarehouse = new Warehouse();
@@ -109,8 +121,30 @@ public class WarehouseServiceTest {
         expectedWarehouse.setName("CA1");
 
         when(warehouseRepository.save(expectedWarehouse)).thenReturn(expectedWarehouse);
+        when(warehouseRepository.existsByName("CA1")).thenReturn(false);
+
         Warehouse result = warehouseService.updateWarehouseById(warehouseId, expectedWarehouse);
         Assert.assertEquals(expectedWarehouse, result);
+    }
+
+    @Test
+    public void testUpdateWarehouseByIdExistingName() {
+        int warehouseId = 4;
+        Warehouse warehouse = new Warehouse();
+        warehouse.setId(warehouseId);
+        warehouse.setName("NY1");
+
+        Warehouse existingWarehouse = new Warehouse();
+        existingWarehouse.setId(warehouseId);
+        existingWarehouse.setName("CA2");
+
+        when(warehouseRepository.findById(warehouseId)).thenReturn(Optional.of(existingWarehouse));
+
+        when(warehouseRepository.existsByName("NY1")).thenReturn(true);
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            warehouseService.updateWarehouseById(warehouseId, warehouse);
+        });
     }
 
     @Test
