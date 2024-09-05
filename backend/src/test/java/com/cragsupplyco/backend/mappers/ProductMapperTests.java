@@ -14,7 +14,6 @@ import com.cragsupplyco.backend.models.Category;
 import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.services.CategoryService;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 public class ProductMapperTests {
@@ -73,8 +72,11 @@ public class ProductMapperTests {
 
         when(categoryService.findById(1)).thenReturn(Optional.empty());
 
-        Assert.assertThrows(EntityNotFoundException.class, () -> {
+        try {
             productMapper.toProduct(dto);
-        });
+            Assert.fail("Expected a RuntimeException to be thrown");
+        } catch (RuntimeException exception) {
+            Assert.assertEquals(exception.getMessage(), "Category not found with ID: 1");
+        }
     }
 }
