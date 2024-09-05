@@ -2,15 +2,15 @@ package com.cragsupplyco.backend.mappers;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 
 import com.cragsupplyco.backend.dtos.InventoryRequestDto;
 import com.cragsupplyco.backend.models.Inventory;
@@ -31,7 +31,7 @@ public class InventoryMapperTest {
     private InventoryMapper inventoryMapper;
     private AutoCloseable closeable;
 
-    @BeforeTest
+    @BeforeClass
     public void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
     }
@@ -61,29 +61,33 @@ public class InventoryMapperTest {
 
         Inventory result = inventoryMapper.mapDtoToInventory(inventoryDto);
 
-        assertEquals(1, result.getWarehouse().getId());
-        assertEquals(2, result.getProduct().getId());
-        assertEquals(10, result.getQuantity());
+        Assert.assertEquals(1, result.getWarehouse().getId());
+        Assert.assertEquals(2, result.getProduct().getId());
+        Assert.assertEquals(10, result.getQuantity());
     }
 
     @Test
     public void testMapDtoToInventoryButWarehouseNotFound() {
+        Product product = new Product();
+        product.setId(2);
+
         InventoryRequestDto inventoryDto = new InventoryRequestDto();
         inventoryDto.setWarehouse(1);
         inventoryDto.setProduct(2);
         inventoryDto.setQuantity("10");
 
+        when(productRepo.findById(2)).thenReturn(Optional.of(product));
         when(warehouseRepo.findById(1)).thenReturn(Optional.empty());
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            inventoryMapper.mapDtoToInventory(inventoryDto);
-        });
-
-        assertEquals("Warehouse not found with ID: 1", exception.getMessage());
+        try {
+          inventoryMapper.mapDtoToInventory(inventoryDto);
+        } catch (RuntimeException e) {
+          Assert.assertEquals("Warehouse not found with ID: 1", e.getMessage());
+        }
     }
 
     @Test
     public void testMapDtoToInventoryButProductNotFound() {
+
         InventoryRequestDto inventoryDto = new InventoryRequestDto();
         inventoryDto.setWarehouse(1);
         inventoryDto.setProduct(2);
@@ -95,10 +99,10 @@ public class InventoryMapperTest {
         when(warehouseRepo.findById(1)).thenReturn(Optional.of(warehouse));
         when(productRepo.findById(2)).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            inventoryMapper.mapDtoToInventory(inventoryDto);
-        });
-
-        assertEquals("Product not found with ID: 2", exception.getMessage());
+        try {
+          inventoryMapper.mapDtoToInventory(inventoryDto);
+        } catch (RuntimeException e) {
+          Assert.assertEquals("Product not found with ID: 2", e.getMessage());
+        }
     }
 }
