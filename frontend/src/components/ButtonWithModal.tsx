@@ -16,6 +16,7 @@ type props = {
   setWarehouse?: string | null;
   setCategory?: string | null;
   id?: string;
+  loadDataHandler?: () => void;
 };
 
 export const ButtonWithModal = ({
@@ -33,11 +34,13 @@ export const ButtonWithModal = ({
   setCategory,
   setWarehouse,
   id,
+  loadDataHandler,
 }: props) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const showModal = () => {
+    if (loadDataHandler) loadDataHandler();
     setOpen(true);
   };
 
@@ -58,6 +61,7 @@ export const ButtonWithModal = ({
   };
 
   const handleCancel = () => {
+    console.log("cancel clicked");
     setOpen(false);
     form.resetFields();
   };
