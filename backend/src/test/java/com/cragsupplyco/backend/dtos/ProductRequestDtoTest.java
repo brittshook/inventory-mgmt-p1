@@ -2,6 +2,7 @@ package com.cragsupplyco.backend.dtos;
 
 import java.util.Set;
 
+import org.junit.AfterClass;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -13,12 +14,17 @@ import jakarta.validation.ValidatorFactory;
 
 public class ProductRequestDtoTest {
 
-    private static Validator validator;
+    private Validator validator;
 
     @BeforeClass
-    public static void setUp() {
+    public void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
+    }
+
+    @AfterClass
+    public void teardown() {
+        validator = null;
     }
 
     @Test
@@ -103,5 +109,20 @@ public class ProductRequestDtoTest {
         Assert.assertTrue(dto.getName().equals("Test Name"));
         Assert.assertTrue(dto.getDescription().equals("This is a test description."));
         Assert.assertTrue(dto.getCategory() == 1);
+        Assert.assertTrue(dto.getPrice() == "99.99");
     }
+
+    @Test
+    public void testToString() {
+        ProductRequestDto dto = new ProductRequestDto();
+        dto.setBrand("Test Brand");
+        dto.setName("Test Name");
+        dto.setDescription("This is a test description.");
+        dto.setPrice("99.99");
+        dto.setCategory(1);
+
+        String expectedToString = "ProductRequestDto [brand=Test Brand, name=Test Name, description=This is a test description., price=99.99, category=1]";
+        Assert.assertEquals(dto.toString(), expectedToString);
+    }
+
 }
