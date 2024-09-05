@@ -126,9 +126,12 @@ public class InventoryServiceTest {
                 anyString()))
                 .thenReturn(false);
 
-        Assert.assertThrows(RuntimeException.class, () -> {
+        try {
             inventoryService.save(dto);
-        });
+            Assert.fail("Expected a IllegalArgumentException to be thrown");
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Cannot save inventory. It exceeds the warehouse capacity.", e.getMessage());
+        }
     }
 
     @Test
@@ -168,6 +171,45 @@ public class InventoryServiceTest {
         Assert.assertEquals(result.getWarehouse(), currentWarehouse);
         verify(warehouseRepository).save(currentWarehouse);
         verify(inventoryRepository).save(existingInventory);
+    }
+
+    @Test
+    public void testUpdateInventoryInSameWarehouseExceedsWarehouseCapacity() {
+        Warehouse currentWarehouse = new Warehouse();
+        currentWarehouse.setId(2);
+        currentWarehouse.setName("CA2");
+        currentWarehouse.setCurrentCapacity(50);
+        currentWarehouse.setMaxCapacity(100);
+
+        Inventory existingInventory = new Inventory();
+        existingInventory.setId(1);
+        existingInventory.setProduct(new Product());
+        existingInventory.setWarehouse(currentWarehouse);
+        existingInventory.setQuantity(10);
+        existingInventory.setSize("M");
+
+        Inventory updatedInventory = new Inventory();
+        updatedInventory.setId(1);
+        updatedInventory.setProduct(new Product());
+        updatedInventory.setWarehouse(currentWarehouse);
+        updatedInventory.setQuantity(175);
+        updatedInventory.setSize("M");
+
+        when(inventoryRepository.findById(1)).thenReturn(Optional.of(existingInventory));
+        when(warehouseRepository.save(any(Warehouse.class))).thenReturn(currentWarehouse);
+        when(inventoryRepository.save(any(Inventory.class))).thenReturn(existingInventory);
+
+        InventoryRequestDto dto = new InventoryRequestDto();
+        dto.setWarehouse(warehouse.getId());
+
+        when(inventoryMapper.toInventory(dto)).thenReturn(updatedInventory);
+
+        try {
+            inventoryService.updateInventoryById(1, dto);
+            Assert.fail("Expected a IllegalArgumentException to be thrown");
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Cannot update inventory. It exceeds the warehouse capacity.", e.getMessage());
+        }
     }
 
     @Test
@@ -217,7 +259,52 @@ public class InventoryServiceTest {
     }
 
     @Test
-    public void testIncrementQuantity() {
+    public void testUpdateInventoryInDifferentWarehouseExceedsWarehouseCapacity() {
+        Warehouse currentWarehouse = new Warehouse();
+        currentWarehouse.setId(2);
+        currentWarehouse.setName("CA2");
+        currentWarehouse.setCurrentCapacity(50);
+        currentWarehouse.setMaxCapacity(100);
+
+        Warehouse newWarehouse = new Warehouse();
+        newWarehouse.setId(3);
+        currentWarehouse.setName("NY1");
+        newWarehouse.setCurrentCapacity(30);
+        newWarehouse.setMaxCapacity(200);
+
+        Inventory existingInventory = new Inventory();
+        existingInventory.setId(1);
+        existingInventory.setProduct(new Product());
+        existingInventory.setWarehouse(currentWarehouse);
+        existingInventory.setQuantity(10);
+        existingInventory.setSize("M");
+
+        Inventory updatedInventory = new Inventory();
+        updatedInventory.setId(1);
+        updatedInventory.setProduct(new Product());
+        updatedInventory.setWarehouse(newWarehouse);
+        updatedInventory.setQuantity(175);
+        updatedInventory.setSize("M");
+
+        when(inventoryRepository.findById(1)).thenReturn(Optional.of(existingInventory));
+        when(warehouseRepository.save(any(Warehouse.class))).thenReturn(newWarehouse);
+        when(inventoryRepository.save(any(Inventory.class))).thenReturn(existingInventory);
+
+        InventoryRequestDto dto = new InventoryRequestDto();
+        dto.setWarehouse(warehouse.getId());
+
+        when(inventoryMapper.toInventory(dto)).thenReturn(updatedInventory);
+
+        try {
+            inventoryService.updateInventoryById(1, dto);
+            Assert.fail("Expected a IllegalArgumentException to be thrown");
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Cannot move inventory. It exceeds the new warehouse capacity.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUpdateQuantityIncrement() {
         Warehouse currentWarehouse = new Warehouse();
         currentWarehouse.setId(2);
         currentWarehouse.setName("CA2");
@@ -242,7 +329,7 @@ public class InventoryServiceTest {
     }
 
     @Test
-    public void testDecrementQuantity() {
+    public void testUpdateQuantityDecrement() {
         Warehouse currentWarehouse = new Warehouse();
         currentWarehouse.setId(2);
         currentWarehouse.setName("CA2");
@@ -264,6 +351,52 @@ public class InventoryServiceTest {
 
         Assert.assertEquals(result.getQuantity(), 5);
         verify(inventoryRepository).save(result);
+    }
+
+    @Test
+    public void testUpdateQuantityInvalidOperation() {
+        Warehouse currentWarehouse = new Warehouse();
+        currentWarehouse.setId(2);
+        currentWarehouse.setName("CA2");
+        currentWarehouse.setCurrentCapacity(50);
+        currentWarehouse.setMaxCapacity(100);
+
+        Inventory inventory = new Inventory();
+        inventory.setId(1);
+        inventory.setProduct(new Product());
+        inventory.setWarehouse(currentWarehouse);
+        inventory.setQuantity(10);
+        inventory.setSize("M");
+
+        int value = 5;
+        when(inventoryRepository.findById(1)).thenReturn(Optional.of(inventory));
+        when(inventoryRepository.save(inventory)).thenReturn(inventory);
+
+        try {
+            inventoryService.updateQuantityById(1, "multiply", value);
+            Assert.fail("Expected a RuntimeException to be thrown");
+        } catch (RuntimeException e) {
+            Assert.assertEquals("Invalid operation: multiply", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUpdateQuantityInventoryNotFound() {
+        Warehouse currentWarehouse = new Warehouse();
+        currentWarehouse.setId(2);
+        currentWarehouse.setName("CA2");
+        currentWarehouse.setCurrentCapacity(50);
+        currentWarehouse.setMaxCapacity(100);
+
+        int value = 5;
+        when(inventoryRepository.findById(1)).thenReturn(Optional.empty());
+
+        try {
+            inventoryService.updateQuantityById(1, "multiply", value);
+            Assert.fail("Expected a RuntimeException to be thrown");
+        } catch (RuntimeException e) {
+            Assert.assertEquals("Inventory not found with ID: 1", e.getMessage());
+        }
     }
 
     @Test

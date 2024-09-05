@@ -173,7 +173,7 @@ public class InventoryService {
 
             return repo.save(inventory);
         } else { // Throw error if inventory item not found
-            throw new RuntimeException("Inventory not found with id " + id);
+            throw new RuntimeException("Inventory not found with ID: " + id);
         }
     }
 
