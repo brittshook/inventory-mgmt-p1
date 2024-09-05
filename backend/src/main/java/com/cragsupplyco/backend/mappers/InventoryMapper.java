@@ -21,7 +21,7 @@ public class InventoryMapper {
         this.productRepo = productRepo;
     }
 
-    public Inventory mapDtoToInventory(InventoryRequestDto inventoryDto) {
+    public Inventory toInventory(InventoryRequestDto inventoryDto) {
         Inventory inventory = new Inventory();
         
         Optional<Warehouse> optionalWarehouse = warehouseRepo.findById(inventoryDto.getWarehouse());
@@ -29,7 +29,7 @@ public class InventoryMapper {
             throw new RuntimeException("Warehouse not found with ID: " + inventoryDto.getWarehouse());
         }
         Warehouse warehouse = optionalWarehouse.get();
-        Optional<Product> optionalProduct = productRepo.findById(inventoryDto.getWarehouse());
+        Optional<Product> optionalProduct = productRepo.findById(inventoryDto.getProduct());
         if (optionalProduct.isEmpty()) {
             throw new RuntimeException("Product not found with ID: " + inventoryDto.getProduct());
         }
