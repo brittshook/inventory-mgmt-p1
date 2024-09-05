@@ -16,21 +16,22 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 public class Inventory {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment to generate PK
     @JsonView(Views.Public.class)
     private int id;
 
-    @ManyToOne
+    @ManyToOne // Many inventory items belong to a single product (stored in different
+               // warehouses, in various sizes)
     @JoinColumn(name = "product_id")
     @NotNull
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIdentityReference(alwaysAsId = true) // Store only as id
     @JsonView(Views.Public.class)
     private Product product;
 
-    @ManyToOne
+    @ManyToOne // Many inventory items are stored in a single warehouse
     @JoinColumn(name = "warehouse_id")
     @NotNull
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIdentityReference(alwaysAsId = true) // Store only as id
     @JsonView(Views.Public.class)
     private Warehouse warehouse;
 
@@ -39,7 +40,7 @@ public class Inventory {
     private String size;
 
     @NotNull
-    @Min(value=0)
+    @Min(value = 0)
     @JsonView(Views.Public.class)
     private int quantity;
 

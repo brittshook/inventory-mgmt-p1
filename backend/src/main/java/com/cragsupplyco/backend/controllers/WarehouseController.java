@@ -25,7 +25,8 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/warehouse")
-@CrossOrigin(origins = {"http://crag-supply-co-client.s3-website-us-east-1.amazonaws.com", "http://localhost:5173"})
+@CrossOrigin(origins = { "http://crag-supply-co-client.s3-website-us-east-1.amazonaws.com", "http://localhost:5173",
+        "http://[::1]:5173/" })
 public class WarehouseController {
     private WarehouseService service;
 
@@ -33,19 +34,19 @@ public class WarehouseController {
         this.service = service;
     }
 
-    @GetMapping
+    @GetMapping // Get all warehouses (without inventory)
     @JsonView(Views.Public.class)
     public Iterable<Warehouse> findAllWarehouses() {
         return service.findAll();
     }
 
-    @PostMapping
+    @PostMapping // Create new warehouse
     @ResponseStatus(code = HttpStatus.CREATED)
     public Warehouse createWarehouse(@Valid @RequestBody Warehouse warehouse) {
         return service.save(warehouse);
     }
 
-    @GetMapping("/byProps")
+    @GetMapping("/byProps") // Get warehouse by name (using query params) (without inventory)
     @JsonView(Views.Public.class)
     public ResponseEntity<Warehouse> findWarehouseByName(@RequestParam String name) {
         Optional<Warehouse> warehouse = service.findByName(name);
@@ -55,7 +56,7 @@ public class WarehouseController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // Get warehouse by id (with inventory)
     @JsonView(Views.Internal.class)
     public ResponseEntity<Warehouse> findWarehouseById(@PathVariable int id) {
         Optional<Warehouse> warehouse = service.findById(id);
@@ -65,13 +66,13 @@ public class WarehouseController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") // Update warehouse by id
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void updateWarehouseById(@PathVariable int id, @Valid @RequestBody Warehouse warehouse) {
         service.updateWarehouseById(id, warehouse);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // Delete warehouse by id
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteWarehouseById(@PathVariable int id) {
         service.deleteById(id);

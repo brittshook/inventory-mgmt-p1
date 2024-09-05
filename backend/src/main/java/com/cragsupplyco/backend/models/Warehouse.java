@@ -24,11 +24,11 @@ import jakarta.validation.constraints.Pattern;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
 public class Warehouse {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment to generate PK
     @JsonView(Views.Public.class)
     private int id;
 
-    @Column(length = 50, unique = true)
+    @Column(length = 50, unique = true) // Name must be unique
     @NotBlank
     @JsonView(Views.Public.class)
     private String name;
@@ -55,7 +55,7 @@ public class Warehouse {
 
     @Column(length = 2)
     @NotBlank
-    @Pattern(regexp = "^[A-Z]{2}$")
+    @Pattern(regexp = "^[A-Z]{2}$") // Must be 2 uppercase characters (e.g., VA, CA, MD)
     @JsonView(Views.Public.class)
     private String state;
 
@@ -65,9 +65,11 @@ public class Warehouse {
     @JsonView(Views.Public.class)
     private String zipCode;
 
-    @OneToMany(mappedBy = "warehouse")
+    @OneToMany(mappedBy = "warehouse") // One product can have many inventory items (stored in different warehouses, in
+                                       // various sizes)
     @Cascade(CascadeType.ALL)
-    @JsonView(Views.Internal.class)
+    @JsonView(Views.Internal.class) // Used to hide field on public view; only included when internal view is used
+                                    // on controller method
     private List<Inventory> inventory;
 
     public int getId() {

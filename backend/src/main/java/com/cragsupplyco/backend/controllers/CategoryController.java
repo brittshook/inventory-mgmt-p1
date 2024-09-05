@@ -25,7 +25,8 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/category")
-@CrossOrigin(origins = {"http://crag-supply-co-client.s3-website-us-east-1.amazonaws.com", "http://localhost:5173"})
+@CrossOrigin(origins = { "http://crag-supply-co-client.s3-website-us-east-1.amazonaws.com", "http://localhost:5173",
+        "http://[::1]:5173/" })
 public class CategoryController {
     private CategoryService service;
 
@@ -33,19 +34,19 @@ public class CategoryController {
         this.service = service;
     }
 
-    @GetMapping
+    @GetMapping // Get all product categories
     @JsonView(Views.Public.class)
     public Iterable<Category> findAllCategories() {
         return service.findAll();
     }
 
-    @PostMapping
+    @PostMapping // Create new product category
     @ResponseStatus(code = HttpStatus.CREATED)
     public Category createCategory(@Valid @RequestBody Category category) {
         return service.save(category);
     }
 
-    @GetMapping("/byProps")
+    @GetMapping("/byProps") // Get product category by name (using query param)
     @JsonView(Views.Public.class)
     public ResponseEntity<Category> findCategoryByName(@RequestParam String name) {
         Optional<Category> category = service.findByName(name);
@@ -55,7 +56,7 @@ public class CategoryController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // Get product category by id
     @JsonView(Views.Public.class)
     public ResponseEntity<Category> findCategoryById(@PathVariable int id) {
         Optional<Category> category = service.findById(id);
@@ -65,13 +66,13 @@ public class CategoryController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") // Update product category by id
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void updateCategoryById(@PathVariable int id, @Valid @RequestBody Category category) {
         service.updateCategoryById(id, category);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // Delete product category by id
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteCategoryById(@PathVariable int id) {
         service.deleteById(id);

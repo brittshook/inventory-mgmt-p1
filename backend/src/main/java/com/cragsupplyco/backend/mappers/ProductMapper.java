@@ -19,6 +19,8 @@ public class ProductMapper {
         this.categoryService = categoryService;
     }
 
+    // Maps product request DTO to product (needs to translate category id to
+    // category object to do so)
     public Product toProduct(ProductRequestDto productRequestDto) {
         Product product = new Product();
         product.setBrand(productRequestDto.getBrand());

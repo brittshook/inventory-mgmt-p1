@@ -21,7 +21,7 @@ import jakarta.validation.constraints.NotBlank;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment to generate PK
     @JsonView(Views.Public.class)
     private int id;
 
@@ -30,9 +30,10 @@ public class Category {
     @JsonView(Views.Public.class)
     private String name;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category") // One category has many products within it
     @Cascade(CascadeType.ALL)
-    @JsonView(Views.Internal.class)
+    @JsonView(Views.Internal.class) // Used to hide field on public view; only included when internal view is used
+                                    // on controller method
     List<Product> products;
 
     public int getId() {
