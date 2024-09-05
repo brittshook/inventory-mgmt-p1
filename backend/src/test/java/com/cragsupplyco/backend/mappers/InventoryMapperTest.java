@@ -75,9 +75,10 @@ public class InventoryMapperTest {
         when(warehouseRepo.findById(1)).thenReturn(Optional.empty());
 
         try {
-          inventoryMapper.toInventory(inventoryDto);
+            inventoryMapper.toInventory(inventoryDto);
+            Assert.fail("Expected a RuntimeException to be thrown");
         } catch (RuntimeException e) {
-          Assert.assertEquals("Warehouse not found with ID: 1", e.getMessage());
+            Assert.assertEquals("Warehouse not found with ID: 1", e.getMessage());
         }
     }
 
@@ -95,9 +96,10 @@ public class InventoryMapperTest {
         when(productRepo.findById(2)).thenReturn(Optional.empty());
 
         try {
-          inventoryMapper.toInventory(inventoryDto);
+            inventoryMapper.toInventory(inventoryDto);
+            Assert.fail("Expected a RuntimeException to be thrown");
         } catch (RuntimeException e) {
-          Assert.assertEquals("Product not found with ID: 2", e.getMessage());
+            Assert.assertEquals("Product not found with ID: 2", e.getMessage());
         }
 
     }

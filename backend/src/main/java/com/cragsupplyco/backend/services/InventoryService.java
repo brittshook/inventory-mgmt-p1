@@ -51,7 +51,7 @@ public class InventoryService {
 
         // Checks whether the potential capacity would exceed max capacity of warehouse
         if (updatedCapacity > warehouse.getMaxCapacity()) {
-            throw new RuntimeException("Cannot save inventory. It exceeds the warehouse capacity.");
+            throw new IllegalArgumentException("Cannot save inventory. It exceeds the warehouse capacity.");
         }
 
         // If not, then saves item and updates warehouse's current capacity
@@ -88,7 +88,7 @@ public class InventoryService {
                 // Check whether the potential capacity would exceed max capacity of new
                 // warehouse
                 if (newWarehouseCapacity > newWarehouse.getMaxCapacity()) {
-                    throw new RuntimeException("Cannot move inventory. It exceeds the new warehouse capacity.");
+                    throw new IllegalArgumentException("Cannot move inventory. It exceeds the new warehouse capacity.");
                 }
 
                 // If not, update warehouses' capacity and update warehouse on inventory item
@@ -107,7 +107,7 @@ public class InventoryService {
                 // Check whether the potential capacity would exceed max capacity of the
                 // warehouse
                 if (updatedCapacity > currentWarehouse.getMaxCapacity()) {
-                    throw new RuntimeException("Cannot update inventory. It exceeds the warehouse capacity.");
+                    throw new IllegalArgumentException("Cannot update inventory. It exceeds the warehouse capacity.");
                 }
 
                 // If not, update warehouse capacity
@@ -129,7 +129,7 @@ public class InventoryService {
             int updatedCapacity = currentQuantity + newQuantity;
 
             if (updatedCapacity > warehouse.getMaxCapacity()) {
-                throw new RuntimeException("Cannot save inventory. It exceeds the warehouse capacity.");
+                throw new IllegalArgumentException("Cannot save inventory. It exceeds the warehouse capacity.");
             }
 
             warehouse.setCurrentCapacity(updatedCapacity);
@@ -152,7 +152,7 @@ public class InventoryService {
                 int updatedCapacity = currentCapacity + value; // Add quantity if operation is increment
 
                 if (updatedCapacity > warehouse.getMaxCapacity()) {
-                    throw new RuntimeException("Cannot update inventory. It exceeds the warehouse capacity.");
+                    throw new IllegalArgumentException("Cannot update inventory. It exceeds the warehouse capacity.");
                 }
 
                 inventory.setQuantity(inventory.getQuantity() + value);
@@ -161,19 +161,19 @@ public class InventoryService {
                 int updatedCapacity = currentCapacity - value; // Subtract quantity if operation is decrement
 
                 if (updatedCapacity > warehouse.getMaxCapacity()) {
-                    throw new RuntimeException("Cannot update inventory. It exceeds the warehouse capacity.");
+                    throw new IllegalArgumentException("Cannot update inventory. It exceeds the warehouse capacity.");
                 }
 
                 inventory.setQuantity(inventory.getQuantity() - value);
                 warehouse.setCurrentCapacity(updatedCapacity);
             } else {
-                throw new IllegalArgumentException("Invalid operation: " + operation); // Otherwise, throw error for
-                                                                                       // invalid operations
+                throw new RuntimeException("Invalid operation: " + operation); // Otherwise, throw error for
+                                                                               // invalid operations
             }
 
             return repo.save(inventory);
         } else { // Throw error if inventory item not found
-            throw new RuntimeException("Inventory not found with id " + id);
+            throw new RuntimeException("Inventory not found with ID: " + id);
         }
     }
 
