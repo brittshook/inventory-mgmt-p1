@@ -59,7 +59,7 @@ export const DataTable = ({
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
-
+  const [selectedRecord, setSelectedRecord] = useState<DataType | null>(null);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -67,6 +67,18 @@ export const DataTable = ({
       setData(initialData);
     }
   }, [initialData]);
+
+  useEffect(() => {
+    form.setFieldsValue(selectedRecord);
+  }, [selectedRecord, form]);
+
+  const handleEdit = (record: DataType) => {
+    setSelectedRecord({
+      ...record,
+      ...(categoryName && { categoryName }),
+      ...(warehouseName && { warehouseName }),
+    });
+  };
 
   const handleSearch = (
     selectedKeys: string[],
@@ -314,17 +326,9 @@ export const DataTable = ({
             confirmHandler={updateHandler}
             form={form}
             recordId={record.key}
+            loadDataHandler={() => handleEdit(record)}
           >
-            <Form
-              layout="vertical"
-              form={form}
-              name="form_in_modal"
-              initialValues={{
-                ...record,
-                ...(categoryName && { categoryName }),
-                ...(warehouseName && { warehouseName }),
-              }}
-            >
+            <Form layout="vertical" form={form} name="form_in_modal">
               {editModalFormItems}
             </Form>
           </ButtonWithModal>
@@ -344,7 +348,12 @@ export const DataTable = ({
             }}
             okText="Delete"
           >
-            <Button type="link" size="small" id={`delete-inventory-${index}`} data-testid={`delete-inventory-${index}`}>
+            <Button
+              type="link"
+              size="small"
+              id={`delete-inventory-${index}`}
+              data-testid={`delete-inventory-${index}`}
+            >
               Delete
             </Button>
           </Popconfirm>
