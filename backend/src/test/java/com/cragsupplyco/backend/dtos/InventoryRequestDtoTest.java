@@ -2,6 +2,7 @@ package com.cragsupplyco.backend.dtos;
 
 import java.util.Set;
 
+import org.junit.AfterClass;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -13,12 +14,17 @@ import jakarta.validation.ValidatorFactory;
 
 public class InventoryRequestDtoTest {
 
-    private static Validator validator;
+    private Validator validator;
 
     @BeforeClass
     public void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
+    }
+
+    @AfterClass
+    public void teardown() {
+        validator = null;
     }
 
     @Test
