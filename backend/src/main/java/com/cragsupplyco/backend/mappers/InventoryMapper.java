@@ -21,7 +21,7 @@ public class InventoryMapper {
         this.productRepo = productRepo;
     }
 
-    public Inventory mapDtoToInventory(InventoryRequestDto inventoryDto) {
+    public Inventory toInventory(InventoryRequestDto inventoryDto) {
         Inventory inventory = new Inventory();
         int productId = inventoryDto.getProduct();
         int warehouseId = inventoryDto.getWarehouse();

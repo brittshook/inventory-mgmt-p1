@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import org.mockito.InjectMocks;
@@ -14,6 +15,9 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import com.cragsupplyco.backend.dtos.ProductRequestDto;
+import com.cragsupplyco.backend.mappers.ProductMapper;
+import com.cragsupplyco.backend.models.Category;
 import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.repositories.ProductRepository;
 
@@ -25,6 +29,9 @@ public class ProductServiceTests {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private ProductMapper productMapper;
 
     @BeforeTest
     public void setUp() {
@@ -97,26 +104,57 @@ public class ProductServiceTests {
 
     @Test
     public void testSaveProduct() {
+        ProductRequestDto savedProductRequestDto = new ProductRequestDto();
+        savedProductRequestDto.setName("Hiking Boots");
+        savedProductRequestDto.setBrand("HikersInc");
+        savedProductRequestDto.setDescription("Durable hiking boots");
+        savedProductRequestDto.setPrice("150.0");
+        savedProductRequestDto.setCategory(1);
+
+        Category category = new Category();
+        category.setId(1);
+        category.setName("Climbing Shoes");
+
         Product savedProduct = new Product();
         savedProduct.setId(3);
-        savedProduct.setName("newProduct");
+        savedProduct.setName("Hiking Boots");
+        savedProduct.setBrand("HikersInc");
+        savedProduct.setDescription("Durable hiking boots");
+        savedProduct.setPrice(150.0);
+        savedProduct.setCategory(category);
 
+        when(productMapper.toProduct(any(ProductRequestDto.class))).thenReturn(savedProduct);
         when(productRepository.save(savedProduct)).thenReturn(savedProduct);
 
-        Product result = productService.save(savedProduct);
+        Product result = productService.save(savedProductRequestDto);
         Assert.assertTrue(result.equals(savedProduct));
     }
 
     @Test
     public void testUpdateProductById() {
+        ProductRequestDto updatedProductRequestDto = new ProductRequestDto();
+        updatedProductRequestDto.setName("Hiking Boots");
+        updatedProductRequestDto.setBrand("HikersInc");
+        updatedProductRequestDto.setDescription("Durable hiking boots");
+        updatedProductRequestDto.setPrice("150.0");
+        updatedProductRequestDto.setCategory(1);
+
+        Category category = new Category();
+        category.setId(1);
+        category.setName("Climbing Shoes");
+
         Product updatedProduct = new Product();
-        updatedProduct.setId(1); 
-        updatedProduct.setName("updatedProduct");
+        updatedProduct.setId(4);
+        updatedProduct.setName("Hiking Boots");
+        updatedProduct.setBrand("HikersInc");
+        updatedProduct.setDescription("Durable hiking boots");
+        updatedProduct.setPrice(150.0);
+        updatedProduct.setCategory(category);
 
-        int productId = 1;
-
+        when(productMapper.toProduct(any(ProductRequestDto.class))).thenReturn(updatedProduct);
         when(productRepository.save(updatedProduct)).thenReturn(updatedProduct);
-        Product result = productService.updateProductById(productId, updatedProduct);
+
+        Product result = productService.updateProductById(4, updatedProductRequestDto);
         Assert.assertNotNull(result);
         Assert.assertEquals(result, updatedProduct);
         verify(productRepository, times(1)).save(updatedProduct);
