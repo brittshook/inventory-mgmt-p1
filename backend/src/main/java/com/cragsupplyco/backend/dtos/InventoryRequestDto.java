@@ -11,9 +11,13 @@ public class InventoryRequestDto {
     @NotBlank
     private String size;
 
+    // This is one of the difference in the DTO and the model - product id is passed
+    // as int
     @NotNull
     private int product;
 
+    // This is one of the difference in the DTO and the model - warehouse id is
+    // passed as int
     @NotNull
     private int warehouse;
 
