@@ -57,7 +57,7 @@ The system is designed to be fully responsive, ensuring a seamless user experien
 This application has been thoroughly tested in the following ways:
 
 - Unit and unit integration tests on front-end with Jest
-- Unit and unit integration tests on back-end with TestNG
+- Unit and unit integration tests on back-end with TestNG and Mockito
 - Functional testing with Selenium and Cucumber ([Functional test repo](https://github.com/daniel413x/project-two-functional-tests))
 - Performance testing with Jmeter ([Jmeter test repo](https://github.com/daniel413x/project-two-performance-tests))
 - Vulnerability testing with BurpSuite
@@ -68,8 +68,8 @@ This application has been thoroughly tested in the following ways:
 For more information, test reports can be found at the following links:
 
 - [Cucumber Reports (Jenkins pipeline-run tests)](https://reports.cucumber.io/report-collections/4836ff78-3584-4e46-8548-5e7674dc4321)
-- [SonarCloud Frontend Analysis](https://sonarcloud.io/project/overview?id=brittshook_inventory-mgmt-p1)
-- [SonarCloud Backend Analysis](https://sonarcloud.io/project/overview?id=brittshook_inventory-mgmt-p1)
+- [SonarCloud Frontend Analysis](https://sonarcloud.io/project/overview?id=brittshook_inventory-mgmt-p1) 
+- [SonarCloud Backend Analysis](https://sonarcloud.io/project/overview?id=brittshook_inventory-mgmt-p1) (coverage reported from JaCoCo)
 
 ## Deployment
 
