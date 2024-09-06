@@ -19,6 +19,7 @@ type props = {
 };
 
 export const Products = ({ testId }: props) => {
+  // Initialize forms using Ant Design's Form hook
   const [form] = Form.useForm();
   const [updateForm] = Form.useForm();
 
@@ -27,6 +28,7 @@ export const Products = ({ testId }: props) => {
   const [error, setError] = useState<AxiosError | null>(null);
   const [showErrorOverlay, setShowErrorOverlay] = useState<boolean>(false);
 
+  // Fetch data for categories
   const fetchData = async () => {
     try {
       const result = await getCategories();
@@ -42,6 +44,7 @@ export const Products = ({ testId }: props) => {
     fetchData();
   }, []);
 
+  // Handle error display and error overlay
   useEffect(() => {
     if (error) {
       setShowErrorOverlay(true);
@@ -51,6 +54,7 @@ export const Products = ({ testId }: props) => {
     }
   }, [error]);
 
+  // Handle deleting category
   const handleDelete = async (id: number) => {
     try {
       await deleteCategoryById(id);
@@ -61,6 +65,7 @@ export const Products = ({ testId }: props) => {
     }
   };
 
+  // Handle adding new category
   const handlePost = async (data: CategoryFormValues) => {
     try {
       await postCategory(data);
@@ -71,6 +76,7 @@ export const Products = ({ testId }: props) => {
     }
   };
 
+  // Handle updating existing category
   const handlePut = async (id: number) => {
     try {
       const data = updateForm.getFieldsValue();
@@ -83,6 +89,8 @@ export const Products = ({ testId }: props) => {
   };
 
   if (loading) return <div>Loading...</div>;
+
+  // Render an error page if a 404 error occurs
   if (error?.message.includes("404"))
     return <ErrorPage testId={testId && "error-page"} />;
 
@@ -146,6 +154,7 @@ export const Products = ({ testId }: props) => {
           ></Card>
         ))}
       </section>
+      {/* Display error overlay if an error occurs and it's not a 404 error */}
       {showErrorOverlay && !error?.message.includes("404") && (
         <div data-testid="error-overlay">
           <ErrorOverlay

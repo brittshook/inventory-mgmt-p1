@@ -27,9 +27,9 @@ type props = {
 export const InventoryByWarehouse = ({ testId }: props) => {
   const path = useLocation().pathname;
   const search = useLocation().search;
-  const id = search.match(/\d+/)![0];
+  const id = search.match(/\d+/)![0]; // Set id based on search param in URL
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm(); // Initialize form using Ant Design's Form hook
 
   const [warehouse, setWarehouse] = useState<string | null>(null);
   const [currentCapacity, setCurrentCapacity] = useState(0);
@@ -40,6 +40,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
   const [error, setError] = useState<AxiosError | null>(null);
   const [showErrorOverlay, setShowErrorOverlay] = useState<boolean>(false);
 
+  // Fetch data for warehouse, inventory, and products
   const fetchData = async () => {
     if (id) {
       try {
@@ -57,7 +58,6 @@ export const InventoryByWarehouse = ({ testId }: props) => {
                 const product: ProductDataType = await getProductById(
                   productId
                 );
-                console.log(product);
 
                 return {
                   key: item.id,
@@ -80,7 +80,6 @@ export const InventoryByWarehouse = ({ testId }: props) => {
 
         if (categoriesResult) setCategories(categoriesResult);
       } catch (e) {
-        console.log("Error fetching items"); // not running in tests
         e instanceof AxiosError && setError(e);
       } finally {
         setLoading(false);
@@ -92,6 +91,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
     fetchData();
   }, []);
 
+  // Handle error display and error overlay
   useEffect(() => {
     if (error) {
       setShowErrorOverlay(true);
@@ -101,6 +101,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
     }
   }, [error]);
 
+  // Handle adding new inventory
   const handlePost = async (data: InventoryFormValues) => {
     try {
       await postInventory(data);
@@ -111,6 +112,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
     }
   };
 
+  // Handle updating existing inventory
   const handlePut = async (data: InventoryFormValues) => {
     try {
       await putInventory(data);
@@ -121,6 +123,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
     }
   };
 
+  // Handle deleting inventory item
   const handleDelete = async (id: number) => {
     try {
       await deleteInventoryById(id);
@@ -130,6 +133,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
     }
   };
 
+  // Render an error page if a 404 error occurs
   if (error?.message.includes("404"))
     return <ErrorPage testId={testId && "error-page"} />;
 
@@ -198,6 +202,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
           warehouseName={warehouse}
         />
       </section>
+      {/* Display error overlay if an error occurs and it's not a 404 error */}
       {showErrorOverlay && !error?.message.includes("404") && (
         <div data-testid="error-overlay">
           <ErrorOverlay

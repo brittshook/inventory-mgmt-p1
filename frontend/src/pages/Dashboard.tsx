@@ -15,6 +15,7 @@ export const Dashboard = ({ testId }: props) => {
   const [error, setError] = useState<AxiosError | null>(null);
   const [showErrorOverlay, setShowErrorOverlay] = useState<boolean>(false);
 
+  // Fetch warehouse data and calculate total capacities
   const fetchData = async () => {
     try {
       const warehouseResult = await getWarehouses();
@@ -35,7 +36,7 @@ export const Dashboard = ({ testId }: props) => {
     } catch (e) {
       e instanceof AxiosError && setError(e);
     } finally {
-      setLoading(false);
+      setLoading(false); // Reset loading state after data fetch
     }
   };
 
@@ -43,6 +44,7 @@ export const Dashboard = ({ testId }: props) => {
     fetchData();
   }, []);
 
+  // Handle error display and error overlay
   useEffect(() => {
     if (error) {
       setShowErrorOverlay(true);
@@ -53,6 +55,8 @@ export const Dashboard = ({ testId }: props) => {
   }, [error]);
 
   if (loading) return <div>Loading...</div>;
+
+  // Render an error page if a 404 error occurs
   if (error?.message.includes("404"))
     return <ErrorPage testId={testId && "error-page"} />;
 
@@ -75,6 +79,7 @@ export const Dashboard = ({ testId }: props) => {
       >
         <h1 style={{ padding: 20 }}>{totalCapacity}</h1>
       </Card>
+      {/* Display error overlay if an error occurs and it's not a 404 error */}
       {showErrorOverlay && !error?.message.includes("404") && (
         <div data-testid="error-overlay">
           <ErrorOverlay

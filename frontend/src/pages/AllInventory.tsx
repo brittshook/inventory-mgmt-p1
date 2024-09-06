@@ -27,9 +27,9 @@ type props = {
 export const AllInventory = ({ testId }: props) => {
   const path = useLocation().pathname;
   const search = useLocation().search;
-  const source = /category/.test(search) ? "/products" : "/warehouses";
+  const source = /category/.test(search) ? "/products" : "/warehouses"; // Set source based on search param in URL
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm(); // Initialize form using Ant Design's Form hook
 
   const [inventory, setInventory] = useState<DataType[]>();
   const [categories, setCategories] = useState<CategoryDataType[] | null>(null);
@@ -40,6 +40,7 @@ export const AllInventory = ({ testId }: props) => {
   const [error, setError] = useState<AxiosError | null>(null);
   const [showErrorOverlay, setShowErrorOverlay] = useState<boolean>(false);
 
+  // Fetch data for inventory, categories, and warehouses
   const fetchData = async () => {
     try {
       const productResult = await getProductsWithInventory();
@@ -78,6 +79,7 @@ export const AllInventory = ({ testId }: props) => {
     fetchData();
   }, []);
 
+  // Handle error display and error overlay
   useEffect(() => {
     if (error) {
       setShowErrorOverlay(true);
@@ -87,6 +89,7 @@ export const AllInventory = ({ testId }: props) => {
     }
   }, [error]);
 
+  // Handle adding new inventory
   const handlePost = async (data: InventoryFormValues) => {
     try {
       await postInventory(data);
@@ -97,6 +100,7 @@ export const AllInventory = ({ testId }: props) => {
     }
   };
 
+  // Handle updating existing inventory
   const handlePut = async (data: InventoryFormValues) => {
     try {
       await putInventory(data);
@@ -107,6 +111,7 @@ export const AllInventory = ({ testId }: props) => {
     }
   };
 
+  // Handle deleting inventory item
   const handleDelete = async (id: number) => {
     try {
       await deleteInventoryById(id);
@@ -116,6 +121,7 @@ export const AllInventory = ({ testId }: props) => {
     }
   };
 
+  // Render an error page if a 404 error occurs
   if (error?.message.includes("404"))
     return <ErrorPage testId={testId && "error-page"} />;
 
@@ -174,6 +180,7 @@ export const AllInventory = ({ testId }: props) => {
           }
         />
       </section>
+      {/* Display error overlay if an error occurs and it's not a 404 error */}
       {showErrorOverlay && !error?.message.includes("404") && (
         <div data-testid="error-overlay">
           <ErrorOverlay
