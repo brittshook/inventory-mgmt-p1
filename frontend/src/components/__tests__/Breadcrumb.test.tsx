@@ -8,8 +8,10 @@ describe("Breadcrumb Component", () => {
 
     render(<Breadcrumb items={items} />);
 
+    // Check that the item "Warehouses" is present
     expect(screen.getByText("Warehouses")).toBeInTheDocument();
 
+    // Check that no separators (">") are present
     const separators = screen.queryAllByText(">");
     expect(separators.length).toBe(0);
   });
@@ -22,9 +24,11 @@ describe("Breadcrumb Component", () => {
 
     render(<Breadcrumb items={items} />);
 
+    // Check that both items "Warehouses" and "CA1" are present
     expect(screen.getByText("Warehouses")).toBeInTheDocument();
     expect(screen.getByText("CA1")).toBeInTheDocument();
 
+    // Check that 1 separator (">") is present
     const separators = screen.getAllByText(">");
     expect(separators.length).toBe(1);
   });
@@ -43,9 +47,11 @@ describe("Breadcrumb Component", () => {
 
     render(<Breadcrumb items={items} />);
 
+    // Check that the elements are present using their test ids
     expect(screen.getByTestId("breadcrumb-1")).toBeInTheDocument();
     expect(screen.getByTestId("breadcrumb-2")).toBeInTheDocument();
 
+    // Check that the item texts "Warehouse" and "CA1" are present
     expect(screen.getByText("Warehouses")).toBeInTheDocument();
     expect(screen.getByText("CA1")).toBeInTheDocument();
   });
