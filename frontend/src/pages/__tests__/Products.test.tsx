@@ -18,10 +18,12 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { generateMockAxiosError } from "../../test/__mocks__/axiosMock";
 
+// Mock API call
 jest.mock("../../api/category");
 
 describe("Products Page", () => {
   beforeEach(() => {
+    // Clear all mocks before each test
     jest.clearAllMocks();
   });
 
@@ -31,6 +33,8 @@ describe("Products Page", () => {
         <Products testId="products" />
       </MemoryRouter>
     );
+
+    // Check for loading indicator
     expect(screen.getByText("Loading...")).toBeDefined();
   });
 
@@ -48,7 +52,9 @@ describe("Products Page", () => {
 
     await waitFor(() => {
       const cardsSection = screen.getByTestId("category-cards-section");
+      // Cards should be displayed
       expect(cardsSection.children.length).toBeGreaterThan(0);
+      // Check for categories by text
       const categoryCardOne = screen.getByText("Climbing Shoes");
       const categoryCardTwo = screen.getByText("Ropes");
       expect(categoryCardOne).toBeDefined();
@@ -65,8 +71,8 @@ describe("Products Page", () => {
       </MemoryRouter>
     );
 
+    // Check error overlay is displayed
     const container = await screen.findByTestId("products");
-
     expect(await findByTestId(container, "error-overlay")).toBeInTheDocument();
   });
 
@@ -87,6 +93,7 @@ describe("Products Page", () => {
       cardsSection = screen.getByTestId("category-cards-section");
     });
 
+    // Click "Add Category" button and fill in form
     await waitFor(() => {
       const addCategoryButton = screen.getByText("Add Category");
       userEvent.click(addCategoryButton);
@@ -94,6 +101,7 @@ describe("Products Page", () => {
       userEvent.type(nameField, "Backpacks");
     });
 
+    // Submit form and mock API response
     await waitFor(() => {
       const submitButton = screen.getByText("Create");
       (getCategories as jest.Mock).mockResolvedValue([
@@ -103,6 +111,7 @@ describe("Products Page", () => {
       userEvent.click(submitButton);
     });
 
+    // Verify create function was called and card to be visible
     await waitFor(() => {
       expect(postCategory).toHaveBeenCalled();
       expect(cardsSection.children.length).toBe(2);
@@ -122,6 +131,7 @@ describe("Products Page", () => {
       </MemoryRouter>
     );
 
+    // Click "Add Category" button and fill in form
     await waitFor(() => {
       const addCategoryButton = screen.getByText("Add Category");
       userEvent.click(addCategoryButton);
@@ -129,11 +139,13 @@ describe("Products Page", () => {
       userEvent.type(nameField, "Backpacks");
     });
 
+    // Submit form
     await waitFor(() => {
       const submitButton = screen.getByText("Create");
       userEvent.click(submitButton);
     });
 
+    // Check error overlay is displayed
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
@@ -150,6 +162,7 @@ describe("Products Page", () => {
       </MemoryRouter>
     );
 
+    // Click edit button on a card, fill and submit form
     await waitFor(() => {
       const cardsSection = screen.getByTestId("category-cards-section");
       const categoryCard = within(cardsSection).getByTestId("edit-card-button");
@@ -157,13 +170,14 @@ describe("Products Page", () => {
       const nameField = screen.getByTestId("edit-category-name-field");
       userEvent.type(nameField, "Penguin Shoes");
       const submitButton = screen.getByText("Save");
-      // mock expected new getCategories fetch
+      // Mock API response
       (getCategories as jest.Mock).mockResolvedValue([
         { id: 1, name: "Penguin Shoes" },
       ]);
       userEvent.click(submitButton);
     });
 
+    // Verify update function was called and card is visible
     await waitFor(() => {
       expect(putCategory).toHaveBeenCalled();
       expect(screen.getByText("Penguin Shoes")).toBeDefined();
@@ -182,6 +196,7 @@ describe("Products Page", () => {
       </MemoryRouter>
     );
 
+    // Click edit button on a card, fill and submit form
     await waitFor(() => {
       const cardsSection = screen.getByTestId("category-cards-section");
       const categoryCard = within(cardsSection).getByTestId("edit-card-button");
@@ -192,6 +207,7 @@ describe("Products Page", () => {
       userEvent.click(submitButton);
     });
 
+    // Check error overlay is displayed
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
@@ -208,6 +224,7 @@ describe("Products Page", () => {
       </MemoryRouter>
     );
 
+    // Click delete dropdown button on a card
     await waitFor(() => {
       const cardsSection = screen.getByTestId("category-cards-section");
       expect(cardsSection).toBeDefined();
@@ -226,6 +243,7 @@ describe("Products Page", () => {
       userEvent.click(deleteButton);
     });
 
+    // Verify delete function was called and card is not visible
     await waitFor(() => {
       expect(deleteCategoryById).toHaveBeenCalled();
       expect(cardsSection.children.length).toBe(0);
@@ -246,6 +264,7 @@ describe("Products Page", () => {
       </MemoryRouter>
     );
 
+    // Click delete dropdown button on a card
     await waitFor(() => {
       const cardsSection = screen.getByTestId("category-cards-section");
       expect(cardsSection).toBeDefined();
@@ -264,6 +283,7 @@ describe("Products Page", () => {
       userEvent.click(deleteButton);
     });
 
+    // Check error overlay is displayed
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });

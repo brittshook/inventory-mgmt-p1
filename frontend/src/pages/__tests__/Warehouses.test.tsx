@@ -16,13 +16,16 @@ import userEvent from "@testing-library/user-event";
 import { generateMockAxiosError } from "../../test/__mocks__/axiosMock";
 import "@testing-library/jest-dom";
 
+// Mock API call
 jest.mock("../../api/warehouse");
 
 describe("Warehouses Page", () => {
   beforeEach(() => {
+    // Clear all mocks before each test
     jest.clearAllMocks();
   });
 
+  // Test data
   const testWarehouse1 = {
     id: 1,
     name: "DC1",
@@ -50,6 +53,7 @@ describe("Warehouses Page", () => {
       </MemoryRouter>
     );
 
+    // Check for loading indicator
     expect(screen.getByText("Loading...")).toBeDefined();
   });
 
@@ -63,11 +67,13 @@ describe("Warehouses Page", () => {
       </MemoryRouter>
     );
 
+    // Check error overlay is displayed
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
   });
 
+  // Helper function to fill the warehouse form fields
   const fillWarehouseForm = async () => {
     await waitFor(() => {
       const nameField = screen.getByTestId("warehouse-modal-name-field");
@@ -113,20 +119,24 @@ describe("Warehouses Page", () => {
       </MemoryRouter>
     );
 
+    // Click edit button on card
     await waitFor(() => {
       const cardsSection = screen.getByTestId("warehouse-cards-section");
       const warehouseCardEditButton =
         within(cardsSection).getByTestId("edit-card-button");
       userEvent.click(warehouseCardEditButton);
     });
-    // mock expected new getWarehouses fetch
+
+    // Mock API response after editing
     (getWarehouses as jest.Mock).mockResolvedValue([
       { ...testWarehouse2, id: 1 },
     ]);
+
     await fillWarehouseForm();
     const submitButton = screen.getByText("Save");
     userEvent.click(submitButton);
 
+    // Verify update function was called and updated name visible
     await waitFor(() => {
       expect(putWarehouse).toHaveBeenCalled();
       expect(screen.getByText("Warehouse NY1")).toBeDefined();
@@ -143,6 +153,7 @@ describe("Warehouses Page", () => {
       </MemoryRouter>
     );
 
+    // Click edit button, fill and submit form
     await waitFor(() => {
       const cardsSection = screen.getByTestId("warehouse-cards-section");
       const warehouseCardEditButton =
@@ -153,6 +164,7 @@ describe("Warehouses Page", () => {
     const submitButton = screen.getByText("Save");
     userEvent.click(submitButton);
 
+    // Check error overlay is displayed
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
@@ -217,15 +229,20 @@ describe("Warehouses Page", () => {
     );
     // simulate hover action
     fireEvent.mouseOver(ellipsisButton);
-
+    // Click delete button
     await waitFor(() => {
       const deleteButton = screen.getByText("Delete");
       userEvent.click(deleteButton);
     });
 
     await waitFor(() => {
+      // Check error overlay is displayed
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
+
+      // Verify delete function was called
       expect(deleteWarehouseById).toHaveBeenCalled();
+
+      // Verify card was removed as child
       expect(cardsSection.children).toHaveLength(1);
     });
   });

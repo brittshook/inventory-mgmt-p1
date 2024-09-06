@@ -5,10 +5,12 @@ import { getWarehouses } from "../../api/warehouse";
 import { generateMockAxiosError } from "../../test/__mocks__/axiosMock";
 import "@testing-library/jest-dom";
 
+// Mock API call
 jest.mock("../../api/warehouse");
 
 describe("Dashboard Page", () => {
   afterEach(() => {
+    // Reset mocks after each test
     jest.clearAllMocks();
   });
 

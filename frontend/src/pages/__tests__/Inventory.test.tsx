@@ -3,6 +3,7 @@ import { Inventory } from "../Inventory";
 import { useLocation } from "react-router-dom";
 import "@testing-library/jest-dom";
 
+// Set up mocks
 jest.mock("../InventoryByWarehouse", () => ({
   InventoryByWarehouse: () => <div>Mocked InventoryByWarehouse</div>,
 }));
@@ -20,6 +21,7 @@ jest.mock("react-router-dom", () => ({
 
 describe("Inventory Component", () => {
   afterEach(() => {
+    // Reset mocks after each test
     jest.clearAllMocks();
   });
 
