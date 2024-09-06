@@ -14,7 +14,7 @@ public class CategoryTest {
     private List<Product> products;
 
     @BeforeMethod
-    public void setUp() {
+    public void setUp() { // Initialize test data before each test
         category = new Category();
 
         Product product1 = new Product();
@@ -31,11 +31,15 @@ public class CategoryTest {
     }
 
     @AfterMethod
-    public void teardown() {
+    public void teardown() { // Clean up test data after each test
         category = null;
         products = null;
     }
 
+    /**
+     * Test case for validating the getter and setter methods of the Category class.
+     * Verifies that expected values are correctly returned by getter methods.
+     */
     @Test
     public void testCategoryGettersAndSetters() {
         Assert.assertEquals(category.getId(), 1);
@@ -43,6 +47,11 @@ public class CategoryTest {
         Assert.assertEquals(category.getProducts(), products);
     }
 
+    /**
+     * Test case for validating the toString() method of the Category class.
+     * Verifies that the string representation of the object matches the
+     * expected format.
+     */
     @Test
     public void testToString() {
         String expectedToString = "Category [id=1, name=Name, products=" + products + "]";
