@@ -35,14 +35,18 @@ public class ProductServiceTests {
 
     @BeforeTest
     public void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this); // Initialize mocks before each test
     }
 
     @AfterTest
     public void teardown() throws Exception {
-        closeable.close();
+        closeable.close(); // Close any open mocks after test
     }
 
+    /**
+     * Test case to verify that findAll() method returns a list of all products
+     * from the repository.
+     */
     @Test
     public void testFindAll() {
         List<Product> products = Arrays.asList(new Product(), new Product());
@@ -58,6 +62,10 @@ public class ProductServiceTests {
         Assert.assertTrue(count == products.size());
     }
 
+    /**
+     * Test case to verify that using the findById() method with existing id
+     * returns the product with specified id from the repository.
+     */
     @Test
     public void testFindProductByExistingId() {
         Product product1 = new Product();
@@ -68,6 +76,10 @@ public class ProductServiceTests {
         Assert.assertTrue(result.isPresent());
     }
 
+    /**
+     * Test case to verify that using the findById() method with non-existent id
+     * returns an empty result from the repository.
+     */
     @Test
     public void testFindProductByNonExistentId() {
         when(productRepository.findById(1)).thenReturn(Optional.empty());
@@ -76,6 +88,11 @@ public class ProductServiceTests {
         Assert.assertTrue(result.isEmpty());
     }
 
+    /**
+     * Test case to verify that using the findByBrandAndName() method with existing
+     * brand and name returns the product with specified brand and name from the
+     * repository.
+     */
     @Test
     public void testFindByBrandAndName() {
         Product product1 = new Product();
@@ -91,6 +108,10 @@ public class ProductServiceTests {
         Assert.assertTrue(result.isPresent());
     }
 
+    /**
+     * Test case to verify that using the findByBrandAndName() method with brand and
+     * non-existent name returns an empty result from the repository.
+     */
     @Test
     public void testFindByBrandAndNonExistentName() {
         String brand = "Unknown Brand";
@@ -102,6 +123,10 @@ public class ProductServiceTests {
         Assert.assertFalse(result.isPresent());
     }
 
+    /**
+     * Test case to verify that using the save() method with a valid product
+     * returns the created product from the repository.
+     */
     @Test
     public void testSaveProduct() {
         ProductRequestDto savedProductRequestDto = new ProductRequestDto();
@@ -130,6 +155,10 @@ public class ProductServiceTests {
         Assert.assertTrue(result.equals(savedProduct));
     }
 
+    /**
+     * Test case to verify that using the updateProductById() method with a valid
+     * product returns the updated product from the repository.
+     */
     @Test
     public void testUpdateProductById() {
         ProductRequestDto updatedProductRequestDto = new ProductRequestDto();
@@ -160,6 +189,10 @@ public class ProductServiceTests {
         verify(productRepository, times(1)).save(updatedProduct);
     }
 
+    /**
+     * Test case to verify that using the deleteById() method with calls the
+     * repository deleteById() method.
+     */
     @Test
     public void testDeleteById() {
         int productId = 1;

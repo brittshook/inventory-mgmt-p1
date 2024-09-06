@@ -46,7 +46,7 @@ public class InventoryServiceTest {
 
     @BeforeTest
     public void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this); // Initialize mocks before each test
 
         warehouse.setId(1);
         warehouse.setName("CA1");
@@ -55,9 +55,13 @@ public class InventoryServiceTest {
 
     @AfterTest
     public void teardown() throws Exception {
-        closeable.close();
+        closeable.close(); // Close any open mocks after test
     }
 
+    /**
+     * Test case to verify that findAll() method returns a list of all inventory
+     * items from the repository.
+     */
     @Test
     public void testFindAll() {
         Inventory inventory1 = new Inventory();
@@ -76,6 +80,10 @@ public class InventoryServiceTest {
         Assert.assertTrue(count == exepctedCategories.size());
     }
 
+    /**
+     * Test case to verify that using the findById() method with existing id
+     * returns the inventory item with specified id from the repository.
+     */
     @Test
     public void testFindInventoryByExistingId() {
         int inventoryId = 1;
@@ -87,6 +95,10 @@ public class InventoryServiceTest {
         Assert.assertTrue(result.isPresent());
     }
 
+    /**
+     * Test case to verify that using the findById() method with non-existent id
+     * returns an empty result from the repository.
+     */
     @Test
     public void testFindInventoryByNonExistentId() {
         int inventoryId = 2;
@@ -95,6 +107,10 @@ public class InventoryServiceTest {
         Assert.assertTrue(result.isEmpty());
     }
 
+    /**
+     * Test case to verify that using the save() method with a valid inventory item
+     * returns the created inventory item from the repository.
+     */
     @Test
     public void testSaveInventory() {
         InventoryRequestDto dto = new InventoryRequestDto();
@@ -108,6 +124,11 @@ public class InventoryServiceTest {
         Assert.assertEquals(result, expectedInventory);
     }
 
+    /**
+     * Test case to verify that using the save() method with an inventory
+     * item with a quantity that would exceed warehouse capacity throws an
+     * IllegalArgumentException.
+     */
     @Test
     public void testSaveInventoryExceedsWarehouseCapacity() {
         InventoryRequestDto dto = new InventoryRequestDto();
@@ -134,6 +155,11 @@ public class InventoryServiceTest {
         }
     }
 
+    /**
+     * Test case to verify that using the updateInventoryById() method with a valid
+     * inventory item in same warehouse returns the updated inventory item from the
+     * repository.
+     */
     @Test
     public void testUpdateInventoryInSameWarehouse() {
         Warehouse currentWarehouse = new Warehouse();
@@ -173,6 +199,11 @@ public class InventoryServiceTest {
         verify(inventoryRepository).save(existingInventory);
     }
 
+    /**
+     * Test case to verify that using the updateInventoryById() method with an
+     * inventory item with a quantity that would exceed warehouse capacity throws an
+     * IllegalArgumentException.
+     */
     @Test
     public void testUpdateInventoryInSameWarehouseExceedsWarehouseCapacity() {
         Warehouse currentWarehouse = new Warehouse();
@@ -212,6 +243,11 @@ public class InventoryServiceTest {
         }
     }
 
+    /**
+     * Test case to verify that using the updateInventoryById() method with a valid
+     * inventory item in different warehouse returns the updated inventory item from
+     * the repository.
+     */
     @Test
     public void testUpdateInventoryInDifferentWarehouse() {
         Warehouse currentWarehouse = new Warehouse();
@@ -258,6 +294,11 @@ public class InventoryServiceTest {
         verify(inventoryRepository).save(existingInventory);
     }
 
+    /**
+     * Test case to verify that using the updateInventoryById() method with an
+     * inventory item with a quantity that would exceed warehouse capacity of its
+     * new warehouse throws an IllegalArgumentException.
+     */
     @Test
     public void testUpdateInventoryInDifferentWarehouseExceedsWarehouseCapacity() {
         Warehouse currentWarehouse = new Warehouse();
@@ -303,6 +344,10 @@ public class InventoryServiceTest {
         }
     }
 
+    /**
+     * Test case to verify that using the updateQuantityById() method with the valid
+     * operation "increment" returns the updated inventory item from the repository.
+     */
     @Test
     public void testUpdateQuantityIncrement() {
         Warehouse currentWarehouse = new Warehouse();
@@ -328,6 +373,10 @@ public class InventoryServiceTest {
         verify(inventoryRepository).save(result);
     }
 
+    /**
+     * Test case to verify that using the updateQuantityById() method with the valid
+     * operation "decrement" returns the updated inventory item from the repository.
+     */
     @Test
     public void testUpdateQuantityDecrement() {
         Warehouse currentWarehouse = new Warehouse();
@@ -353,6 +402,10 @@ public class InventoryServiceTest {
         verify(inventoryRepository).save(result);
     }
 
+    /**
+     * Test case to verify that using the updateQuantityById() method with an
+     * invalid operation throws a RuntimeException.
+     */
     @Test
     public void testUpdateQuantityInvalidOperation() {
         Warehouse currentWarehouse = new Warehouse();
@@ -380,6 +433,10 @@ public class InventoryServiceTest {
         }
     }
 
+    /**
+     * Test case to verify that using the updateQuantityById() method with an
+     * inventory item that is not found throws a RuntimeException.
+     */
     @Test
     public void testUpdateQuantityInventoryNotFound() {
         Warehouse currentWarehouse = new Warehouse();
@@ -392,13 +449,17 @@ public class InventoryServiceTest {
         when(inventoryRepository.findById(1)).thenReturn(Optional.empty());
 
         try {
-            inventoryService.updateQuantityById(1, "multiply", value);
+            inventoryService.updateQuantityById(1, "increment", value);
             Assert.fail("Expected a RuntimeException to be thrown");
         } catch (RuntimeException e) {
             Assert.assertEquals("Inventory not found with ID: 1", e.getMessage());
         }
     }
 
+    /**
+     * Test case to verify that using the deleteById() method with calls the
+     * repository deleteById() method.
+     */
     @Test
     public void testDeleteInventoryById() {
         int inventoryId = 1;

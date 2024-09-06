@@ -13,6 +13,7 @@ export type CategoryFormValues = {
 
 const API_ENDPOINT = "/category";
 
+// GET request to fetch all categories
 export const getCategories = async () => {
   try {
     const response = await axiosInstance.get(API_ENDPOINT);
@@ -23,6 +24,7 @@ export const getCategories = async () => {
   }
 };
 
+// GET request to fetch a single category by specified id
 export const getCategoryById = async (id: number) => {
   try {
     const response = await axiosInstance.get(`${API_ENDPOINT}/${id}`);
@@ -33,6 +35,7 @@ export const getCategoryById = async (id: number) => {
   }
 };
 
+// GET request to fetch a single category by specified name
 export const getCategoryByName = async (name: string) => {
   try {
     const response = await axiosInstance.get(`${API_ENDPOINT}/byProps`, {
@@ -47,6 +50,7 @@ export const getCategoryByName = async (name: string) => {
   }
 };
 
+// POST request to create a new category
 export const postCategory = async (data: CategoryFormValues) => {
   try {
     const response = await axiosInstance.post(API_ENDPOINT, data);
@@ -57,6 +61,7 @@ export const postCategory = async (data: CategoryFormValues) => {
   }
 };
 
+// PUT request to update an existing category by its id
 export const putCategory = async (id: number, data: CategoryFormValues) => {
   try {
     const response = await axiosInstance.put(`${API_ENDPOINT}/${id}`, data);
@@ -67,6 +72,7 @@ export const putCategory = async (id: number, data: CategoryFormValues) => {
   }
 };
 
+// DELETE request to remove a category by its id
 export const deleteCategoryById = async (id: number) => {
   try {
     const response = await axiosInstance.delete(`${API_ENDPOINT}/${id}`);

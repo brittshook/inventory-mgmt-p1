@@ -13,6 +13,7 @@ export type ProductDataType = {
 
 const API_ENDPOINT = "/product";
 
+// GET request to fetch all products (without inventory)
 export const getProducts = async () => {
   try {
     const response = await axiosInstance.get(API_ENDPOINT);
@@ -23,6 +24,7 @@ export const getProducts = async () => {
   }
 };
 
+// GET request to fetch a single product by specified brand and name
 export const getProductByBrandAndName = async (brand: string, name: string) => {
   try {
     const response = await axiosInstance.get(`${API_ENDPOINT}/byProps`, {
@@ -38,6 +40,7 @@ export const getProductByBrandAndName = async (brand: string, name: string) => {
   }
 };
 
+// GET request to fetch all products (with inventory)
 export const getProductsWithInventory = async () => {
   try {
     const response = await axiosInstance.get(`${API_ENDPOINT}/detailed`);
@@ -48,6 +51,7 @@ export const getProductsWithInventory = async () => {
   }
 };
 
+// GET request to fetch all products (with inventory) within specified category
 export const getProductsWithInventoryByCategoryId = async (id: number) => {
   try {
     const response = await axiosInstance.get(
@@ -60,6 +64,7 @@ export const getProductsWithInventoryByCategoryId = async (id: number) => {
   }
 };
 
+// GET request to fetch a single product by specified id
 export const getProductById = async (id: number) => {
   try {
     const response = await axiosInstance.get(`${API_ENDPOINT}/${id}`);
@@ -70,6 +75,7 @@ export const getProductById = async (id: number) => {
   }
 };
 
+// POST request to create a new products
 export const postProduct = async (data: {
   brand: string;
   name: string;
@@ -86,6 +92,7 @@ export const postProduct = async (data: {
   }
 };
 
+// PUT request to update an existing product by its id
 export const putProduct = async (
   id: number,
   data: {

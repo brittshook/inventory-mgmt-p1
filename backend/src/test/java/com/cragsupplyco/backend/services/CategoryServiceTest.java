@@ -29,14 +29,18 @@ public class CategoryServiceTest {
 
     @BeforeTest
     public void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this); // Initialize mocks before each test
     }
 
     @AfterTest
     public void teardown() throws Exception {
-        closeable.close();
+        closeable.close(); // Close any open mocks after test
     }
 
+    /**
+     * Test case to verify that findAll() method returns a list of all categories
+     * from the repository.
+     */
     @Test
     public void testFindAll() {
         List<Category> exepctedCategories = Arrays.asList(new Category(), new Category(), new Category());
@@ -47,6 +51,10 @@ public class CategoryServiceTest {
         Assert.assertEquals(exepctedCategories, result);
     }
 
+    /**
+     * Test case to verify that using the findByName() method with existing name
+     * returns the category with specified name from the repository.
+     */
     @Test
     public void testFindByExistingName() {
         Category expectedCategory = new Category();
@@ -59,6 +67,10 @@ public class CategoryServiceTest {
         Assert.assertTrue(result.isPresent());
     }
 
+    /**
+     * Test case to verify that using the findByName() method with non-existent name
+     * returns an empty result from the repository.
+     */
     @Test
     public void testFindByNonExistentName() {
         String categoryName = "Helmets";
@@ -69,6 +81,10 @@ public class CategoryServiceTest {
         Assert.assertTrue(result.isEmpty());
     }
 
+    /**
+     * Test case to verify that using the findById() method with existing id
+     * returns the category with specified id from the repository.
+     */
     @Test
     public void testFindCategoryByExistingId() {
         int categoryId = 1;
@@ -80,6 +96,10 @@ public class CategoryServiceTest {
         Assert.assertTrue(result.isPresent());
     }
 
+    /**
+     * Test case to verify that using the findById() method with non-existent id
+     * returns an empty result from the repository.
+     */
     @Test
     public void testFindCategoryByNonExistentId() {
         int categoryId = 2;
@@ -90,6 +110,10 @@ public class CategoryServiceTest {
         Assert.assertTrue(result.isEmpty());
     }
 
+    /**
+     * Test case to verify that using the save() method with a valid category
+     * returns the created category from the repository.
+     */
     @Test
     public void testSaveCategory() {
         Category expectedCategory = new Category();
@@ -100,6 +124,10 @@ public class CategoryServiceTest {
         Assert.assertEquals(expectedCategory, result);
     }
 
+    /**
+     * Test case to verify that using the save() method with an invalid category
+     * throws an IllegalArgumentException.
+     */
     @Test
     public void testSaveCategoryExistingName() {
         Category category = new Category();
@@ -112,6 +140,10 @@ public class CategoryServiceTest {
         });
     }
 
+    /**
+     * Test case to verify that using the updateCategoryById() method with a valid
+     * category returns the updated category from the repository.
+     */
     @Test
     public void testUpdateCategoryById() {
         int categoryId = 1;
@@ -126,6 +158,10 @@ public class CategoryServiceTest {
         Assert.assertEquals(expectedCategory, result);
     }
 
+    /**
+     * Test case to verify that using the updateCategoryById() method with an
+     * invalid category throws an IllegalArgumentException.
+     */
     @Test
     public void testUpdateCategoryByIdExistingName() {
         int categoryId = 4;
@@ -146,6 +182,10 @@ public class CategoryServiceTest {
         });
     }
 
+    /**
+     * Test case to verify that using the deleteById() method with calls the
+     * repository deleteById() method.
+     */
     @Test
     public void testDeleteCategoryById() {
         int categoryId = 1;

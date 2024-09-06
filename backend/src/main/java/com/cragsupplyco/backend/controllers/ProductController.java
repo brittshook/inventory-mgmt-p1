@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cragsupplyco.backend.dtos.ProductRequestDto;
-import com.cragsupplyco.backend.mappers.ProductMapper;
 import com.cragsupplyco.backend.models.Product;
 import com.cragsupplyco.backend.models.Views;
 import com.cragsupplyco.backend.services.ProductService;

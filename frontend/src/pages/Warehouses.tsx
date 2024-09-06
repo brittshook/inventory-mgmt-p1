@@ -19,6 +19,7 @@ type props = {
   testId?: string;
 };
 export const Warehouses = ({ testId }: props) => {
+  // Initialize forms using Ant Design's Form hook
   const [form] = Form.useForm();
   const [updateForm] = Form.useForm();
 
@@ -29,6 +30,7 @@ export const Warehouses = ({ testId }: props) => {
   const [error, setError] = useState<AxiosError | null>(null);
   const [showErrorOverlay, setShowErrorOverlay] = useState<boolean>(false);
 
+  // Fetch data for warehouses
   const fetchData = async () => {
     try {
       const result = await getWarehouses();
@@ -44,6 +46,7 @@ export const Warehouses = ({ testId }: props) => {
     fetchData();
   }, []);
 
+  // Handle error display and error overlay
   useEffect(() => {
     if (error) {
       setShowErrorOverlay(true);
@@ -53,6 +56,7 @@ export const Warehouses = ({ testId }: props) => {
     }
   }, [error]);
 
+  // Handle deleting warehouse
   const handleDelete = async (id: number) => {
     try {
       await deleteWarehouseById(id);
@@ -63,6 +67,7 @@ export const Warehouses = ({ testId }: props) => {
     }
   };
 
+  // Handle adding new warehouse
   const handlePost = async (data: WarehouseFormValues) => {
     try {
       await postWarehouse(data);
@@ -73,6 +78,7 @@ export const Warehouses = ({ testId }: props) => {
     }
   };
 
+  // Handle updating existing warehouse
   const handlePut = async (id: number) => {
     try {
       const data = updateForm.getFieldsValue();
@@ -85,6 +91,8 @@ export const Warehouses = ({ testId }: props) => {
   };
 
   if (loading) return <div>Loading...</div>;
+
+  // Render an error page if a 404 error occurs
   if (error?.message.includes("404"))
     return <ErrorPage testId={testId && "error-page"} />;
 
@@ -133,6 +141,7 @@ export const Warehouses = ({ testId }: props) => {
           ></Card>
         ))}
       </section>
+      {/* Display error overlay if an error occurs and it's not a 404 error */}
       {showErrorOverlay && !error?.message.includes("404") && (
         <div data-testid="error-overlay">
           <ErrorOverlay

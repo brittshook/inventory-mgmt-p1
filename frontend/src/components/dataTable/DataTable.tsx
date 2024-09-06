@@ -52,14 +52,14 @@ export const DataTable = ({
   warehouseName,
   testId,
 }: props) => {
-  const { isLargerThan1250 } = useScreenSize();
+  const { isLargerThan1250 } = useScreenSize(); // Get screen size info from context
 
-  const [data, setData] = useState<DataType[]>([]);
+  const [data, setData] = useState<DataType[]>([]); // Data for table
   const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState(""); // Column being searched
   const searchInput = useRef<InputRef>(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState<DataType | null>(null);
+  const [selectedRecord, setSelectedRecord] = useState<DataType | null>(null); // Selected record (row) for editing
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -68,10 +68,12 @@ export const DataTable = ({
     }
   }, [initialData]);
 
+  // Update form fields when selectedRecord changes
   useEffect(() => {
     form.setFieldsValue(selectedRecord);
   }, [selectedRecord, form]);
 
+  // Handle edit button click by setting selected record
   const handleEdit = (record: DataType) => {
     setSelectedRecord({
       ...record,
@@ -80,6 +82,7 @@ export const DataTable = ({
     });
   };
 
+  // Handle search functionality
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps["confirm"],
@@ -90,6 +93,7 @@ export const DataTable = ({
     setSearchedColumn(dataIndex);
   };
 
+  // Column search modal properties
   const getColumnSearchProps = (
     dataIndex: DataIndex
   ): TableColumnType<DataType> => ({
@@ -187,6 +191,7 @@ export const DataTable = ({
       ),
   });
 
+  // Handle filter reset
   const handleReset = (
     clearFilters: () => void,
     confirm: FilterDropdownProps["confirm"],
@@ -198,6 +203,7 @@ export const DataTable = ({
     handleSearch([""], confirm, dataIndex);
   };
 
+  // Define table columns
   const columns: TableColumnsType<DataType> = [
     {
       title: "Brand",
@@ -316,6 +322,7 @@ export const DataTable = ({
       width: 140,
       render: (_, record, index) => (
         <Space>
+          {/* Edit Button */}
           <ButtonWithModal
             id={`edit-inventory-${index}`}
             title="Update Inventory Item"
@@ -332,6 +339,7 @@ export const DataTable = ({
               {editModalFormItems}
             </Form>
           </ButtonWithModal>
+          {/* Delete Button */}
           <Popconfirm
             title="Confirm delete?"
             onConfirm={() => {

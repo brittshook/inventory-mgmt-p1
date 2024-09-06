@@ -24,6 +24,7 @@ export type WarehouseFormValues = {
 
 const API_ENDPOINT = "/warehouse";
 
+// GET request to fetch all warehouses
 export const getWarehouses = async () => {
   try {
     const response = await axiosInstance.get(API_ENDPOINT);
@@ -34,6 +35,7 @@ export const getWarehouses = async () => {
   }
 };
 
+// GET request to fetch a single warehouse by specified id
 export const getWarehouseById = async (id: number) => {
   try {
     const response = await axiosInstance.get(`${API_ENDPOINT}/${id}`);
@@ -44,6 +46,7 @@ export const getWarehouseById = async (id: number) => {
   }
 };
 
+// GET request to fetch a single warehouse by specified name
 export const getWarehouseByName = async (name: string) => {
   try {
     const response = await axiosInstance.get(`${API_ENDPOINT}/byProps`, {
@@ -58,6 +61,7 @@ export const getWarehouseByName = async (name: string) => {
   }
 };
 
+// POST request to create a new warehouse
 export const postWarehouse = async (data: WarehouseFormValues) => {
   try {
     const response = await axiosInstance.post(API_ENDPOINT, data);
@@ -68,6 +72,7 @@ export const postWarehouse = async (data: WarehouseFormValues) => {
   }
 };
 
+// PUT request to update an existing warehouse by its id
 export const putWarehouse = async (id: number, data: WarehouseFormValues) => {
   try {
     const response = await axiosInstance.put(`${API_ENDPOINT}/${id}`, data);
@@ -78,6 +83,7 @@ export const putWarehouse = async (id: number, data: WarehouseFormValues) => {
   }
 };
 
+// DELETE request to remove a warehouse by its id
 export const deleteWarehouseById = async (id: number) => {
   try {
     const response = await axiosInstance.delete(`${API_ENDPOINT}/${id}`);

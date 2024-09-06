@@ -14,7 +14,7 @@ type props = {
 };
 
 export const Sidebar = ({ testId }: props) => {
-  const { isSmallerThan900 } = useScreenSize();
+  const { isSmallerThan900 } = useScreenSize(); // Get screen size info from context
 
   const path = useLocation().pathname;
   const search = useLocation().search;
@@ -22,10 +22,11 @@ export const Sidebar = ({ testId }: props) => {
   return (
     <aside
       data-testid={testId}
-      className={isSmallerThan900 ? "collapsed" : "expanded"}
+      className={isSmallerThan900 ? "collapsed" : "expanded"} // Render collapsed view when screen size < 900px
     >
       <nav>
         <Link to="/">
+          {/* Render short-form logo when screen size < 900px */}
           {isSmallerThan900 ? <Logo type="short" /> : <Logo type="full" />}
         </Link>
         <hr />
@@ -34,6 +35,7 @@ export const Sidebar = ({ testId }: props) => {
           <li>
             <Link id={"dashboard"} to="/">
               <img src={dashboardIcon} alt="dashboard" title="dashboard" />
+              {/* Render only icons (no labels) in collapsed view */}
               {!isSmallerThan900 && "Dashboard"}
             </Link>
           </li>
@@ -42,6 +44,7 @@ export const Sidebar = ({ testId }: props) => {
               <img src={productIcon} alt="products" title="products" />
               {!isSmallerThan900 && "Products"}
             </Link>
+            {/* Do not render sublists in collapsed view; only render sublist in expanded view on related pages */}
             {!isSmallerThan900 &&
               /(products|inventory\?category=)/.test(path + search) && (
                 <ul className="sublist">
@@ -74,6 +77,7 @@ export const Sidebar = ({ testId }: props) => {
               <img src={warehouseIcon} alt="warehouse" />
               {!isSmallerThan900 && "Warehouses"}
             </Link>
+            {/* Do not render sublists in collapsed view; only render sublist in expanded view on related pages */}
             {!isSmallerThan900 &&
               /(warehouses|inventory\?warehouse=)/.test(path + search) && (
                 <ul className="sublist">
@@ -114,6 +118,7 @@ export const Sidebar = ({ testId }: props) => {
         </ul>
       </nav>
       <div id="user-account">
+        {/* Do not render user details in collapsed view */}
         {!isSmallerThan900 && (
           <div id="user-details">
             <img id="profile" src={profileImage} alt="profile" />

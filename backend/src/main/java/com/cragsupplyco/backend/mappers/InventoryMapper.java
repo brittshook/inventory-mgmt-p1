@@ -21,24 +21,31 @@ public class InventoryMapper {
         this.productRepo = productRepo;
     }
 
+    // Maps inventory request DTO to inventory (needs to translate warehouse id to
+    // warehouse object to do so)
     public Inventory toInventory(InventoryRequestDto inventoryDto) {
         Inventory inventory = new Inventory();
-        
+
         Optional<Warehouse> optionalWarehouse = warehouseRepo.findById(inventoryDto.getWarehouse());
         if (optionalWarehouse.isEmpty()) {
             throw new RuntimeException("Warehouse not found with ID: " + inventoryDto.getWarehouse());
         }
+
         Warehouse warehouse = optionalWarehouse.get();
+
         Optional<Product> optionalProduct = productRepo.findById(inventoryDto.getProduct());
         if (optionalProduct.isEmpty()) {
             throw new RuntimeException("Product not found with ID: " + inventoryDto.getProduct());
         }
+
         Product product = optionalProduct.get();
+
         int newQuantity = Integer.parseInt(inventoryDto.getQuantity());
         inventory.setSize(inventoryDto.getSize());
         inventory.setQuantity(newQuantity);
         inventory.setProduct(product);
         inventory.setWarehouse(warehouse);
+        
         return inventory;
     }
 

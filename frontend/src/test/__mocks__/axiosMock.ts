@@ -5,6 +5,7 @@ import {
   InternalAxiosRequestConfig,
 } from "axios";
 
+// Function to generate a mock AxiosError for testing purposes
 export const generateMockAxiosError = (): AxiosError<unknown, any> => {
   const message = "Request failed with status code 400";
   const code = "400";
@@ -23,5 +24,6 @@ export const generateMockAxiosError = (): AxiosError<unknown, any> => {
     headers: {},
     config: config,
   };
+  // Return a new AxiosError instance with the mock data
   return new AxiosError<unknown, any>(message, code, config, {}, response);
 };

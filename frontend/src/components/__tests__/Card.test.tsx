@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react';
-import { Card } from '../card/Card';
-import { MemoryRouter } from 'react-router-dom';
-import { fireEvent } from '@testing-library/react';
+import { render, screen } from "@testing-library/react";
+import { Card } from "../card/Card";
+import { MemoryRouter } from "react-router-dom";
+import { fireEvent } from "@testing-library/react";
 
-test('renders Card component with title and subtitle', () => {
+test("renders Card component with title and subtitle", () => {
   render(
     <MemoryRouter>
       <Card
@@ -18,11 +18,11 @@ test('renders Card component with title and subtitle', () => {
     </MemoryRouter>
   );
 
-  expect(screen.getByText('Test Title')).toBeDefined();
-  expect(screen.getByText('Test Subtitle')).toBeDefined();
+  expect(screen.getByText("Test Title")).toBeDefined();
+  expect(screen.getByText("Test Subtitle")).toBeDefined();
 });
 
-test('opens the edit modal', () => {
+test("opens the edit modal", () => {
   const { getByTestId, queryByRole } = render(
     <MemoryRouter>
       <Card
@@ -38,12 +38,14 @@ test('opens the edit modal', () => {
     </MemoryRouter>
   );
 
-  fireEvent.click(getByTestId('edit-card-button'));
+  // Click the button to open the edit modal
+  fireEvent.click(getByTestId("edit-card-button"));
 
-  expect(queryByRole('dialog')).toBeDefined();
+  // Check if the modal is displayed
+  expect(queryByRole("dialog")).toBeDefined();
 });
 
-test('calls the deleteItem function', async () => {
+test("calls the deleteItem function", async () => {
   const deleteItemMock = jest.fn();
 
   render(
@@ -61,16 +63,18 @@ test('calls the deleteItem function', async () => {
     </MemoryRouter>
   );
 
-  const ellipsisButton = screen.getByTestId('card-ellipsis-button');
+  const ellipsisButton = screen.getByTestId("card-ellipsis-button");
   fireEvent.mouseOver(ellipsisButton);
 
-  const deleteAction = await screen.findByText('Delete');
+  // Find and click the delete button
+  const deleteAction = await screen.findByText("Delete");
   fireEvent.click(deleteAction);
 
+  // Check if the deleteItem function is called with the correct id
   expect(deleteItemMock).toHaveBeenCalledWith(1);
 });
 
-test('handles errors with the deleteItem function', async () => {
+test("handles errors with the deleteItem function", async () => {
   const deleteItemMock = jest.fn();
   deleteItemMock.mockRejectedValue(() => new Error());
 
@@ -89,12 +93,16 @@ test('handles errors with the deleteItem function', async () => {
     </MemoryRouter>
   );
 
-  const ellipsisButton = screen.getByTestId('card-ellipsis-button');
+  const ellipsisButton = screen.getByTestId("card-ellipsis-button");
   fireEvent.mouseOver(ellipsisButton);
 
-  const deleteAction = await screen.findByText('Delete');
+  // Find and click the delete button
+  const deleteAction = await screen.findByText("Delete");
   fireEvent.click(deleteAction);
 
+  // Check if the deleteItem function is called with the correct id
   expect(deleteItemMock).toHaveBeenCalledWith(1);
+
+  // Verify that the title of the card is still displayed
   expect(screen.getByText("Test Title")).toBeDefined();
 });

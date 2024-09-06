@@ -117,6 +117,7 @@ describe("Inventory By Category Page", () => {
       </MemoryRouter>
     );
 
+    // Check error overlay is displayed
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
@@ -129,11 +130,13 @@ describe("Inventory By Category Page", () => {
       </MemoryRouter>
     );
 
+    // Click delete button on first row
     await waitFor(() => {
       const deleteButton = screen.getAllByText("Delete");
       fireEvent.click(deleteButton[0]);
     });
 
+    // Confirm delete
     await waitFor(() => {
       const confirmDeleteButton = document.querySelector(
         "#confirm-delete-inventory-0"
@@ -142,6 +145,7 @@ describe("Inventory By Category Page", () => {
       fireEvent.click(confirmDeleteButton!);
     });
 
+    // Check for no data message and delete function was called
     await waitFor(() => {
       expect(screen.getByText("No data")).toBeDefined();
       expect(deleteInventoryById).toHaveBeenCalled();
@@ -159,12 +163,14 @@ describe("Inventory By Category Page", () => {
       </MemoryRouter>
     );
 
+    // Click delete button on first row
     await waitFor(() => {
       // index-based (not id!)
       const deleteButton = screen.getAllByText("Delete");
       fireEvent.click(deleteButton[0]);
     });
 
+    // Confirm delete
     await waitFor(() => {
       const confirmDeleteButton = document.querySelector(
         "#confirm-delete-inventory-0"
@@ -172,6 +178,7 @@ describe("Inventory By Category Page", () => {
       fireEvent.click(confirmDeleteButton!);
     });
 
+    // Check error overlay is displayed
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });

@@ -14,7 +14,7 @@ public class ProductTest {
     private List<Inventory> inventoryItems;
 
     @BeforeMethod
-    public void setUp() {
+    public void setUp() { // Initialize test data before each test
         product = new Product();
 
         category = new Category();
@@ -34,14 +34,19 @@ public class ProductTest {
     }
 
     @AfterMethod
-    public void teardown() {
+    public void teardown() { // Clean up test data after each test
         product = null;
         category = null;
         inventoryItems = null;
     }
 
+    /**
+     * Test case for validating the getter and setter methods of the Product
+     * class. Verifies that expected values are correctly returned by getter
+     * methods.
+     */
     @Test
-    public void testCategoryGettersAndSetters() {
+    public void testProductGettersAndSetters() {
         Assert.assertEquals(product.getId(), 1);
         Assert.assertEquals(product.getBrand(), "Brand");
         Assert.assertEquals(product.getName(), "Name");
@@ -51,6 +56,11 @@ public class ProductTest {
         Assert.assertEquals(product.getInventory(), inventoryItems);
     }
 
+    /**
+     * Test case for validating the toString() method of the Product class.
+     * Verifies that the string representation of the object matches the
+     * expected format.
+     */
     @Test
     public void testToString() {
         String expectedToString = "Product [id=1, brand=Brand, name=Name, description=Description, price=2.0, category="

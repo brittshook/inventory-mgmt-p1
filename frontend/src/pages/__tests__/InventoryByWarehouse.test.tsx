@@ -9,6 +9,7 @@ import { generateMockAxiosError } from "../../test/__mocks__/axiosMock";
 import { getCategories } from "../../api/category";
 import { deleteInventoryById } from "../../api/inventory";
 
+// Set up mocks
 jest.mock("../../context/ScreenSizeContext", () => ({
   useScreenSize: jest.fn(),
 }));
@@ -116,6 +117,8 @@ describe("Inventory By Warehouse Page", () => {
         <InventoryByWarehouse testId="inventory-by-warehouse" />
       </MemoryRouter>
     );
+
+    // Check error overlay is displayed
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
@@ -128,15 +131,18 @@ describe("Inventory By Warehouse Page", () => {
       </MemoryRouter>
     );
 
+    // Click delete button on first row
     await waitFor(() => {
       const deleteButton = screen.getAllByText("Delete");
       fireEvent.click(deleteButton[0]);
     });
 
+    // Confirm delete
     await waitFor(() => {
       const confirmDeleteButton = document.querySelector(
         "#confirm-delete-inventory-0"
       );
+      // Mock API response
       (getWarehouseById as jest.Mock).mockResolvedValue({
         id: 1,
         name: "NY1",
@@ -151,9 +157,11 @@ describe("Inventory By Warehouse Page", () => {
       fireEvent.click(confirmDeleteButton!);
     });
 
+    // Mock API response
     (getWarehouseById as jest.Mock).mockResolvedValue([]);
     (getProductById as jest.Mock).mockResolvedValue([]);
 
+    // Check for no data message and delete function was called
     await waitFor(() => {
       expect(screen.getByText("No data")).toBeDefined();
       expect(deleteInventoryById).toHaveBeenCalled();
@@ -171,12 +179,14 @@ describe("Inventory By Warehouse Page", () => {
       </MemoryRouter>
     );
 
+    // Click delete button on first row
     await waitFor(() => {
       // index-based (not id!)
       const deleteButton = screen.getAllByText("Delete");
       fireEvent.click(deleteButton[0]);
     });
 
+    // Confirm delete
     await waitFor(() => {
       const confirmDeleteButton = document.querySelector(
         "#confirm-delete-inventory-0"
@@ -184,6 +194,7 @@ describe("Inventory By Warehouse Page", () => {
       fireEvent.click(confirmDeleteButton!);
     });
 
+    // Check error overlay is displayed
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
