@@ -8,7 +8,6 @@ public class InventoryRequestDto {
     @NotBlank
     private String quantity;
 
-    @NotBlank
     private String size;
 
     // This is one of the difference in the DTO and the model - product id is passed
