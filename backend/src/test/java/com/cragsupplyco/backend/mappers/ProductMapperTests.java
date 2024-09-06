@@ -27,14 +27,18 @@ public class ProductMapperTests {
 
     @BeforeTest
     public void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this); // Initialize mocks before each test
     }
 
     @AfterTest
     public void teardown() throws Exception {
-        closeable.close();
+        closeable.close(); // Close any open mocks after test
     }
 
+    /**
+     * Test case to verify the mapping of ProductRequestDto to Product object.
+     * Validates the Product object is created with the expected data.
+     */
     @Test
     public void testToProduct() {
         ProductRequestDto dto = new ProductRequestDto();
@@ -61,6 +65,11 @@ public class ProductMapperTests {
         Assert.assertEquals(product.getCategory().getId(), 1);
     }
 
+    /**
+     * Test case for attempting the mapping of ProductRequestDto to Product
+     * object where the category is not found. Validates a RuntimeException is
+     * thrown with expected error message.
+     */
     @Test
     public void testToProductCategoryNotFound() {
         ProductRequestDto dto = new ProductRequestDto();

@@ -32,16 +32,20 @@ public class InventoryMapperTest {
 
     @BeforeTest
     public void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this); // Initialize mocks before each test
     }
 
     @AfterTest
     public void teardown() throws Exception {
         if (closeable != null) {
-            closeable.close();
+            closeable.close(); // Close any open mocks after test
         }
     }
 
+    /**
+     * Test case to verify the mapping of InventoryRequestDto to Inventory object.
+     * Validates the Inventory object is created with the expected data.
+     */
     @Test
     public void testMapDtoToInventory() {
         InventoryRequestDto inventoryDto = new InventoryRequestDto();
@@ -65,6 +69,11 @@ public class InventoryMapperTest {
         Assert.assertEquals(10, result.getQuantity());
     }
 
+    /**
+     * Test case for attempting the mapping of InventoryRequestDto to Inventory
+     * object where the warehouse is not found. Validates a RuntimeException is
+     * thrown with expected error message.
+     */
     @Test
     public void testMapDtoToInventoryButWarehouseNotFound() {
         InventoryRequestDto inventoryDto = new InventoryRequestDto();
@@ -82,6 +91,11 @@ public class InventoryMapperTest {
         }
     }
 
+    /**
+     * Test case for attempting the mapping of InventoryRequestDto to Inventory
+     * object where the product is not found. Validates a RuntimeException is
+     * thrown with expected error message.
+     */
     @Test
     public void testMapDtoToInventoryButProductNotFound() {
         InventoryRequestDto inventoryDto = new InventoryRequestDto();
@@ -101,6 +115,5 @@ public class InventoryMapperTest {
         } catch (RuntimeException e) {
             Assert.assertEquals("Product not found with ID: 2", e.getMessage());
         }
-
     }
 }
