@@ -2,8 +2,10 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/";
 import { ScreenSizeProvider, useScreenSize } from "../ScreenSizeContext";
 
+// Mock component that uses the screen size context
 const TestComponent = () => {
   const { isLargerThan1250, isSmallerThan900 } = useScreenSize();
+
   return (
     <div>
       <div data-testid="larger-than-1250">
@@ -28,6 +30,8 @@ describe("Screen Size Provider", () => {
         <TestComponent />
       </ScreenSizeProvider>
     );
+
+    // Check correct content based on mocked screen size
     expect(screen.getByTestId("larger-than-1250")).toHaveTextContent(
       "Screen is larger than 1250px"
     );
@@ -43,6 +47,8 @@ describe("Screen Size Provider", () => {
         <TestComponent />
       </ScreenSizeProvider>
     );
+
+    // Check correct content based on mocked screen size
     expect(screen.getByTestId("larger-than-1250")).toHaveTextContent(
       "Screen is not larger than 1250px"
     );
@@ -58,6 +64,8 @@ describe("Screen Size Provider", () => {
         <TestComponent />
       </ScreenSizeProvider>
     );
+
+    // Check correct content based on mocked screen size
     expect(screen.getByTestId("larger-than-1250")).toHaveTextContent(
       "Screen is not larger than 1250px"
     );
@@ -73,6 +81,8 @@ describe("Screen Size Provider", () => {
         <TestComponent />
       </ScreenSizeProvider>
     );
+
+    // Check correct content based on mocked screen size
     expect(screen.getByTestId("larger-than-1250")).toHaveTextContent(
       "Screen is not larger than 1250px"
     );
@@ -87,6 +97,7 @@ describe("Screen Size Provider", () => {
       return <div>Test</div>;
     };
 
+    // Expect the error to be thrown when rendering TestComponentWithoutProvider
     expect(() => render(<TestComponentWithoutProvider />)).toThrow(
       "useScreenSize must be used within a ScreenSizeProvider"
     );
