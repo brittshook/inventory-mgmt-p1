@@ -29,14 +29,18 @@ public class WarehouseServiceTest {
 
     @BeforeTest
     public void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this); // Initialize mocks before each test
     }
 
     @AfterTest
     public void teardown() throws Exception {
-        closeable.close();
+        closeable.close(); // Close any open mocks after test
     }
 
+    /**
+     * Test case to verify that findAll() method returns a list of all warehouses
+     * from the repository.
+     */
     @Test
     public void testFindAll() {
         List<Warehouse> exepctedCategories = Arrays.asList(new Warehouse(), new Warehouse());
@@ -52,6 +56,10 @@ public class WarehouseServiceTest {
         Assert.assertTrue(count == exepctedCategories.size());
     }
 
+    /**
+     * Test case to verify that using the findByName() method with existing name
+     * returns the warehouse with specified name from the repository.
+     */
     @Test
     public void testFindByExistingName() {
         String warehouseName = "CA1";
@@ -63,6 +71,10 @@ public class WarehouseServiceTest {
         Assert.assertTrue(result.isPresent());
     }
 
+    /**
+     * Test case to verify that using the findByName() method with non-existent name
+     * returns an empty result from the repository.
+     */
     @Test
     public void testFindByNonExistentName() {
         String warehouseName = "ST1";
@@ -71,6 +83,10 @@ public class WarehouseServiceTest {
         Assert.assertTrue(result.isEmpty());
     }
 
+    /**
+     * Test case to verify that using the findById() method with existing id
+     * returns the warehouse with specified id from the repository.
+     */
     @Test
     public void testFindWarehouseByExistingId() {
         int warehouseId = 1;
@@ -82,6 +98,10 @@ public class WarehouseServiceTest {
         Assert.assertTrue(result.isPresent());
     }
 
+    /**
+     * Test case to verify that using the findById() method with non-existent id
+     * returns an empty result from the repository.
+     */
     @Test
     public void testFindWarehouseByNonExistentId() {
         int warehouseId = 2;
@@ -90,6 +110,10 @@ public class WarehouseServiceTest {
         Assert.assertTrue(result.isEmpty());
     }
 
+    /**
+     * Test case to verify that using the save() method with a valid warehouse
+     * returns the created warehouse from the repository.
+     */
     @Test
     public void testSaveWarehouse() {
         int warehouseId = 4;
@@ -101,6 +125,10 @@ public class WarehouseServiceTest {
         Assert.assertEquals(expectedWarehouse, result);
     }
 
+    /**
+     * Test case to verify that using the save() method with an invalid warehouse
+     * throws an IllegalArgumentException.
+     */
     @Test
     public void testSaveWarehouseExistingName() {
         Warehouse warehouse = new Warehouse();
@@ -113,6 +141,10 @@ public class WarehouseServiceTest {
         });
     }
 
+    /**
+     * Test case to verify that using the updateWarehouseById() method with a valid
+     * warehouse returns the updated warehouse from the repository.
+     */
     @Test
     public void testUpdateWarehouseById() {
         int warehouseId = 1;
@@ -127,6 +159,10 @@ public class WarehouseServiceTest {
         Assert.assertEquals(expectedWarehouse, result);
     }
 
+    /**
+     * Test case to verify that using the updateWarehouseById() method with an
+     * invalid warehouse throws an IllegalArgumentException.
+     */
     @Test
     public void testUpdateWarehouseByIdExistingName() {
         int warehouseId = 4;
@@ -147,6 +183,10 @@ public class WarehouseServiceTest {
         });
     }
 
+    /**
+     * Test case to verify that using the deleteById() method with calls the
+     * repository deleteById() method.
+     */
     @Test
     public void testDeleteWarehouseById() {
         int warehouseId = 1;
