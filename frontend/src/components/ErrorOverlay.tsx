@@ -10,8 +10,8 @@ export const ErrorOverlay = ({ messageText }: Props) => {
 
   useEffect(() => {
     messageApi.open({
-      type: "error",
-      content: messageText,
+      type: "error", // Use error UI
+      content: messageText, // Set error message
     });
   }, [messageApi, messageText]);
 

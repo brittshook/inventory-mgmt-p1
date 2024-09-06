@@ -35,11 +35,13 @@ export const Card = ({
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
+  // Handler to open the edit modal and set initial form values
   const handleEditClick = () => {
     form?.setFieldsValue(initialValues);
     setOpen(true);
   };
 
+  // Handler for menu item click events – currently just delete
   const handleMenuClick: MenuProps["onClick"] = async (e) => {
     if (e.key === "delete") {
       try {
@@ -50,6 +52,7 @@ export const Card = ({
     }
   };
 
+  // Menu items for the dropdown
   const items: MenuProps["items"] = [
     {
       label: "Delete",
@@ -59,16 +62,18 @@ export const Card = ({
   ];
 
   const menuProps = {
-    items,
-    onClick: handleMenuClick,
+    items, // Set menu items
+    onClick: handleMenuClick, // Set menu click handler
   };
 
   const actions: React.ReactNode[] = [
+    // Edit button
     <EditOutlined
       data-testid={testId && "edit-card-button"}
       key="edit"
       onClick={handleEditClick}
     />,
+    // Dropdown button with delete option
     <Dropdown key="dropdown" menu={menuProps}>
       <EllipsisOutlined
         key="ellipsis"
@@ -82,12 +87,13 @@ export const Card = ({
       setConfirmLoading(true);
       await updateItem(id);
       setOpen(false);
-      setConfirmLoading(false);
+      setConfirmLoading(false); // Reset loading state
     } catch (e) {
-      setConfirmLoading(false);
+      setConfirmLoading(false); // Reset loading state if error occurs
     }
   };
 
+  // Handler for Cancel button in the modal to reset fields and close modal
   const handleCancel = () => {
     form?.resetFields();
     setOpen(false);

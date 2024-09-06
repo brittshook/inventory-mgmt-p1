@@ -39,6 +39,7 @@ export const ButtonWithModal = ({
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
+  // Function to show the modal and call handler to load in existing data
   const showModal = () => {
     if (loadDataHandler) loadDataHandler();
     setOpen(true);
@@ -46,23 +47,25 @@ export const ButtonWithModal = ({
 
   const handleOk = async () => {
     try {
-      setConfirmLoading(true);
+      setConfirmLoading(true); // Set loading state
+
       const values = await form.validateFields();
       if (setCategory) values.categoryName = setCategory;
       if (setWarehouse) values.warehouseName = setWarehouse;
       if (recordId) values.id = recordId;
+
       await confirmHandler(values);
-      setOpen(false);
-      setConfirmLoading(false);
+
+      setOpen(false); // Close modal
+      setConfirmLoading(false); // Reset loading state
       form.resetFields();
     } catch (e) {
-      setConfirmLoading(false);
+      setConfirmLoading(false); // Reset loading state on error
     }
   };
 
   const handleCancel = () => {
-    console.log("cancel clicked");
-    setOpen(false);
+    setOpen(false); // Close modal
     form.resetFields();
   };
 
