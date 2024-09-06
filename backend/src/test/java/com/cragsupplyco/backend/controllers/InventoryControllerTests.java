@@ -37,16 +37,21 @@ public class InventoryControllerTests {
 
     @BeforeTest
     public void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this); // Initialize mocks before each test
     }
 
     @AfterTest
     public void teardown() throws Exception {
         if (closeable != null) {
-            closeable.close();
+            closeable.close(); // Close any open mocks after test
         }
     }
 
+    /**
+     * Test case for finding all inventory items using the findAllInventory()
+     * method. Validates that the service returns a list of inventory items and the
+     * method is called once.
+     */
     @Test
     public void testFindAllInventory() {
         List<Inventory> expectedInventory = Arrays.asList(new Inventory(), new Inventory());
@@ -59,6 +64,11 @@ public class InventoryControllerTests {
         verify(inventoryService, times(1)).findAll();
     }
 
+    /**
+     * Test case for finding an inventory item by its id using the
+     * findInventoryById() method. Validates that the correct inventory item is
+     * returned for a valid id.
+     */
     @Test
     public void testFindInventoryById() {
         Inventory inventory1 = new Inventory();
@@ -92,6 +102,10 @@ public class InventoryControllerTests {
         verify(inventoryService, times(1)).findById(id);
     }
 
+    /**
+     * Test case for attempting to find an inventory item with a non-existent id.
+     * Validates that a 404/Not Found response is returned.
+     */
     @Test
     public void testFindInventoryByyNonExistentId() {
         int id = 999;
@@ -103,6 +117,10 @@ public class InventoryControllerTests {
         verify(inventoryService, times(1)).findById(id);
     }
 
+    /**
+     * Test case for creating a valid inventory item using the createInventory()
+     * method. Validates that the inventory item is saved and returned as expected.
+     */
     @Test
     public void testCreateValidInventory() {
         Inventory validInventory = new Inventory();
@@ -141,6 +159,11 @@ public class InventoryControllerTests {
         verify(inventoryService, times(1)).save(validInventoryDto);
     }
 
+    /**
+     * Test case for attempting to create an invalid inventory item with incorrect
+     * data. Validates that null is returned and the inventory item is not
+     * created.
+     */
     @Test
     public void testCreateInvalidInventory() {
         Inventory invalidInventory = new Inventory();
@@ -175,6 +198,11 @@ public class InventoryControllerTests {
         Assert.assertEquals(result, null);
     }
 
+    /**
+     * Test case for updating an inventory item by its id using the
+     * updateInventoryById() method. Verifies that the updateInventoryById service
+     * method is called with the correct parameters.
+     */
     @Test
     public void testUpdateInventoryById() {
         Inventory validInventory = new Inventory();
@@ -210,17 +238,27 @@ public class InventoryControllerTests {
         verify(inventoryService, times(1)).updateInventoryById(eq(3), any(InventoryRequestDto.class));
     }
 
+    /**
+     * Test case for updating the quantity of an inventory item by its id using the
+     * updateQuantityById() method. Verifies that the updateQuantityById service
+     * method is called with the correct parameters.
+     */
     @Test
     public void testUpdateInventoryQuantityById() {
         UpdateQuantityRequestDto dto = new UpdateQuantityRequestDto();
-        dto.setOperation("add");
+        dto.setOperation("increment");
         dto.setValue(10);
 
         inventoryController.updateInventoryQuantityById(3, dto);
 
-        verify(inventoryService, times(1)).updateQuantityById(eq(3), eq("add"), eq(10));
+        verify(inventoryService, times(1)).updateQuantityById(eq(3), eq("increment"), eq(10));
     }
 
+    /**
+     * Test case for deleting an inventory item by its id using the
+     * deleteInventoryById() method. Verifies that the deleteById service method is
+     * called once.
+     */
     @Test
     public void testDeleteInventoryById() {
         inventoryController.deleteInventoryById(3);

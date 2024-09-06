@@ -33,16 +33,21 @@ public class CategoryControllerTests {
 
     @BeforeTest
     public void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this); // Initialize mocks before each test
     }
 
     @AfterTest
     public void teardown() throws Exception {
         if (closeable != null) {
-            closeable.close();
+            closeable.close(); // Close any open mocks after test
         }
     }
 
+    /**
+     * Test case for finding all categories using the findAllCategories() method.
+     * Validates that the service returns a list of categories and the method is
+     * called once.
+     */
     @Test
     public void testFindAllCategories() {
         List<Category> expectedCategories = Arrays.asList(new Category(), new Category());
@@ -55,6 +60,10 @@ public class CategoryControllerTests {
         verify(categoryService, times(1)).findAll();
     }
 
+    /**
+     * Test case for finding a category by its id using the findCategoryById()
+     * method. Validates that the correct category is returned for a valid id.
+     */
     @Test
     public void testFindCategoryById() {
         Category category1 = new Category();
@@ -70,6 +79,10 @@ public class CategoryControllerTests {
         verify(categoryService, times(1)).findById(id);
     }
 
+    /**
+     * Test case for attempting to find a category with a non-existent id.
+     * Validates that a 404/Not Found response is returned.
+     */
     @Test
     public void testFindCategoryByyNonExistentId() {
         int id = 999;
@@ -81,6 +94,10 @@ public class CategoryControllerTests {
         verify(categoryService, times(1)).findById(id);
     }
 
+    /**
+     * Test case for finding a category by its name using the findCategoryByName()
+     * method. Validates that the correct category is returned for a valid name.
+     */
     @Test
     public void testFindCategoryByName() {
         Category category1 = new Category();
@@ -97,6 +114,10 @@ public class CategoryControllerTests {
         verify(categoryService, times(1)).findByName(name);
     }
 
+    /**
+     * Test case for attempting to find a category with a non-existent name.
+     * Validates that a 404/Not Found response is returned.
+     */
     @Test
     public void testFindCategoryByyNonExistentName() {
         String name = "Unknown Category";
@@ -108,6 +129,10 @@ public class CategoryControllerTests {
         verify(categoryService, times(1)).findByName(name);
     }
 
+    /**
+     * Test case for creating a valid category using the createCategory() method.
+     * Validates that the category is saved and returned as expected.
+     */
     @Test
     public void testCreateValidCategory() {
         Category validCategory = new Category();
@@ -122,6 +147,10 @@ public class CategoryControllerTests {
         verify(categoryService, times(1)).save(validCategory);
     }
 
+    /**
+     * Test case for attempting to create an invalid category with missing/incorrect
+     * data. Validates that null is returned and the category is not created.
+     */
     @Test
     public void testCreateInvalidCategory() {
         Category invalidCategory = new Category();
@@ -132,6 +161,11 @@ public class CategoryControllerTests {
         Assert.assertEquals(category, null);
     }
 
+    /**
+     * Test case for updating a category by its id using the updateCategoryById()
+     * method. Verifies that the updateCategoryById service method is called with
+     * the correct parameters.
+     */
     @Test
     public void testUpdateCategoryById() {
         Category validCategory = new Category();
@@ -143,6 +177,10 @@ public class CategoryControllerTests {
         verify(categoryService, times(1)).updateCategoryById(eq(3), any(Category.class));
     }
 
+    /**
+     * Test case for deleting a category by its id using the deleteCategoryById()
+     * method. Verifies that the deleteById service method is called once.
+     */
     @Test
     public void testDeleteCategoryById() {
         categoryController.deleteCategoryById(3);

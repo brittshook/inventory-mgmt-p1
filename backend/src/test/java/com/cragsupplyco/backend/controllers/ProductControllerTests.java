@@ -35,17 +35,21 @@ public class ProductControllerTests {
 
     @BeforeMethod
     public void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this); // Initialize mocks before each test
     }
 
     @AfterMethod
     public void teardown() throws Exception {
         if (closeable != null) {
-            closeable.close();
+            closeable.close(); // Close any open mocks after test
         }
     }
 
+    /**
+     * Test case for finding all products using the findAllProducts() method.
+     * Validates that the service returns a list of products and the method is
+     * called once.
+     */
     @Test
     public void testFindAllProducts() {
         List<Product> expectedProducts = Arrays.asList(new Product(), new Product());
@@ -58,18 +62,11 @@ public class ProductControllerTests {
         verify(productService, times(1)).findAll();
     }
 
-    @Test
-    public void testFindAllProductsDetailed() {
-        List<Product> expectedProducts = Arrays.asList(new Product(), new Product());
-
-        when(productService.findAll()).thenReturn(expectedProducts);
-
-        Iterable<Product> result = productController.findAllProducts(null);
-
-        Assert.assertEquals(result, expectedProducts);
-        verify(productService, times(1)).findAll();
-    }
-
+    /**
+     * Test case for finding all products with specified category id using the
+     * findAllProducts(int categoryId) method. Validates that the service returns a
+     * list of products and the method is called once.
+     */
     @Test
     public void testFindAllProductsWithCategoryId() {
         int categoryId = 1;
@@ -82,6 +79,11 @@ public class ProductControllerTests {
         verify(productService, times(1)).findAllByCategoryId(categoryId);
     }
 
+    /**
+     * Test case for finding a product (without inventory) by its id using the
+     * findProductById() method. Validates that the correct product is returned for
+     * a valid id.
+     */
     @Test
     public void testFindById() {
         Product product1 = new Product();
@@ -98,6 +100,10 @@ public class ProductControllerTests {
         verify(productService, times(1)).findById(id);
     }
 
+    /**
+     * Test case for attempting to find a product (without inventory) with a
+     * non-existent id. Validates that a 404/Not Found response is returned.
+     */
     @Test
     public void testFindByNonExistentId() {
         int id = 10;
@@ -111,6 +117,11 @@ public class ProductControllerTests {
         verify(productService, times(1)).findById(id);
     }
 
+    /**
+     * Test case for finding a product (with inventory) by its id using the
+     * findProductByIdDetailed() method. Validates that the correct product is
+     * returned for a valid id.
+     */
     @Test
     public void testFindByIdDetailed() {
         Product product1 = new Product();
@@ -129,6 +140,10 @@ public class ProductControllerTests {
         verify(productService, times(1)).findById(id);
     }
 
+    /**
+     * Test case for attempting to find a product (with inventory) with a
+     * non-existent id. Validates that a 404/Not Found response is returned.
+     */
     @Test
     public void testFindByNonExistentIdDetailed() {
         int id = 10;
@@ -142,6 +157,11 @@ public class ProductControllerTests {
         verify(productService, times(1)).findById(id);
     }
 
+    /**
+     * Test case for finding a product by its brand and name using the
+     * findProductByBrandAndName() method. Validates that the correct product is
+     * returned for a valid brand and name.
+     */
     @Test
     public void testFindProductByBrandAndName() {
         Product product1 = new Product();
@@ -161,6 +181,10 @@ public class ProductControllerTests {
         verify(productService, times(1)).findByBrandAndName(brand, name);
     }
 
+    /**
+     * Test case for attempting to find a product with a non-existent brand and
+     * name. Validates that a 404/Not Found response is returned.
+     */
     @Test
     public void testFindProductByNonExistentBrandAndyNonExistentName() throws Exception {
         String brand = "invalidBrand";
@@ -175,6 +199,10 @@ public class ProductControllerTests {
         verify(productService, times(1)).findByBrandAndName(brand, name);
     }
 
+    /**
+     * Test case for creating a valid product using the createProduct() method.
+     * Validates that the product is saved and returned as expected.
+     */
     @Test
     public void testCreateValidProduct() {
         ProductRequestDto validProductRequestDto = new ProductRequestDto();
@@ -205,6 +233,10 @@ public class ProductControllerTests {
         verify(productService, times(1)).save(any(ProductRequestDto.class));
     }
 
+    /**
+     * Test case for attempting to create an invalid product with missing/incorrect
+     * data. Validates that null is returned and the product is not created.
+     */
     @Test
     public void testCreateInvalidProduct() {
         ProductRequestDto invalidProductRequestDto = new ProductRequestDto();
@@ -224,6 +256,11 @@ public class ProductControllerTests {
         Assert.assertEquals(result, null);
     }
 
+    /**
+     * Test case for updating a product by its id using the updateProductById()
+     * method. Verifies that the updateProductById service method is called with
+     * the correct parameters.
+     */
     @Test
     public void testUpdateProductById() {
         ProductRequestDto validProductRequestDto = new ProductRequestDto();
@@ -253,6 +290,10 @@ public class ProductControllerTests {
                 .updateProductById(eq(4), any(ProductRequestDto.class));
     }
 
+    /**
+     * Test case for deleting a product by its id using the deleteProductById()
+     * method. Verifies that the deleteById service method is called once.
+     */
     @Test
     public void testDeleteProductById() {
         productController.deleteProductById(4);

@@ -33,16 +33,21 @@ public class WarehouseControllerTests {
 
     @BeforeTest
     public void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this); // Initialize mocks before each test
     }
 
     @AfterTest
     public void teardown() throws Exception {
         if (closeable != null) {
-            closeable.close();
+            closeable.close(); // Close any open mocks after test
         }
     }
 
+    /**
+     * Test case for finding all warehouses using the findAllWarehouses() method.
+     * Validates that the service returns a list of warehouses and the method is
+     * called once.
+     */
     @Test
     public void testFindAllWarehouses() {
         List<Warehouse> expectedWarehouses = Arrays.asList(new Warehouse(), new Warehouse());
@@ -55,6 +60,10 @@ public class WarehouseControllerTests {
         verify(warehouseService, times(1)).findAll();
     }
 
+    /**
+     * Test case for finding a warehouse by its id using the findWarehouseById()
+     * method. Validates that the correct warehouse is returned for a valid id.
+     */
     @Test
     public void testFindWarehouseById() {
         Warehouse warehouse1 = new Warehouse();
@@ -71,6 +80,10 @@ public class WarehouseControllerTests {
         verify(warehouseService, times(1)).findById(id);
     }
 
+    /**
+     * Test case for attempting to find a warehouse with a non-existent id.
+     * Validates that a 404/Not Found response is returned.
+     */
     @Test
     public void testFindWarehouseByNonExistentId() {
         int id = 10;
@@ -84,6 +97,10 @@ public class WarehouseControllerTests {
         verify(warehouseService, times(1)).findById(id);
     }
 
+    /**
+     * Test case for finding a warehouse by its name using the findWarehouseByName()
+     * method. Validates that the correct warehouse is returned for a valid name.
+     */
     @Test
     public void testFindWarehouseByName() {
         Warehouse warehouse1 = new Warehouse();
@@ -101,6 +118,10 @@ public class WarehouseControllerTests {
         verify(warehouseService, times(1)).findByName(name);
     }
 
+    /**
+     * Test case for attempting to find a warehouse with a non-existent name.
+     * Validates that a 404/Not Found response is returned.
+     */
     @Test
     public void testFindWarehouseByNonExistentName() {
         String name = "invalidName";
@@ -114,6 +135,10 @@ public class WarehouseControllerTests {
         verify(warehouseService, times(1)).findByName(name);
     }
 
+    /**
+     * Test case for creating a valid warehouse using the createWarehouse() method.
+     * Validates that the warehouse is saved and returned as expected.
+     */
     @Test
     public void testCreateValidWarehouse() {
         Warehouse validWarehouse = new Warehouse();
@@ -133,6 +158,11 @@ public class WarehouseControllerTests {
         verify(warehouseService, times(1)).save(validWarehouse);
     }
 
+    /**
+     * Test case for attempting to create an invalid warehouse with missing /
+     * incorrect data. Validates that null is returned and the warehouse is
+     * not created.
+     */
     @Test
     public void testCreateInvalidWarehouse() {
         Warehouse invalidWarehouse = new Warehouse();
@@ -147,6 +177,11 @@ public class WarehouseControllerTests {
         Assert.assertEquals(result, null);
     }
 
+    /**
+     * Test case for updating a warehouse by its id using the updateWarehouseById()
+     * method. Verifies that the updateWarehouseById service method is called with
+     * the correct parameters.
+     */
     @Test
     public void testUpdateWarehouseById() {
         Warehouse validWarehouse = new Warehouse();
@@ -163,6 +198,10 @@ public class WarehouseControllerTests {
         verify(warehouseService, times(1)).updateWarehouseById(eq(3), any(Warehouse.class));
     }
 
+    /**
+     * Test case for deleting a warehouse by its id using the deleteWarehouseById()
+     * method. Verifies that the deleteById service method is called once.
+     */
     @Test
     public void testDeleteWarehouseById() {
         warehouseController.deleteWarehouseById(3);
