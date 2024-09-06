@@ -15,29 +15,33 @@ public class WarehouseService {
         this.repo = repo;
     }
 
-    public Iterable<Warehouse> findAll() {
+    public Iterable<Warehouse> findAll() { // Returns all warehouses
         return repo.findAll();
     }
 
-    public Optional<Warehouse> findById(int id) {
+    public Optional<Warehouse> findById(int id) { // Return warehouse by id
         return repo.findById(id);
     }
 
-    public Optional<Warehouse> findByName(String name) {
+    public Optional<Warehouse> findByName(String name) { // Return warehouse by name
         return repo.findByName(name);
     }
 
-    public Warehouse save(Warehouse warehouse) {
-        if (repo.existsByName(warehouse.getName())) {
+    public Warehouse save(Warehouse warehouse) { // Saves warehouse
+        if (repo.existsByName(warehouse.getName())) { // Checks if warehouse exists with the intended name (as warehouse
+                                                      // name have unique names)
             throw new IllegalArgumentException("Warehouse with this name already exists.");
         }
         return repo.save(warehouse);
     }
 
-    public Warehouse updateWarehouseById(int id, Warehouse warehouse) {
+    public Warehouse updateWarehouseById(int id, Warehouse warehouse) { // Update warehouse by id
         warehouse.setId(id);
         Warehouse existingWarehouse = repo.findById(id).get();
 
+        // Checks whether warehouse name is being updated to a new value and checks if
+        // warehouse exists with the intended name (as warehouses must have
+        // unique names)
         if (!warehouse.getName().equals(existingWarehouse.getName()) && repo.existsByName(warehouse.getName())) {
             throw new IllegalArgumentException("Warehouse with this name already exists.");
         }
@@ -45,8 +49,7 @@ public class WarehouseService {
         return repo.save(warehouse);
     }
 
-    public void deleteById(int id) {
+    public void deleteById(int id) { // Delete warehouse by id
         repo.deleteById(id);
     }
-
 }
