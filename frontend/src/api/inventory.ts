@@ -30,6 +30,7 @@ export type InventoryFormValues = {
 
 const API_ENDPOINT = "/inventory";
 
+// GET request to fetch all inventory items
 export const getInventory = async () => {
   try {
     const response = await axiosInstance.get(API_ENDPOINT);
@@ -40,11 +41,13 @@ export const getInventory = async () => {
   }
 };
 
+// PUT request to update an existing inventory item by its id
 export const putInventory = async (data: InventoryFormValues) => {
   try {
     let product;
 
     try {
+      // Check if associated product details are updated
       product = await getProductByBrandAndName(data.brand, data.name);
 
       const isProductUpdated =
@@ -54,6 +57,8 @@ export const putInventory = async (data: InventoryFormValues) => {
 
       if (isProductUpdated) {
         const category = await getCategoryByName(data.categoryName);
+
+        // If product details are updated, send PUT request to update product
         await putProduct(product.id, {
           brand: data.brand,
           name: data.name,
@@ -64,6 +69,7 @@ export const putInventory = async (data: InventoryFormValues) => {
         product = await getProductById(product.id);
       }
     } catch (e) {
+      // If product does not exist, send POST request to create it
       const category = await getCategoryByName(data.categoryName);
       product = await postProduct({
         brand: data.brand,
@@ -89,13 +95,16 @@ export const putInventory = async (data: InventoryFormValues) => {
   }
 };
 
+// POST request to create a new inventory item
 export const postInventory = async (data: InventoryFormValues) => {
   try {
     let product;
 
     try {
+      // Check if associated product already exists
       product = await getProductByBrandAndName(data.brand, data.name);
     } catch (e) {
+      // Otherwise, send POST request to create the associated product
       const category = await getCategoryByName(data.categoryName);
       product = await postProduct({
         brand: data.brand,
@@ -121,6 +130,7 @@ export const postInventory = async (data: InventoryFormValues) => {
   }
 };
 
+// DELETE request to remove an inventory item by its id
 export const deleteInventoryById = async (id: number) => {
   try {
     const response = await axiosInstance.delete(`${API_ENDPOINT}/${id}`);
