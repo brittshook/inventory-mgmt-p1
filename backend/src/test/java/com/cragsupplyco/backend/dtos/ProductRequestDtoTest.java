@@ -18,15 +18,21 @@ public class ProductRequestDtoTest {
 
     @BeforeClass
     public void setUp() {
+        // Set up the validator before the tests are executed
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
     }
 
     @AfterClass
     public void teardown() {
+        // Clean up the validator after all tests are executed
         validator = null;
     }
 
+    /**
+     * Test case for a valid ProductRequestDto. Verifies that no validation errors
+     * occur with valid inputs.
+     */
     @Test
     public void testValidProductRequestDto() {
         ProductRequestDto dto = new ProductRequestDto();
@@ -40,8 +46,12 @@ public class ProductRequestDtoTest {
         Assert.assertTrue(violations.isEmpty(), "No validation errors should occur with valid input");
     }
 
+    /**
+     * Test case for an invalid ProductRequestDto with missing/incorrect brand
+     * data. Verifies that validation errors occur due to invalid brand input.
+     */
     @Test
-    public void testInvalidBlankBrand() {
+    public void testInvalidBrand() {
         ProductRequestDto dto = new ProductRequestDto();
         dto.setBrand(""); // invalid brand
         dto.setName("Test Name");
@@ -53,8 +63,12 @@ public class ProductRequestDtoTest {
         Assert.assertFalse(violations.isEmpty(), "Validation error should occur for blank brand");
     }
 
+    /**
+     * Test case for an invalid ProductRequestDto with missing/incorrect name
+     * data. Verifies that validation errors occur due to invalid name input.
+     */
     @Test
-    public void testInvalidBlankName() {
+    public void testInvalidName() {
         ProductRequestDto dto = new ProductRequestDto();
         dto.setBrand("Test Brand");
         dto.setName(""); // invalid name
@@ -66,8 +80,12 @@ public class ProductRequestDtoTest {
         Assert.assertFalse(violations.isEmpty(), "Validation error should occur for blank name");
     }
 
+    /**
+     * Test case for an invalid ProductRequestDto with missing/incorrect description
+     * data. Verifies that validation errors occur due to invalid description input.
+     */
     @Test
-    public void testInvalidBlankDescription() {
+    public void testInvalidDescription() {
         ProductRequestDto dto = new ProductRequestDto();
         dto.setBrand("Test Brand");
         dto.setName("Test Name");
@@ -79,8 +97,12 @@ public class ProductRequestDtoTest {
         Assert.assertFalse(violations.isEmpty(), "Validation error should occur for blank description");
     }
 
+    /**
+     * Test case for an invalid ProductRequestDto with missing/incorrect price
+     * data. Verifies that validation errors occur due to invalid price input.
+     */
     @Test
-    public void testInvalidNegativePrice() {
+    public void testInvalidPrice() {
         ProductRequestDto dto = new ProductRequestDto();
         dto.setBrand("Test Brand");
         dto.setName("Test Name");
@@ -92,6 +114,12 @@ public class ProductRequestDtoTest {
         Assert.assertFalse(violations.isEmpty(), "Validation error should occur for negative price");
     }
 
+    /**
+     * Test case for validating the default constructor and setter methods
+     * of the ProductRequestDto class. Verifies that no validation errors
+     * occur when valid input is provided and that the fields are correctly
+     * set and retrieved.
+     */
     @Test
     public void testDefaultConstructorAndSetters() {
         ProductRequestDto dto = new ProductRequestDto();
@@ -112,6 +140,11 @@ public class ProductRequestDtoTest {
         Assert.assertTrue(dto.getPrice() == "99.99");
     }
 
+    /**
+     * Test case for validating the toString() method of the ProductRequestDto
+     * class. Verifies that the string representation of the object matches the
+     * expected format.
+     */
     @Test
     public void testToString() {
         ProductRequestDto dto = new ProductRequestDto();
