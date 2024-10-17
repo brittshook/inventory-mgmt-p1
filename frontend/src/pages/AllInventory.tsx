@@ -145,7 +145,17 @@ export const AllInventory = ({ testId }: props) => {
           },
           {
             href: `${path + search}`,
-            title: "All",
+            title: (
+              <div
+                className="breadcrumb-item"
+                aria-current="page"
+                aria-label={`All ${
+                  source == "/warehouses" ? "warehouses" : "products"
+                }`}
+              >
+                All
+              </div>
+            ),
           },
         ]}
       />

@@ -125,6 +125,7 @@ export const Products = ({ testId }: props) => {
       >
         {categories?.map((category) => (
           <Card
+            isCategory
             testId={testId && `category-card-${category.id}`}
             key={category.id}
             id={category.id}

@@ -17,6 +17,7 @@ type props = {
   form?: FormInstance<any>;
   initialValues?: {};
   testId?: string;
+  isCategory?: boolean;
 };
 
 export const Card = ({
@@ -31,6 +32,7 @@ export const Card = ({
   form,
   initialValues,
   testId,
+  isCategory,
 }: props) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -72,12 +74,14 @@ export const Card = ({
       data-testid={testId && "edit-card-button"}
       key="edit"
       onClick={handleEditClick}
+      aria-label={`Edit ${title}${isCategory ? " category" : ""}`}
     />,
     // Dropdown button with delete option
     <Dropdown key="dropdown" menu={menuProps}>
       <EllipsisOutlined
         key="ellipsis"
         data-testid={testId && "card-ellipsis-button"}
+        aria-label={`More options for ${title}${isCategory ? " category" : ""}`}
       />
     </Dropdown>,
   ];

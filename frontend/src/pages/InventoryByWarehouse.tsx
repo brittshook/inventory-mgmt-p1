@@ -153,7 +153,12 @@ export const InventoryByWarehouse = ({ testId }: props) => {
           {
             href: `${path + search}`,
             title: (
-              <div id={`breadcrumb-warehouse-name`} className="breadcrumb-item">
+              <div
+                id={`breadcrumb-warehouse-name`}
+                className="breadcrumb-item"
+                aria-current="page"
+                aria-label={`Warehouse ${warehouse}`}
+              >
                 {warehouse}
               </div>
             ),
@@ -162,7 +167,9 @@ export const InventoryByWarehouse = ({ testId }: props) => {
       />
       <section id="inventory">
         <div className="section-heading">
-          <h1>
+          <h1
+            aria-label={`Inventory with current capacity of ${currentCapacity} and maximum capacity of ${maxCapacity}`}
+          >
             Inventory ({currentCapacity}/{maxCapacity})
           </h1>
 
