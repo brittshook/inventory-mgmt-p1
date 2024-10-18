@@ -183,4 +183,19 @@ describe("Inventory By Category Page", () => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
   });
+
+  test("should render page's breadcrumb with aria-current", async () => {
+    render(
+      <MemoryRouter>
+        <InventoryByCategory testId="inventory-by-category" />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      // Check that the breadcrumb is displayed
+      const pageBreadcrumb = screen.getByRole("link", { current: "page" });
+      expect(pageBreadcrumb).toBeInTheDocument();
+      expect(pageBreadcrumb).toHaveTextContent("Climbing Shoes");
+    });
+  });
 });

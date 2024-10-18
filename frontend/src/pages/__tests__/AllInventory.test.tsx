@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { AllInventory } from "../AllInventory";
 import "@testing-library/jest-dom";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 import { getWarehouses } from "../../api/warehouse";
 import { getCategories } from "../../api/category";
@@ -12,6 +12,11 @@ import { deleteInventoryById } from "../../api/inventory";
 // Set up mocks
 jest.mock("../../context/ScreenSizeContext", () => ({
   useScreenSize: jest.fn(),
+}));
+
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useLocation: jest.fn(),
 }));
 
 jest.mock("../../api/category", () => ({
@@ -37,6 +42,10 @@ describe("All Inventory Page", () => {
     jest.clearAllMocks();
 
     // Mock data
+    (useLocation as jest.Mock).mockReturnValue({
+      pathname: "/inventory",
+      search: "?warehouse=all",
+    });
     (useScreenSize as jest.Mock).mockReturnValue({ isLargerThan1250: true });
     (getCategories as jest.Mock).mockResolvedValue([
       {
@@ -200,5 +209,18 @@ describe("All Inventory Page", () => {
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
+  });
+
+  test("should render page's breadcrumb with aria-current and aria-label", () => {
+    render(
+      <MemoryRouter>
+        <AllInventory testId="all-inventory" />
+      </MemoryRouter>
+    );
+
+    // Check that the breadcrumb is displayed
+    const pageBreadcrumb = screen.getByRole("link", { current: "page" });
+    expect(pageBreadcrumb).toBeInTheDocument();
+    expect(pageBreadcrumb).toHaveAttribute("aria-label", "All warehouses");
   });
 });

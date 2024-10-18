@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { InventoryByWarehouse } from "../InventoryByWarehouse";
 import "@testing-library/jest-dom";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 import { getProductById } from "../../api/product";
 import { getWarehouseById } from "../../api/warehouse";
@@ -197,6 +197,21 @@ describe("Inventory By Warehouse Page", () => {
     // Check error overlay is displayed
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
+    });
+  });
+
+  test("should render page's breadcrumb with aria-current and aria-label", async () => {
+    render(
+      <MemoryRouter>
+        <InventoryByWarehouse testId="inventory-by-warehouse" />
+      </MemoryRouter>
+    );
+
+    // Check that the breadcrumb is displayed
+    await waitFor(() => {
+      const pageBreadcrumb = screen.getByRole("link", { current: "page" });
+      expect(pageBreadcrumb).toBeInTheDocument();
+      expect(pageBreadcrumb).toHaveAttribute("aria-label", "Warehouse NY1");
     });
   });
 });
