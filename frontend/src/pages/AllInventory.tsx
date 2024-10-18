@@ -132,7 +132,7 @@ export const AllInventory = ({ testId }: props) => {
           {
             href: source,
             title: (
-              <div className="breadcrumb-item">
+              <div className="breadcrumb-item" role="link">
                 <img
                   src={source == "/warehouses" ? warehouseIcon : productIcon}
                   alt={source.substring(1)}
@@ -145,7 +145,18 @@ export const AllInventory = ({ testId }: props) => {
           },
           {
             href: `${path + search}`,
-            title: "All",
+            title: (
+              <div
+                className="breadcrumb-item"
+                role="link"
+                aria-current="page"
+                aria-label={`All ${
+                  source == "/warehouses" ? "warehouses" : "products"
+                }`}
+              >
+                All
+              </div>
+            ),
           },
         ]}
       />

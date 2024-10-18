@@ -6,22 +6,23 @@ import { Inventory } from "./pages/Inventory";
 import { Products } from "./pages/Products";
 import { Sidebar } from "./components/sidebar/Sidebar";
 import { ScreenSizeProvider } from "./context/ScreenSizeContext";
+import { SkipNavigation } from "./components/SkipNavigation";
 
 function App() {
   return (
     <ScreenSizeProvider>
-      <Sidebar />
-      <main>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/warehouses" element={<Warehouses />} />
-          <Route
-            path="/inventory"
-            element={<Inventory />}
-          />
-          <Route path="/products" element={<Products />} />
-        </Routes>
-      </main>
+      <SkipNavigation section="#main-content" />
+      <div id="app">
+        <Sidebar />
+        <main id="main-content">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/warehouses" element={<Warehouses />} />
+            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/products" element={<Products />} />
+          </Routes>
+        </main>
+      </div>
     </ScreenSizeProvider>
   );
 }

@@ -1,8 +1,12 @@
 #root {
   margin: 0;
   padding: 24px 24px 12px 24px;
-  display: flex;
   height: 100vh;
+}
+
+#app {
+  display: flex;
+  height: 100%;
   gap: 28px;
 }
 
@@ -39,6 +43,37 @@ section.cards {
 div.section-heading {
   display: flex;
   justify-content: space-between;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+#skip-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 5px 10px;
+  background-color: brown;
+  color: #fff;
+}
+
+#skip-nav:link,
+#skip-nav:visited {
+  color: #fff;
+}
+
+#skip-nav:hover,
+#skip-nav:active {
+  text-decoration: underline;
 }
 
 @media screen and (min-width: 1600px) {
