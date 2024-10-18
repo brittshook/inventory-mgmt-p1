@@ -140,7 +140,11 @@ export const InventoryByCategory = ({ testId }: props) => {
           {
             href: "/products",
             title: (
-              <div id="breadcrumb-products" className="breadcrumb-item">
+              <div
+                id="breadcrumb-products"
+                className="breadcrumb-item"
+                role="link"
+              >
                 <img src={productIcon} alt="product" />
                 <span>{"Products"}</span>
               </div>
@@ -152,6 +156,7 @@ export const InventoryByCategory = ({ testId }: props) => {
               <div
                 id={`breadcrumb-product-type`}
                 className="breadcrumb-item"
+                role="link"
                 aria-current="page"
               >
                 {category}

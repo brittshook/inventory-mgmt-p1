@@ -144,7 +144,11 @@ export const InventoryByWarehouse = ({ testId }: props) => {
           {
             href: "/warehouses",
             title: (
-              <div id="breadcrumb-warehouses" className="breadcrumb-item">
+              <div
+                id="breadcrumb-warehouses"
+                className="breadcrumb-item"
+                role="link"
+              >
                 <img src={warehouseIcon} alt="warehouse" />
                 <span>{"Warehouses"}</span>
               </div>
@@ -156,6 +160,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
               <div
                 id={`breadcrumb-warehouse-name`}
                 className="breadcrumb-item"
+                role="link"
                 aria-current="page"
                 aria-label={`Warehouse ${warehouse}`}
               >
