@@ -14,7 +14,7 @@ function App() {
       <SkipNavigation section="#main-content" />
       <div id="app">
         <Sidebar />
-        <main className="#main-content">
+        <main id="main-content">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/warehouses" element={<Warehouses />} />
