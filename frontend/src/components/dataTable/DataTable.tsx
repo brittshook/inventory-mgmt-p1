@@ -73,6 +73,35 @@ export const DataTable = ({
     form.setFieldsValue(selectedRecord);
   }, [selectedRecord, form]);
 
+  // Add ARIA label to nested element inaccessible by props
+  useEffect(() => {
+    const filterTriggers = document.querySelectorAll(
+      ".ant-table-filter-trigger"
+    );
+    const paginationArrows = document.querySelectorAll(
+      ".ant-pagination-item-link"
+    );
+
+    const thTitles = document.querySelectorAll(
+      ".ant-table-column-title, .ant-table-filter-column"
+    );
+
+    // filterTriggers.forEach((filterTrigger) => {
+    //   filterTrigger.setAttribute("aria-label", "Filter");
+    // });
+    paginationArrows.forEach((paginationArrow) => {
+      const type = paginationArrow.getAttribute("type");
+      paginationArrow.setAttribute(
+        "aria-label",
+        type === "prev" ? "Previous page" : "Next page"
+      );
+    });
+
+    thTitles.forEach((thTitle) => {
+      thTitle.setAttribute("aria-hidden", "true");
+    });
+  }, []);
+
   // Handle edit button click by setting selected record
   const handleEdit = (record: DataType) => {
     setSelectedRecord({
@@ -124,12 +153,12 @@ export const DataTable = ({
         <Space>
           <Button
             type="primary"
-            onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
-            }
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
+            onClick={() =>
+              handleSearch(selectedKeys as string[], confirm, dataIndex)
+            }
           >
             Search
           </Button>
@@ -166,7 +195,10 @@ export const DataTable = ({
       </div>
     ),
     filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+      <SearchOutlined
+        aria-hidden
+        style={{ color: filtered ? "#1677ff" : undefined }}
+      />
     ),
     onFilter: (value, record) =>
       record[dataIndex]
