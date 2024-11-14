@@ -1,6 +1,7 @@
+import "@testing-library/jest-dom";
+import "@guidepup/jest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { InventoryByCategory } from "../InventoryByCategory";
-import "@testing-library/jest-dom";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 import { getCategoryById } from "../../api/category";
@@ -197,5 +198,91 @@ describe("Inventory By Category Page", () => {
       expect(pageBreadcrumb).toBeInTheDocument();
       expect(pageBreadcrumb).toHaveTextContent("Climbing Shoes");
     });
+  });
+
+
+  test("should match the inline snapshot of expected screen reader spoken phrases", async () => {
+    render(
+      <MemoryRouter>
+        <InventoryByCategory testId="inventory-by-category" />
+      </MemoryRouter>
+    );
+
+    await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+  [
+    "document",
+    "navigation, breadcrumb",
+    "list",
+    "listitem, level 1, position 1, set size 2",
+    "link, Products",
+    "link, Products",
+    "Products",
+    "end of link, Products",
+    "end of link, Products",
+    "end of listitem, level 1, position 1, set size 2",
+    "listitem, level 1, position 2, set size 2",
+    "link, Climbing Shoes",
+    "link, Climbing Shoes, current page",
+    "end of link, Climbing Shoes",
+    "end of listitem, level 1, position 2, set size 2",
+    "end of list",
+    "end of navigation, breadcrumb",
+    "region",
+    "heading, Inventory, level 1",
+    "button, Add Inventory",
+    "table",
+    "rowgroup",
+    "row, Name Description Price Size Quantity Warehouse Action",
+    "columnheader, Brand, sorted in ascending order",
+    "columnheader, Name",
+    "columnheader, Description",
+    "columnheader, Price",
+    "columnheader, Size",
+    "columnheader, Quantity",
+    "columnheader, Warehouse",
+    "columnheader, Action",
+    "end of row, Name Description Price Size Quantity Warehouse Action",
+    "end of rowgroup",
+    "rowgroup",
+    "row, SummitKing Peak Performance Climbing Shoes High-performance climbing shoes with excellent grip and comfort. 129.99 42 100 NY1 Edit Delete",
+    "cell, SummitKing",
+    "SummitKing",
+    "end of cell, SummitKing",
+    "cell, Peak Performance Climbing Shoes",
+    "Peak Performance Climbing Shoes",
+    "end of cell, Peak Performance Climbing Shoes",
+    "cell, High-performance climbing shoes with excellent grip and comfort.",
+    "High-performance climbing shoes with excellent grip and comfort.",
+    "end of cell, High-performance climbing shoes with excellent grip and comfort.",
+    "cell, 129.99",
+    "cell, 42",
+    "cell, 100",
+    "cell, NY1",
+    "cell, Edit Delete",
+    "button, Edit",
+    "button, Delete",
+    "end of cell, Edit Delete",
+    "end of row, SummitKing Peak Performance Climbing Shoes High-performance climbing shoes with excellent grip and comfort. 129.99 42 100 NY1 Edit Delete",
+    "end of rowgroup",
+    "end of table",
+    "list",
+    "listitem, Previous Page, level 1, position 1, set size 3",
+    "button, left, disabled",
+    "img, left",
+    "end of button, left, disabled",
+    "end of listitem, Previous Page, level 1, position 1, set size 3",
+    "listitem, 1, level 1, position 2, set size 3",
+    "1",
+    "end of listitem, 1, level 1, position 2, set size 3",
+    "listitem, Next Page, level 1, position 3, set size 3",
+    "button, right, disabled",
+    "img, right",
+    "end of button, right, disabled",
+    "end of listitem, Next Page, level 1, position 3, set size 3",
+    "end of list",
+    "end of region",
+    "end of document",
+  ]
+  `);
   });
 });

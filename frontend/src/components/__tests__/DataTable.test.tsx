@@ -1,8 +1,9 @@
+import "@testing-library/jest-dom";
+import "@guidepup/jest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { DataTable, DataType } from "../dataTable/DataTable";
 import { deleteInventoryById, putInventory } from "../../api/inventory";
 import { useScreenSize } from "../../context/ScreenSizeContext";
-import "@testing-library/jest-dom";
 import { Form, Input } from "antd";
 
 // Set up mocks
@@ -295,5 +296,99 @@ describe("Data Table Component", () => {
     await waitFor(() => {
       expect(deleteInventoryById).toHaveBeenCalledWith(1);
     });
+  });
+
+  
+  test("should match the inline snapshot of expected screen reader spoken phrases", async () => {
+    render(
+      <DataTable
+        testId="table"
+        initialData={initialData}
+        loading={false}
+        showCategories
+        showWarehouses
+        updateHandler={putInventory}
+        deleteHandler={deleteInventoryById}
+        editModalFormItems={mockEditModalFormItems}
+      />
+    );
+    await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+  [
+    "document",
+    "table",
+    "rowgroup",
+    "row, Name Description Product Type Price Size Quantity Warehouse Action",
+    "columnheader, Brand, sorted in ascending order",
+    "columnheader, Name",
+    "columnheader, Description",
+    "columnheader, Product Type",
+    "columnheader, Price",
+    "columnheader, Size",
+    "columnheader, Quantity",
+    "columnheader, Warehouse",
+    "columnheader, Action",
+    "end of row, Name Description Product Type Price Size Quantity Warehouse Action",
+    "end of rowgroup",
+    "rowgroup",
+    "row, PeakPro Titanium Ascend Rope 60m Durable and lightweight climbing rope, 60 meters long, perfect for lead climbing. Ropes 199.99 N/A 200 CA1 Edit Delete",
+    "cell, PeakPro",
+    "PeakPro",
+    "end of cell, PeakPro",
+    "cell, Titanium Ascend Rope 60m",
+    "Titanium Ascend Rope 60m",
+    "end of cell, Titanium Ascend Rope 60m",
+    "cell, Durable and lightweight climbing rope, 60 meters long, perfect for lead climbing.",
+    "Durable and lightweight climbing rope, 60 meters long, perfect for lead climbing.",
+    "end of cell, Durable and lightweight climbing rope, 60 meters long, perfect for lead climbing.",
+    "cell, Ropes",
+    "cell, 199.99",
+    "cell, N/A",
+    "cell, 200",
+    "cell, CA1",
+    "cell, Edit Delete",
+    "button, Edit",
+    "button, Delete",
+    "end of cell, Edit Delete",
+    "end of row, PeakPro Titanium Ascend Rope 60m Durable and lightweight climbing rope, 60 meters long, perfect for lead climbing. Ropes 199.99 N/A 200 CA1 Edit Delete",
+    "row, SummtKing Peak Performance Climbing Shoes High-performance climbing shoes with excellent grip and comfort. Climbing Shoes 129.99 42 100 NY1 Edit Delete",
+    "cell, SummtKing",
+    "SummtKing",
+    "end of cell, SummtKing",
+    "cell, Peak Performance Climbing Shoes",
+    "Peak Performance Climbing Shoes",
+    "end of cell, Peak Performance Climbing Shoes",
+    "cell, High-performance climbing shoes with excellent grip and comfort.",
+    "High-performance climbing shoes with excellent grip and comfort.",
+    "end of cell, High-performance climbing shoes with excellent grip and comfort.",
+    "cell, Climbing Shoes",
+    "cell, 129.99",
+    "cell, 42",
+    "cell, 100",
+    "cell, NY1",
+    "cell, Edit Delete",
+    "button, Edit",
+    "button, Delete",
+    "end of cell, Edit Delete",
+    "end of row, SummtKing Peak Performance Climbing Shoes High-performance climbing shoes with excellent grip and comfort. Climbing Shoes 129.99 42 100 NY1 Edit Delete",
+    "end of rowgroup",
+    "end of table",
+    "list",
+    "listitem, Previous Page, level 1, position 1, set size 3",
+    "button, left, disabled",
+    "img, left",
+    "end of button, left, disabled",
+    "end of listitem, Previous Page, level 1, position 1, set size 3",
+    "listitem, 1, level 1, position 2, set size 3",
+    "1",
+    "end of listitem, 1, level 1, position 2, set size 3",
+    "listitem, Next Page, level 1, position 3, set size 3",
+    "button, right, disabled",
+    "img, right",
+    "end of button, right, disabled",
+    "end of listitem, Next Page, level 1, position 3, set size 3",
+    "end of list",
+    "end of document",
+  ]
+  `);
   });
 });

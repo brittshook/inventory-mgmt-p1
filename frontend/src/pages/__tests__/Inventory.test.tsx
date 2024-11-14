@@ -1,7 +1,7 @@
+import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { Inventory } from "../Inventory";
 import { useLocation } from "react-router-dom";
-import "@testing-library/jest-dom";
 
 // Set up mocks
 jest.mock("../InventoryByWarehouse", () => ({

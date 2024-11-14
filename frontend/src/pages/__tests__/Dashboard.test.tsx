@@ -1,9 +1,10 @@
+import "@testing-library/jest-dom";
+import "@guidepup/jest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { Dashboard } from "../Dashboard";
 import { MemoryRouter } from "react-router-dom";
 import { getWarehouses } from "../../api/warehouse";
 import { generateMockAxiosError } from "../../test/__mocks__/axiosMock";
-import "@testing-library/jest-dom";
 
 // Mock API call
 jest.mock("../../api/warehouse");
@@ -55,5 +56,32 @@ describe("Dashboard Page", () => {
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
+  });
+
+  test("should match the inline snapshot of expected screen reader spoken phrases", async () => {
+    (getWarehouses as jest.Mock).mockResolvedValue([
+      { id: 1, name: "Warehouse 1", maxCapacity: 100, currentCapacity: 10 },
+      { id: 2, name: "Warehouse 2", maxCapacity: 200, currentCapacity: 5 },
+    ]);
+
+    render(
+      <MemoryRouter>
+        <Dashboard testId="dashboard" />
+      </MemoryRouter>
+    );
+
+    await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+  [
+    "document",
+    "region",
+    "heading, Dashboard, level 1",
+    "Total Items in Inventory",
+    "heading, 15, level 1",
+    "Total Max Capacity",
+    "heading, 300, level 1",
+    "end of region",
+    "end of document",
+  ]
+  `);
   });
 });

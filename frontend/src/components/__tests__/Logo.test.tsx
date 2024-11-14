@@ -1,6 +1,7 @@
+import "@testing-library/jest-dom";
+import "@guidepup/jest";
 import { render, screen } from "@testing-library/react";
 import { Logo } from "../logo/Logo";
-import "@testing-library/jest-dom";
 
 describe("Logo Component", () => {
   test("should render full form logo if type prop is 'full'", () => {
@@ -21,5 +22,19 @@ describe("Logo Component", () => {
 
     // Check if the logo id is 'short-logo'
     expect(screen.getByTestId("logo")).toHaveAttribute("id", "short-logo");
+  });
+
+  test("should match the inline snapshot of expected screen reader spoken phrases", async () => {
+    render(<Logo testId="logo" type="short" />);
+
+    await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+  [
+    "document",
+    "banner",
+    "image, Crag Supply Co.",
+    "end of banner",
+    "end of document",
+  ]
+  `);
   });
 });

@@ -1,9 +1,10 @@
+import "@testing-library/jest-dom";
+import "@guidepup/jest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ButtonWithModal } from "../ButtonWithModal";
 import { FormInstance, Input } from "antd";
-import "@testing-library/jest-dom";
 
-describe("ButtonWithModal", () => {
+describe("Button with modal component ", () => {
   // Mock functions and partial form instance for testing
   const mockConfirmHandler = jest.fn().mockResolvedValue(undefined);
   const mockFormInstance: Partial<FormInstance<any>> = {
@@ -102,5 +103,25 @@ describe("ButtonWithModal", () => {
     // Verify the form fields are reset and the modal is closed
     expect(screen.queryByText("Test Modal")).not.toBeInTheDocument();
     expect(mockFormInstance.resetFields).toHaveBeenCalled();
+  });
+
+  test("should match the inline snapshot of expected screen reader spoken phrases", async () => {
+    render(
+      <ButtonWithModal
+        title="Test Modal"
+        buttonText="Open Modal"
+        modalButtonText="Save"
+        confirmHandler={mockConfirmHandler}
+        form={mockFormInstance as FormInstance<any>}
+        children={<Input name="testInput" />}
+      />
+    );
+    await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+  [
+    "document",
+    "button, Open Modal",
+    "end of document",
+  ]
+  `);
   });
 });
