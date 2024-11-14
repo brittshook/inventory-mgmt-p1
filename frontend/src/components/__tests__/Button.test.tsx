@@ -1,6 +1,7 @@
+import "@testing-library/jest-dom";
+import "@guidepup/jest";
 import { render, screen } from "@testing-library/react";
 import { Button } from "../Button";
-import "@testing-library/jest-dom";
 
 describe("Button Component", () => {
   test("should render button with children text", () => {
@@ -52,5 +53,21 @@ describe("Button Component", () => {
 
     // Check that the button is not disabled
     expect(screen.getByTestId("test-button")).not.toBeDisabled();
+  });
+
+  test("should match the inline snapshot of expected screen reader spoken phrases", async () => {
+    render(
+      <Button testId="test-button" type="primary">
+        Primary Button
+      </Button>
+    );
+
+    await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+  [
+    "document",
+    "button, Primary Button",
+    "end of document",
+  ]
+  `);
   });
 });

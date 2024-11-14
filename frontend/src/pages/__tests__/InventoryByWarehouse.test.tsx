@@ -1,7 +1,8 @@
+import "@testing-library/jest-dom";
+import "@guidepup/jest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { InventoryByWarehouse } from "../InventoryByWarehouse";
-import "@testing-library/jest-dom";
-import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 import { getProductById } from "../../api/product";
 import { getWarehouseById } from "../../api/warehouse";
@@ -213,5 +214,99 @@ describe("Inventory By Warehouse Page", () => {
       expect(pageBreadcrumb).toBeInTheDocument();
       expect(pageBreadcrumb).toHaveAttribute("aria-label", "Warehouse NY1");
     });
+  });
+
+
+  test("should match the inline snapshot of expected screen reader spoken phrases", async () => {
+    render(
+      <MemoryRouter>
+        <InventoryByWarehouse testId="inventory-by-warehouse" />
+      </MemoryRouter>
+    );
+
+    await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+  [
+    "document",
+    "navigation, breadcrumb",
+    "list",
+    "listitem, level 1, position 1, set size 2",
+    "link, Warehouses",
+    "link, Warehouses",
+    "Warehouses",
+    "end of link, Warehouses",
+    "end of link, Warehouses",
+    "end of listitem, level 1, position 1, set size 2",
+    "listitem, level 1, position 2, set size 2",
+    "link, Warehouse NY1",
+    "link, Warehouse NY1, current page",
+    "NY1",
+    "end of link, Warehouse NY1, current page",
+    "end of link, Warehouse NY1",
+    "end of listitem, level 1, position 2, set size 2",
+    "end of list",
+    "end of navigation, breadcrumb",
+    "region",
+    "heading, Inventory with current capacity of 100 and maximum capacity of 1000, level 1",
+    "Inventory (",
+    "100",
+    "/",
+    "1000",
+    ")",
+    "end of heading, Inventory with current capacity of 100 and maximum capacity of 1000, level 1",
+    "button, Add Inventory",
+    "table",
+    "rowgroup",
+    "row, Name Description Product Type Price Size Quantity Action",
+    "columnheader, Brand, sorted in ascending order",
+    "columnheader, Name",
+    "columnheader, Description",
+    "columnheader, Product Type",
+    "columnheader, Price",
+    "columnheader, Size",
+    "columnheader, Quantity",
+    "columnheader, Action",
+    "end of row, Name Description Product Type Price Size Quantity Action",
+    "end of rowgroup",
+    "rowgroup",
+    "row, SummitKing Peak Performance Climbing Shoes High-performance climbing shoes with excellent grip and comfort. Climbing Shoes 129.99 42 100 Edit Delete",
+    "cell, SummitKing",
+    "SummitKing",
+    "end of cell, SummitKing",
+    "cell, Peak Performance Climbing Shoes",
+    "Peak Performance Climbing Shoes",
+    "end of cell, Peak Performance Climbing Shoes",
+    "cell, High-performance climbing shoes with excellent grip and comfort.",
+    "High-performance climbing shoes with excellent grip and comfort.",
+    "end of cell, High-performance climbing shoes with excellent grip and comfort.",
+    "cell, Climbing Shoes",
+    "cell, 129.99",
+    "cell, 42",
+    "cell, 100",
+    "cell, Edit Delete",
+    "button, Edit",
+    "button, Delete",
+    "end of cell, Edit Delete",
+    "end of row, SummitKing Peak Performance Climbing Shoes High-performance climbing shoes with excellent grip and comfort. Climbing Shoes 129.99 42 100 Edit Delete",
+    "end of rowgroup",
+    "end of table",
+    "list",
+    "listitem, Previous Page, level 1, position 1, set size 3",
+    "button, left, disabled",
+    "img, left",
+    "end of button, left, disabled",
+    "end of listitem, Previous Page, level 1, position 1, set size 3",
+    "listitem, 1, level 1, position 2, set size 3",
+    "1",
+    "end of listitem, 1, level 1, position 2, set size 3",
+    "listitem, Next Page, level 1, position 3, set size 3",
+    "button, right, disabled",
+    "img, right",
+    "end of button, right, disabled",
+    "end of listitem, Next Page, level 1, position 3, set size 3",
+    "end of list",
+    "end of region",
+    "end of document",
+  ]
+  `);
   });
 });

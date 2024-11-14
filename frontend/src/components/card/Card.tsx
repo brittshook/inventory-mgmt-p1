@@ -82,9 +82,9 @@ export const Card = ({
     // Dropdown button with delete option
     <DeleteOutlined
       role="button"
+      data-testid={testId && "delete-card-button"}
       key="delete"
       className="delete-icon"
-      data-testid={testId && "card-delete-button"}
       aria-label={`Delete ${title}${isCategory ? " category" : ""}`}
       onClick={handleDeleteClick}
       onKeyDown={(e) => {

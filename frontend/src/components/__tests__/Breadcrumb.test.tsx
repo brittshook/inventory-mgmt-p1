@@ -1,6 +1,7 @@
+import "@testing-library/jest-dom";
+import "@guidepup/jest";
 import { render, screen } from "@testing-library/react";
 import { Breadcrumb } from "../breadcrumb/Breadcrumb";
-import "@testing-library/jest-dom";
 
 describe("Breadcrumb Component", () => {
   test("should render breadcrumb with single item", () => {
@@ -54,5 +55,32 @@ describe("Breadcrumb Component", () => {
     // Check that the item texts "Warehouse" and "CA1" are present
     expect(screen.getByText("Warehouses")).toBeInTheDocument();
     expect(screen.getByText("CA1")).toBeInTheDocument();
+  });
+
+
+  test("should match the inline snapshot of expected screen reader spoken phrases", async () => {
+    const items = [
+      { href: "/warehouses", title: "Warehouses" },
+      { href: "/inventory?warehouse=1", title: "CA1" },
+    ];
+
+    render(<Breadcrumb items={items} />);
+
+    await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+  [
+    "document",
+    "navigation, breadcrumb",
+    "list",
+    "listitem, level 1, position 1, set size 2",
+    "link, Warehouses",
+    "end of listitem, level 1, position 1, set size 2",
+    "listitem, level 1, position 2, set size 2",
+    "link, CA1",
+    "end of listitem, level 1, position 2, set size 2",
+    "end of list",
+    "end of navigation, breadcrumb",
+    "end of document",
+  ]
+  `);
   });
 });

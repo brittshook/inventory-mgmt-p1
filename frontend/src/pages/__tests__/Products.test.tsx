@@ -1,3 +1,5 @@
+import "@testing-library/jest-dom";
+import "@guidepup/jest";
 import {
   findByTestId,
   fireEvent,
@@ -15,7 +17,6 @@ import {
   deleteCategoryById,
 } from "../../api/category";
 import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom";
 import { generateMockAxiosError } from "../../test/__mocks__/axiosMock";
 
 // Mock API call
@@ -224,23 +225,20 @@ describe("Products Page", () => {
       </MemoryRouter>
     );
 
-    // Click delete dropdown button on a card
+    // Click delete button on a card
     await waitFor(() => {
       const cardsSection = screen.getByTestId("category-cards-section");
       expect(cardsSection).toBeDefined();
     });
     const cardsSection = screen.getByTestId("category-cards-section");
-    const ellipsisButton = within(cardsSection).getByTestId(
-      "card-ellipsis-button"
+    const deleteButton = within(cardsSection).getByTestId(
+      "delete-card-button"
     );
-    // simulate hover action
-    fireEvent.mouseOver(ellipsisButton);
+    fireEvent.click(deleteButton);
 
     await waitFor(() => {
-      const deleteButton = screen.getByText("Delete");
       // mock expected new getCategories fetch
       (getCategories as jest.Mock).mockResolvedValue([]);
-      userEvent.click(deleteButton);
     });
 
     // Verify delete function was called and card is not visible
@@ -264,28 +262,75 @@ describe("Products Page", () => {
       </MemoryRouter>
     );
 
-    // Click delete dropdown button on a card
+    // Click delete button on a card
     await waitFor(() => {
       const cardsSection = screen.getByTestId("category-cards-section");
       expect(cardsSection).toBeDefined();
     });
     const cardsSection = screen.getByTestId("category-cards-section");
-    const ellipsisButton = within(cardsSection).getByTestId(
-      "card-ellipsis-button"
+    const deleteButton = within(cardsSection).getByTestId(
+      "delete-card-button"
     );
-    // simulate hover action
-    fireEvent.mouseOver(ellipsisButton);
+    fireEvent.click(deleteButton);
 
     await waitFor(() => {
-      const deleteButton = screen.getByText("Delete");
       // mock expected new getCategories fetch
       (getCategories as jest.Mock).mockResolvedValue([]);
-      userEvent.click(deleteButton);
     });
 
     // Check error overlay is displayed
     await waitFor(() => {
       expect(screen.getByTestId("error-overlay")).toBeInTheDocument();
     });
+  });
+
+  test("should match the inline snapshot of expected screen reader spoken phrases", async () => {
+    (getCategories as jest.Mock).mockResolvedValue([
+      { id: 1, name: "Climbing Shoes" },
+      { id: 2, name: "Ropes" },
+    ]);
+
+    render(
+      <MemoryRouter>
+        <Products testId="products" />
+      </MemoryRouter>
+    );
+
+    await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+  [
+    "document",
+    "region",
+    "heading, Products, level 1",
+    "button, Add Category",
+    "region",
+    "link, Climbing Shoes",
+    "Climbing Shoes",
+    "paragraph",
+    "end of link, Climbing Shoes",
+    "list",
+    "listitem, level 1, position 1, set size 2",
+    "button, Edit Climbing Shoes category",
+    "end of listitem, level 1, position 1, set size 2",
+    "listitem, level 1, position 2, set size 2",
+    "button, Delete Climbing Shoes category",
+    "end of listitem, level 1, position 2, set size 2",
+    "end of list",
+    "link, Ropes",
+    "Ropes",
+    "paragraph",
+    "end of link, Ropes",
+    "list",
+    "listitem, level 1, position 1, set size 2",
+    "button, Edit Ropes category",
+    "end of listitem, level 1, position 1, set size 2",
+    "listitem, level 1, position 2, set size 2",
+    "button, Delete Ropes category",
+    "end of listitem, level 1, position 2, set size 2",
+    "end of list",
+    "end of region",
+    "end of region",
+    "end of document",
+  ]
+  `);
   });
 });

@@ -1,3 +1,5 @@
+import "@testing-library/jest-dom";
+import "@guidepup/jest";
 import {
   fireEvent,
   render,
@@ -14,7 +16,6 @@ import {
 } from "../../api/warehouse";
 import userEvent from "@testing-library/user-event";
 import { generateMockAxiosError } from "../../test/__mocks__/axiosMock";
-import "@testing-library/jest-dom";
 
 // Mock API call
 jest.mock("../../api/warehouse");
@@ -31,8 +32,8 @@ describe("Warehouses Page", () => {
     name: "DC1",
     maxCapacity: 1000,
     streetAddress: "5454 Reno Road NW",
-    city: "D.C.",
-    state: "Washington",
+    city: "Washington",
+    state: "DC",
     zipCode: "20008",
   };
 
@@ -179,25 +180,19 @@ describe("Warehouses Page", () => {
       </MemoryRouter>
     );
 
-    let cardsSection: HTMLElement;
     await waitFor(() => {
-      cardsSection = screen.getByTestId("warehouse-cards-section");
+      const cardsSection = screen.getByTestId("warehouse-cards-section");
       expect(cardsSection).toBeDefined();
     });
+    const cardsSection = screen.getByTestId("warehouse-cards-section");
+    const deleteButton = within(cardsSection).getByTestId(
+      "delete-card-button"
+    );
+    fireEvent.click(deleteButton);
 
     await waitFor(() => {
-      const ellipsisButton = within(cardsSection!).getByTestId(
-        "card-ellipsis-button"
-      );
-      // simulate hover action
-      fireEvent.mouseOver(ellipsisButton);
-    });
-
-    await waitFor(() => {
-      const deleteButton = screen.getByText("Delete");
       // mock expected new getWarehouses fetch
       (getWarehouses as jest.Mock).mockResolvedValue([]);
-      fireEvent.click(deleteButton);
     });
 
     await waitFor(() => {
@@ -218,21 +213,19 @@ describe("Warehouses Page", () => {
       </MemoryRouter>
     );
 
-    let cardsSection: HTMLElement;
     await waitFor(() => {
-      cardsSection = screen.getByTestId("warehouse-cards-section");
+      const cardsSection = screen.getByTestId("warehouse-cards-section");
       expect(cardsSection).toBeDefined();
     });
-
-    const ellipsisButton = within(cardsSection!).getByTestId(
-      "card-ellipsis-button"
+    const cardsSection = screen.getByTestId("warehouse-cards-section");
+    const deleteButton = within(cardsSection).getByTestId(
+      "delete-card-button"
     );
-    // simulate hover action
-    fireEvent.mouseOver(ellipsisButton);
-    // Click delete button
+    fireEvent.click(deleteButton);
+
     await waitFor(() => {
-      const deleteButton = screen.getByText("Delete");
-      userEvent.click(deleteButton);
+      // mock expected new getWarehouses fetch
+      (getWarehouses as jest.Mock).mockResolvedValue([]);
     });
 
     await waitFor(() => {
@@ -245,5 +238,43 @@ describe("Warehouses Page", () => {
       // Verify card was removed as child
       expect(cardsSection.children).toHaveLength(1);
     });
+  });
+
+
+  test("should match the inline snapshot of expected screen reader spoken phrases", async () => {
+    (getWarehouses as jest.Mock).mockResolvedValue([testWarehouse1]);
+
+    render(
+      <MemoryRouter>
+        <Warehouses testId="warehouses" />
+      </MemoryRouter>
+    );
+
+    await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+  [
+    "document",
+    "region",
+    "heading, Warehouses, level 1",
+    "button, Add Warehouse",
+    "region",
+    "link, Warehouse DC1 Washington, DC",
+    "Warehouse DC1",
+    "paragraph",
+    "Washington, DC",
+    "end of paragraph",
+    "end of link, Warehouse DC1 Washington, DC",
+    "list",
+    "listitem, level 1, position 1, set size 2",
+    "button, Edit Warehouse DC1",
+    "end of listitem, level 1, position 1, set size 2",
+    "listitem, level 1, position 2, set size 2",
+    "button, Delete Warehouse DC1",
+    "end of listitem, level 1, position 2, set size 2",
+    "end of list",
+    "end of region",
+    "end of region",
+    "end of document",
+  ]
+  `);
   });
 });
