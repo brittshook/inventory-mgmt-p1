@@ -7,5 +7,5 @@ type props = {
 };
 
 export const Breadcrumb = ({ items }: props) => {
-  return <BreadcrumbNav separator=">" items={items} />;
+  return <BreadcrumbNav aria-label="breadcrumb" separator=">" items={items} />;
 };
