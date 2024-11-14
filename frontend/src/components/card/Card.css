@@ -13,3 +13,12 @@ div.ant-card-body a {
   height: 100%;
   padding: 24px;
 }
+
+.anticon-delete:hover,
+.anticon-delete:focus-visible {
+  color: #f5222d !important; 
+}
+
+.anticon-edit:focus-visible {
+  color: #1677ff !important;
+}

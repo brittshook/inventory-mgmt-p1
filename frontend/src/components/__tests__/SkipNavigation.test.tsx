@@ -1,11 +1,12 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { SkipNavigation } from '../SkipNavigation';
 import "@testing-library/jest-dom";
+import "@guidepup/jest";
 
 describe('SkipNavigation', () => {
     test('renders the link with correct href', () => {
         render(<SkipNavigation section="#main-content" />);
-        const linkElement = screen.getByText(/Skip to main content/i);
+        const linkElement = screen.getByText("Skip to main content");
         expect(linkElement).toBeInTheDocument();
         expect(linkElement).toHaveAttribute('href', '#main-content');
     });
@@ -30,4 +31,16 @@ describe('SkipNavigation', () => {
         fireEvent.blur(linkElement);
         expect(linkElement).toHaveClass('visually-hidden');
     });
+
+    test("should match the inline snapshot of expected screen reader spoken phrases", async () => {
+        render(<SkipNavigation section="#main-content" />);
+
+        await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+      [
+        "document",
+        "link, Skip to main content",
+        "end of document",
+      ]
+      `);
+      });
 });

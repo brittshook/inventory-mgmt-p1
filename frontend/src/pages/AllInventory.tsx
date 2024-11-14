@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { DataTable, DataType } from "../components/dataTable/DataTable";
 import { ProductDataType, getProductsWithInventory } from "../api/product";
 import { Breadcrumb } from "../components/breadcrumb/Breadcrumb";
-import productIcon from "../assets/icons/items.svg";
-import warehouseIcon from "../assets/icons/warehouse.svg";
+import inventoryIcon from "../assets/icons/inventory.svg";
 import { useLocation } from "react-router-dom";
 import { ButtonWithModal } from "../components/ButtonWithModal";
 import { Form } from "antd";
@@ -27,7 +26,6 @@ type props = {
 export const AllInventory = ({ testId }: props) => {
   const path = useLocation().pathname;
   const search = useLocation().search;
-  const source = /category/.test(search) ? "/products" : "/warehouses"; // Set source based on search param in URL
 
   const [form] = Form.useForm(); // Initialize form using Ant Design's Form hook
 
@@ -130,31 +128,11 @@ export const AllInventory = ({ testId }: props) => {
       <Breadcrumb
         items={[
           {
-            href: source,
-            title: (
-              <div className="breadcrumb-item" role="link">
-                <img
-                  src={source == "/warehouses" ? warehouseIcon : productIcon}
-                  alt={source.substring(1)}
-                />
-                <span style={{ textTransform: "capitalize" }}>
-                  {source.substring(1)}
-                </span>
-              </div>
-            ),
-          },
-          {
             href: `${path + search}`,
             title: (
-              <div
-                className="breadcrumb-item"
-                role="link"
-                aria-current="page"
-                aria-label={`All ${
-                  source == "/warehouses" ? "warehouses" : "products"
-                }`}
-              >
-                All
+              <div className="breadcrumb-item" role="link" aria-current="page">
+                <img src={inventoryIcon} alt="" />
+                <span>All Inventory</span>
               </div>
             ),
           },

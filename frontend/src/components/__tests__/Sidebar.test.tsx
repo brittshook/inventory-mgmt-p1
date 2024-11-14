@@ -1,6 +1,7 @@
+import "@testing-library/jest-dom";
+import "@guidepup/jest";
 import { render, screen } from "@testing-library/react";
 import { useScreenSize } from "../../context/ScreenSizeContext";
-import "@testing-library/jest-dom";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { Sidebar } from "../sidebar/Sidebar";
 
@@ -62,7 +63,7 @@ describe("Sidebar Component", () => {
     );
 
     // Verify sidebar is in collapsed state
-    const sidebar = document.querySelector("aside");
+    const sidebar = document.querySelector("nav");
     expect(sidebar).toHaveClass("collapsed");
   });
 
@@ -76,42 +77,8 @@ describe("Sidebar Component", () => {
     );
 
     // Verify sidebar is in expanded state
-    const sidebar = document.querySelector("aside");
+    const sidebar = document.querySelector("nav");
     expect(sidebar).toHaveClass("expanded");
-  });
-
-  test("should display sublist under Products when on products or inventory category page", () => {
-    (useScreenSize as jest.Mock).mockReturnValue({ isSmallerThan900: false });
-    (useLocation as jest.Mock).mockReturnValue({
-      pathname: "/inventory",
-      search: "?category=1",
-    });
-
-    render(
-      <MemoryRouter>
-        <Sidebar testId="sidebar" />
-      </MemoryRouter>
-    );
-
-    // Verify Inventory sub-link is displayed
-    expect(screen.getByText("Inventory")).toBeInTheDocument();
-  });
-
-  test("should display sublist under Warehouses when on warehouses or inventory warehouse page", () => {
-    (useScreenSize as jest.Mock).mockReturnValue({ isSmallerThan900: false });
-    (useLocation as jest.Mock).mockReturnValue({
-      pathname: "/inventory",
-      search: "?warehouse=1",
-    });
-
-    render(
-      <MemoryRouter>
-        <Sidebar testId="sidebar" />
-      </MemoryRouter>
-    );
-
-    // Verify Inventory sub-link is displayed
-    expect(screen.getByText("Inventory")).toBeInTheDocument();
   });
 
   test("should display user details when screen is larger than 900px", () => {
@@ -126,7 +93,7 @@ describe("Sidebar Component", () => {
     // Verify user details are displayed
     expect(screen.getByText("Jo Klein")).toBeInTheDocument();
     expect(screen.getByText("Administrator")).toBeInTheDocument();
-    expect(screen.getByAltText("profile")).toBeInTheDocument();
+    expect(screen.getByAltText("profile picture")).toBeInTheDocument();
   });
 
   test("should not display user details when screen is smaller than 900px", () => {
@@ -154,5 +121,87 @@ describe("Sidebar Component", () => {
 
     // Verify Inventory icon is displayed
     expect(screen.getByAltText("inventory")).toBeInTheDocument();
+  });
+
+  test("should match the inline snapshot of expected screen reader spoken phrases when screen is larger than 900px", async () => {
+    (useScreenSize as jest.Mock).mockReturnValue({ isSmallerThan900: false });
+
+    render(
+      <MemoryRouter>
+        <Sidebar testId="sidebar" />
+      </MemoryRouter>
+    );
+    await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+  [
+    "document",
+    "navigation",
+    "link, Crag Supply Co.",
+    "banner",
+    "image, Crag Supply Co.",
+    "end of banner",
+    "end of link, Crag Supply Co.",
+    "heading, General, level 2",
+    "menubar, orientated horizontally",
+    "menuitem, Dashboard, position 1, set size 4",
+    "Dashboard",
+    "end of menuitem, Dashboard, position 1, set size 4",
+    "menuitem, Products, position 2, set size 4",
+    "Products",
+    "end of menuitem, Products, position 2, set size 4",
+    "menuitem, Warehouses, position 3, set size 4",
+    "Warehouses",
+    "end of menuitem, Warehouses, position 3, set size 4",
+    "menuitem, Inventory, position 4, set size 4",
+    "Inventory",
+    "end of menuitem, Inventory, position 4, set size 4",
+    "end of menubar, orientated horizontally",
+    "image, profile picture",
+    "heading, Jo Klein, level 3",
+    "paragraph",
+    "Administrator",
+    "end of paragraph",
+    "image, Logout",
+    "end of navigation",
+    "end of document",
+  ]
+  `);
+  });
+
+  test("should match the inline snapshot of expected screen reader spoken phrases when screen is smaller than 900px", async () => {
+    (useScreenSize as jest.Mock).mockReturnValue({ isSmallerThan900: true });
+
+    render(
+      <MemoryRouter>
+        <Sidebar testId="sidebar" />
+      </MemoryRouter>
+    );
+    await expect(document.body).toMatchScreenReaderInlineSnapshot(`
+  [
+    "document",
+    "navigation",
+    "link, Crag Supply Co.",
+    "banner",
+    "image, Crag Supply Co.",
+    "end of banner",
+    "end of link, Crag Supply Co.",
+    "menubar, orientated horizontally",
+    "menuitem, dashboard, position 1, set size 4",
+    "image, dashboard",
+    "end of menuitem, dashboard, position 1, set size 4",
+    "menuitem, products, position 2, set size 4",
+    "image, products",
+    "end of menuitem, products, position 2, set size 4",
+    "menuitem, warehouses, position 3, set size 4",
+    "image, warehouses",
+    "end of menuitem, warehouses, position 3, set size 4",
+    "menuitem, inventory, position 4, set size 4",
+    "image, inventory",
+    "end of menuitem, inventory, position 4, set size 4",
+    "end of menubar, orientated horizontally",
+    "image, Logout",
+    "end of navigation",
+    "end of document",
+  ]
+  `);
   });
 });

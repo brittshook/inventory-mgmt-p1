@@ -149,7 +149,7 @@ export const InventoryByWarehouse = ({ testId }: props) => {
                 className="breadcrumb-item"
                 role="link"
               >
-                <img src={warehouseIcon} alt="warehouse" />
+                <img src={warehouseIcon} alt="" />
                 <span>{"Warehouses"}</span>
               </div>
             ),

@@ -76,6 +76,21 @@ div.section-heading {
   text-decoration: underline;
 }
 
+button.ant-btn-primary {
+  background: var(--accent-color-blue, #0e6ff7) !important;
+}
+
+button.ant-btn-link,
+li.ant-pagination-item a {
+  color: var(--accent-color-blue, #0e6ff7) !important;
+}
+
+:focus-visible {
+  overflow: visible;
+  border: 2px solid #2361c5;
+  border-radius: 4px;
+}
+
 @media screen and (min-width: 1600px) {
   section.cards {
     grid-template-columns: repeat(6, 1fr);

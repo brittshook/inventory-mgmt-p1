@@ -145,7 +145,7 @@ export const InventoryByCategory = ({ testId }: props) => {
                 className="breadcrumb-item"
                 role="link"
               >
-                <img src={productIcon} alt="product" />
+                <img src={productIcon} alt="" />
                 <span>{"Products"}</span>
               </div>
             ),

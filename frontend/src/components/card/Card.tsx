@@ -1,9 +1,9 @@
-import React, { ReactElement, useState } from "react";
-import { Card as CardElement, Dropdown, Modal } from "antd";
-import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
+import React, { ReactElement, useEffect, useState } from "react";
+import { Card as CardElement, Modal } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import "./Card.css";
 import { Link } from "react-router-dom";
-import type { FormInstance, MenuProps } from "antd";
+import type { FormInstance } from "antd";
 
 type props = {
   title: string;
@@ -34,63 +34,72 @@ export const Card = ({
   testId,
   isCategory,
 }: props) => {
-  const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+
+  // Edit tabindex to allow proper keyboard navigation
+  useEffect(() => {
+    const editIcons = document.querySelectorAll(".anticon-edit");
+    const deleteIcons = document.querySelectorAll(".anticon-delete");
+
+    editIcons.forEach((editIcon) => {
+      editIcon.setAttribute("tabindex", "0");
+    });
+    deleteIcons.forEach((deleteIcon) => {
+      deleteIcon.setAttribute("tabindex", "0");
+    });
+  }, []);
 
   // Handler to open the edit modal and set initial form values
   const handleEditClick = () => {
     form?.setFieldsValue(initialValues);
-    setOpen(true);
+    setOpenModal(true);
   };
 
   // Handler for menu item click events – currently just delete
-  const handleMenuClick: MenuProps["onClick"] = async (e) => {
-    if (e.key === "delete") {
-      try {
-        await deleteItem(id);
-      } catch (error) {
-        console.error("Failed to delete item:", error);
-      }
+  const handleDeleteClick = async () => {
+    try {
+      await deleteItem(id);
+    } catch (error) {
+      console.error("Failed to delete item:", error);
     }
-  };
-
-  // Menu items for the dropdown
-  const items: MenuProps["items"] = [
-    {
-      label: "Delete",
-      key: "delete",
-      danger: true,
-    },
-  ];
-
-  const menuProps = {
-    items, // Set menu items
-    onClick: handleMenuClick, // Set menu click handler
   };
 
   const actions: React.ReactNode[] = [
     // Edit button
     <EditOutlined
+      role="button"
       data-testid={testId && "edit-card-button"}
       key="edit"
       onClick={handleEditClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          handleEditClick();
+        }
+      }}
       aria-label={`Edit ${title}${isCategory ? " category" : ""}`}
     />,
     // Dropdown button with delete option
-    <Dropdown key="dropdown" menu={menuProps}>
-      <EllipsisOutlined
-        key="ellipsis"
-        data-testid={testId && "card-ellipsis-button"}
-        aria-label={`More options for ${title}${isCategory ? " category" : ""}`}
-      />
-    </Dropdown>,
+    <DeleteOutlined
+      role="button"
+      key="delete"
+      className="delete-icon"
+      data-testid={testId && "card-delete-button"}
+      aria-label={`Delete ${title}${isCategory ? " category" : ""}`}
+      onClick={handleDeleteClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          handleDeleteClick();
+        }
+      }}
+    />,
   ];
 
   const handleOk = async () => {
     try {
       setConfirmLoading(true);
       await updateItem(id);
-      setOpen(false);
+      setOpenModal(false);
       setConfirmLoading(false); // Reset loading state
     } catch (e) {
       setConfirmLoading(false); // Reset loading state if error occurs
@@ -100,7 +109,7 @@ export const Card = ({
   // Handler for Cancel button in the modal to reset fields and close modal
   const handleCancel = () => {
     form?.resetFields();
-    setOpen(false);
+    setOpenModal(false);
   };
 
   return (
@@ -111,8 +120,8 @@ export const Card = ({
         </Link>
       </CardElement>
       <Modal
-        title={title}
-        open={open}
+        title={"Update " + title}
+        open={openModal}
         confirmLoading={confirmLoading}
         onOk={handleOk}
         onCancel={handleCancel}

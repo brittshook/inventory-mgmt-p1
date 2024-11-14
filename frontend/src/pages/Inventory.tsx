@@ -2,8 +2,13 @@ import { useLocation } from "react-router-dom";
 import { InventoryByWarehouse } from "./InventoryByWarehouse";
 import { InventoryByCategory } from "./InventoryByCategory";
 import { AllInventory } from "./AllInventory";
+import { useEffect } from "react";
 
 export const Inventory = () => {
+  useEffect(() => {
+    document.title = "Inventory - Crag Supply Co.";
+  }, []);
+
   const search = useLocation().search;
 
   // Determine which inventory component to render based on search parameters

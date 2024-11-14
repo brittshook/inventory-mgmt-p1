@@ -41,6 +41,7 @@ export const Products = ({ testId }: props) => {
   };
 
   useEffect(() => {
+    document.title = "Products - Crag Supply Co.";
     fetchData();
   }, []);
 
@@ -95,7 +96,7 @@ export const Products = ({ testId }: props) => {
     return <ErrorPage testId={testId && "error-page"} />;
 
   return (
-    <section data-testid={testId} id="products">
+    <section data-testid={testId} id="products-page">
       <div className="section-heading">
         <h1>Products</h1>
         <ButtonWithModal
