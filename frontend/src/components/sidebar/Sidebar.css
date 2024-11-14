@@ -1,25 +1,22 @@
-aside,
-nav,
+nav#sidebar,
+div#menu,
 div#user-account,
 div#user-details {
   display: flex;
 }
 
-aside,
+nav#sidebar,
 div#user-account {
   justify-content: space-between;
 }
 
-aside,
-nav {
-  flex-direction: column;
-}
-
-aside {
+nav#sidebar {
   max-width: 250px;
 }
 
-nav {
+nav#sidebar,
+div#menu {
+  flex-direction: column;
   gap: 16px;
 }
 
@@ -32,15 +29,15 @@ hr {
   background: #eff0f3;
 }
 
-aside h2 {
+nav#sidebar h2 {
   padding: 10px 0;
 }
 
-nav > ul > li {
+nav#sidebar > div#menu > ul > li {
   padding-bottom: 14px;
 }
 
-aside li a {
+div#menu li a {
   font-size: 13px;
   font-weight: 500;
   color: var(--text-color-secondary-medium);
@@ -51,7 +48,7 @@ aside li a {
   padding-top: 8px;
 }
 
-ul.sublist > li {
+div.sublist > a {
   height: 33px;
 }
 
@@ -86,17 +83,17 @@ div#user-account h3 {
   fill: var(--accent-color-blue, #0098ac);
 }
 
-aside.collapsed nav {
+nav#sidebar.collapsed div#menu {
   gap: 40px;
 }
 
-aside.collapsed nav ul {
+nav#sidebar.collapsed div#menu ul {
   display: flex;
   align-items: center;
   flex-direction: column;
   gap: 20px;
 }
 
-aside.collapsed div#user-account {
+nav#sidebar.collapsed div#user-account {
   justify-content: center;
 }
