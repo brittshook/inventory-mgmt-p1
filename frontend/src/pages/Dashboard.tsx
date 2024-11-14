@@ -41,6 +41,7 @@ export const Dashboard = ({ testId }: props) => {
   };
 
   useEffect(() => {
+    document.title = "Dashboard - Crag Supply Co.";
     fetchData();
   }, []);
 
@@ -61,13 +62,12 @@ export const Dashboard = ({ testId }: props) => {
     return <ErrorPage testId={testId && "error-page"} />;
 
   return (
-    <section data-testid={testId} id="dashboard">
+    <section data-testid={testId} id="dashboard-page">
       <h1>Dashboard</h1>
       <Card
         style={{ marginTop: 16 }}
         type="inner"
         title="Total Items in Inventory"
-        extra={<a href="#">More</a>}
       >
         <h1 style={{ padding: 20 }}>{currentCapacity}</h1>
       </Card>
@@ -75,7 +75,6 @@ export const Dashboard = ({ testId }: props) => {
         style={{ marginTop: 16 }}
         type="inner"
         title="Total Max Capacity"
-        extra={<a href="#">More</a>}
       >
         <h1 style={{ padding: 20 }}>{totalCapacity}</h1>
       </Card>
